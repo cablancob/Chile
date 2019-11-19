@@ -55,7 +55,7 @@ export default class App extends Component {
   pagina_inicial = () => {
     if (this.state.usuario !== undefined) {
       return (        
-        (this.state.usuario.TipoUsuario === 2) ? <Encuestas state={this.state} tipo_warning={this.tipo_warning} auth_false={this.auth_false} /> : ""
+        (this.state.usuario.TipoUsuario >= 2 && this.state.usuario.TipoUsuario <= 5) ? <Encuestas state={this.state} tipo_warning={this.tipo_warning} auth_false={this.auth_false} /> : ""
       )
     } else {
       return (

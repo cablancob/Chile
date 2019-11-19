@@ -153,7 +153,10 @@ const encuesta = async (req, res) => {
     try {
         let query = ""
         if (req.query.tipousuario == "2") { query = "SELECT * FROM iam_encuesta90 WHERE IdUsuario = " + req.query.user }
-
+        if (req.query.tipousuario == "3") { query = "SELECT * FROM iam_encuesta180 WHERE IdUsuario = " + req.query.user }
+        if (req.query.tipousuario == "4") { query = "SELECT * FROM iam_encuesta270 WHERE IdUsuario = " + req.query.user }
+        if (req.query.tipousuario == "5") { query = "SELECT * FROM iam_encuesta360 WHERE IdUsuario = " + req.query.user }
+        
         await connection.query(query, (err, result, fields) => {
             if (err) {
                 console.log(err.message)
@@ -166,6 +169,62 @@ const encuesta = async (req, res) => {
                 }
             }
         });
+    } catch (e) {
+        console.log(e.message)
+        res.status(400).json({ error: e.message })
+    }
+}
+
+const actualizar_encuesta = async (req, res) => {
+    try {
+        const data = req.body
+        let query = ""
+
+        if (data.TipoUsuario == 2) {
+            query = "UPDATE iam_encuesta90 SET "
+
+            for (let i in data.Respuestas) {
+                query += i + " = " + data.Respuestas[i] + ", "
+            }
+
+            query += " Pregunta" + data.Pagina + " = 'S' WHERE IdUsuario = " + data.Id            
+        }
+        if (data.TipoUsuario == 3) {
+            query = "UPDATE iam_encuesta180 SET "
+
+            for (let i in data.Respuestas) {
+                query += i + " = " + data.Respuestas[i] + ", "
+            }
+
+            query += " Pregunta" + data.Pagina + " = 'S' WHERE IdUsuario = " + data.Id            
+        }
+        if (data.TipoUsuario == 4) {
+            query = "UPDATE iam_encuesta270 SET "
+
+            for (let i in data.Respuestas) {
+                query += i + " = " + data.Respuestas[i] + ", "
+            }
+
+            query += " Pregunta" + data.Pagina + " = 'S' WHERE IdUsuario = " + data.Id            
+        }
+        if (data.TipoUsuario == 5) {
+            query = "UPDATE iam_encuesta360 SET "
+
+            for (let i in data.Respuestas) {
+                query += i + " = " + data.Respuestas[i] + ", "
+            }
+
+            query += " Pregunta" + data.Pagina + " = 'S' WHERE IdUsuario = " + data.Id            
+        }        
+        
+        await connection.query(query, (err, result, fields) => {
+            if (err) {
+                console.log(err.message)
+                res.status(400).json({ error: err.message })
+            } else {
+                res.status(200).json("OK")
+            }
+        })
     } catch (e) {
         console.log(e.message)
         res.status(400).json({ error: e.message })
@@ -205,6 +264,15 @@ const resultados_innovacion = async (req, res) => {
             if (tipo === 2) {
                 where = ` FROM cadomec_innovactionmeter.iam_encuesta90 as A `
             }
+            if (tipo === 3) {
+                where = ` FROM cadomec_innovactionmeter.iam_encuesta180 as A `
+            }
+            if (tipo === 4) {
+                where = ` FROM cadomec_innovactionmeter.iam_encuesta270 as A `
+            }
+            if (tipo === 5) {
+                where = ` FROM cadomec_innovactionmeter.iam_encuesta360 as A `
+            }
             query = `
             SELECT
             ROUND(SUM(C.0) / COUNT(*),1) AS '0',
@@ -219,7 +287,7 @@ const resultados_innovacion = async (req, res) => {
             WHEN Pregunta3_1 = 1 THEN 1
             WHEN Pregunta3_1 = 2 THEN 5
             WHEN Pregunta3_1 = 3 THEN 10
-            WHEN Pregunta3_1 = 4 THEN 0
+            WHEN Pregunta3_1 = 4 THEN 1
             ELSE 0
             END) AS '0',
             (
@@ -227,7 +295,7 @@ const resultados_innovacion = async (req, res) => {
             WHEN Pregunta3_3 = 1 THEN 1
             WHEN Pregunta3_3 = 2 THEN 5
             WHEN Pregunta3_3 = 3 THEN 10
-            WHEN Pregunta3_3 = 4 THEN 0
+            WHEN Pregunta3_3 = 4 THEN 1
             ELSE 0
             END) AS '1',
             (
@@ -235,7 +303,7 @@ const resultados_innovacion = async (req, res) => {
             WHEN Pregunta3_4 = 1 THEN 1
             WHEN Pregunta3_4 = 2 THEN 5
             WHEN Pregunta3_4 = 3 THEN 10
-            WHEN Pregunta3_4 = 4 THEN 0
+            WHEN Pregunta3_4 = 4 THEN 1
             ELSE 0
             END) AS '2',
             (
@@ -243,7 +311,7 @@ const resultados_innovacion = async (req, res) => {
             WHEN Pregunta3_5 = 1 THEN 1
             WHEN Pregunta3_5 = 2 THEN 5
             WHEN Pregunta3_5 = 3 THEN 10
-            WHEN Pregunta3_5 = 4 THEN 0
+            WHEN Pregunta3_5 = 4 THEN 1
             ELSE 0
             END) AS '3',
             (
@@ -251,7 +319,7 @@ const resultados_innovacion = async (req, res) => {
             WHEN Pregunta3_2 = 1 THEN 1
             WHEN Pregunta3_2 = 2 THEN 5
             WHEN Pregunta3_2 = 3 THEN 10
-            WHEN Pregunta3_2 = 4 THEN 0
+            WHEN Pregunta3_2 = 4 THEN 1
             ELSE 0
             END) AS '4',
             (
@@ -259,7 +327,7 @@ const resultados_innovacion = async (req, res) => {
             WHEN Pregunta3_6 = 1 THEN 1
             WHEN Pregunta3_6 = 2 THEN 5
             WHEN Pregunta3_6 = 3 THEN 10
-            WHEN Pregunta3_6 = 4 THEN 0
+            WHEN Pregunta3_6 = 4 THEN 1
             ELSE 0
             END) AS '5'`
                 + where +
@@ -299,6 +367,15 @@ const proposito = async (req, res) => {
         if (empresa == 0) {            
             if (tipo === 2) {
                 where = ` FROM cadomec_innovactionmeter.iam_encuesta90 as A `
+            }
+            if (tipo === 3) {
+                where = ` FROM cadomec_innovactionmeter.iam_encuesta180 as A `
+            }
+            if (tipo === 4) {
+                where = ` FROM cadomec_innovactionmeter.iam_encuesta270 as A `
+            }
+            if (tipo === 5) {
+                where = ` FROM cadomec_innovactionmeter.iam_encuesta360 as A `
             }
             query = `
             SELECT
@@ -375,6 +452,15 @@ const liderazgo = async (req, res) => {
         if (empresa == 0) {            
             if (tipo === 2) {
                 where = ` FROM cadomec_innovactionmeter.iam_encuesta90 as A `
+            }
+            if (tipo === 3) {
+                where = ` FROM cadomec_innovactionmeter.iam_encuesta180 as A `
+            }
+            if (tipo === 4) {
+                where = ` FROM cadomec_innovactionmeter.iam_encuesta270 as A `
+            }
+            if (tipo === 5) {
+                where = ` FROM cadomec_innovactionmeter.iam_encuesta360 as A `
             }
             query = `
             SELECT
@@ -453,108 +539,215 @@ const estructuras_habilitadoras = async (req, res) => {
             if (tipo === 2) {
                 where = ` FROM cadomec_innovactionmeter.iam_encuesta90 as A `
             }
-            query = `
-            SELECT
-            ROUND(((SUM(C.1) + SUM(C.2)) / 2) / COUNT(*),1) AS '1',
-            ROUND(((SUM(C.3) + SUM(C.4) + SUM(C.5)) / 3) / COUNT(*),1) AS '2',
-            ROUND(((SUM(C.6) + SUM(C.7) + SUM(C.8)) / 3) / COUNT(*),1) AS '3',
-            CASE 
-            WHEN C.11 = 0 THEN ROUND(((SUM(C.9) + SUM(C.10)) / 2) / COUNT(*),1) 
-            ELSE ROUND(((SUM(C.9) + SUM(C.10)  + SUM(C.11)) / 3) / COUNT(*),1) 
-            END AS '4'            
-            FROM (
-            SELECT (
-            CASE 
-            WHEN Pregunta5_1 = 1 THEN 1
-            WHEN Pregunta5_1 = 2 THEN 4
-            WHEN Pregunta5_1 = 3 THEN 7
-            WHEN Pregunta5_1 = 4 THEN 10
-            ELSE 0
-            END) AS '1',
-            (
-            CASE 
-            WHEN Pregunta5_2 = 1 THEN 1
-            WHEN Pregunta5_2 = 2 THEN 4
-            WHEN Pregunta5_2 = 3 THEN 7
-            WHEN Pregunta5_2 = 4 THEN 10
-            ELSE 0
-            END) AS '2',
-            (
-            CASE 
-            WHEN Pregunta5_3 = 1 THEN 1
-            WHEN Pregunta5_3 = 2 THEN 4
-            WHEN Pregunta5_3 = 3 THEN 7
-            WHEN Pregunta5_3 = 4 THEN 10
-            ELSE 0
-            END) AS '3',
-            (
-            CASE 
-            WHEN Pregunta5_4 = 1 THEN 1
-            WHEN Pregunta5_4 = 2 THEN 4
-            WHEN Pregunta5_4 = 3 THEN 7
-            WHEN Pregunta5_4 = 4 THEN 10
-            ELSE 0
-            END) AS '4',
-            (
-            CASE 
-            WHEN Pregunta5_5 = 1 THEN 1
-            WHEN Pregunta5_5 = 2 THEN 4
-            WHEN Pregunta5_5 = 3 THEN 7
-            WHEN Pregunta5_5 = 4 THEN 10
-            ELSE 0
-            END) AS '5',
-            (
-            CASE 
-            WHEN Pregunta5_6 = 1 THEN 1
-            WHEN Pregunta5_6 = 2 THEN 4
-            WHEN Pregunta5_6 = 3 THEN 7
-            WHEN Pregunta5_6 = 4 THEN 10
-            ELSE 0
-            END) AS '6',
-            (
-            CASE 
-            WHEN Pregunta5_7 = 1 THEN 1
-            WHEN Pregunta5_7 = 2 THEN 4
-            WHEN Pregunta5_7 = 3 THEN 7
-            WHEN Pregunta5_7 = 4 THEN 10
-            ELSE 0
-            END) AS '7',
-            (
-            CASE 
-            WHEN Pregunta5_8 = 1 THEN 1
-            WHEN Pregunta5_8 = 2 THEN 4
-            WHEN Pregunta5_8 = 3 THEN 7
-            WHEN Pregunta5_8 = 4 THEN 10
-            ELSE 0
-            END) AS '8',
-            (
-            CASE 
-            WHEN Pregunta5_9 = 1 THEN 1
-            WHEN Pregunta5_9 = 2 THEN 4
-            WHEN Pregunta5_9 = 3 THEN 7
-            WHEN Pregunta5_9 = 4 THEN 10
-            ELSE 0
-            END) AS '9',
-            (
-            CASE 
-            WHEN Pregunta5_10 = 1 THEN 1
-            WHEN Pregunta5_10 = 2 THEN 4
-            WHEN Pregunta5_10 = 3 THEN 7
-            WHEN Pregunta5_10 = 4 THEN 10
-            ELSE 0
-            END) AS '10',
-            (
-            CASE 
-            WHEN Pregunta5_11 = 1 THEN 1
-            WHEN Pregunta5_11 = 2 THEN 4
-            WHEN Pregunta5_11 = 3 THEN 7
-            WHEN Pregunta5_11 = 4 THEN 10
-            ELSE 0
-            END) AS '11'`
-                + where +
-            `WHERE A.Pregunta5 = 'S'
-            AND A.IdUsuario = `+ usuario + `) AS C;
-        `
+            if (tipo === 3) {
+                where = ` FROM cadomec_innovactionmeter.iam_encuesta180 as A `
+            }
+            if (tipo === 4) {
+                where = ` FROM cadomec_innovactionmeter.iam_encuesta270 as A `
+            }
+            if (tipo === 5) {
+                where = ` FROM cadomec_innovactionmeter.iam_encuesta360 as A `
+            }
+            if (tipo === 4 || tipo === 5) {
+                query = `
+                SELECT
+                CASE
+                WHEN C.3 = 0 THEN ROUND(((SUM(C.1) + SUM(C.2)) / 2) / COUNT(*),1)
+                ELSE ROUND(((SUM(C.1) + SUM(C.2) + SUM(C.3)) / 3) / COUNT(*),1)
+                END AS '1',
+                ROUND(SUM(C.4) / COUNT(*),1) AS '2',
+                ROUND(((SUM(C.5) + SUM(C.6) + SUM(C.7)) / 3) / COUNT(*),1) as '3',
+                ROUND(((SUM(C.8) + SUM(C.9) + SUM(C.10)) / 3) / COUNT(*),1) as '4'
+                FROM (
+                SELECT (
+                CASE 
+                WHEN Pregunta5_1 = 1 THEN 1
+                WHEN Pregunta5_1 = 2 THEN 4
+                WHEN Pregunta5_1 = 3 THEN 7
+                WHEN Pregunta5_1 = 4 THEN 10
+                ELSE 0
+                END) AS '1',
+                (
+                CASE 
+                WHEN Pregunta5_2 = 1 THEN 1
+                WHEN Pregunta5_2 = 2 THEN 4
+                WHEN Pregunta5_2 = 3 THEN 7
+                WHEN Pregunta5_2 = 4 THEN 10
+                ELSE 0
+                END) AS '2',
+                (
+                CASE 
+                WHEN Pregunta5_3 = 1 THEN 1
+                WHEN Pregunta5_3 = 2 THEN 4
+                WHEN Pregunta5_3 = 3 THEN 7
+                WHEN Pregunta5_3 = 4 THEN 10
+                ELSE 0
+                END) AS '3',
+                (
+                CASE 
+                WHEN Pregunta5_4 = 1 THEN 1
+                WHEN Pregunta5_4 = 2 THEN 4
+                WHEN Pregunta5_4 = 3 THEN 7
+                WHEN Pregunta5_4 = 4 THEN 10
+                ELSE 0
+                END) AS '4',
+                (
+                CASE 
+                WHEN Pregunta5_5 = 1 THEN 1
+                WHEN Pregunta5_5 = 2 THEN 4
+                WHEN Pregunta5_5 = 3 THEN 7
+                WHEN Pregunta5_5 = 4 THEN 10
+                ELSE 0
+                END) AS '5',
+                (
+                CASE 
+                WHEN Pregunta5_6 = 1 THEN 1
+                WHEN Pregunta5_6 = 2 THEN 4
+                WHEN Pregunta5_6 = 3 THEN 7
+                WHEN Pregunta5_6 = 4 THEN 10
+                ELSE 0
+                END) AS '6',
+                (
+                CASE 
+                WHEN Pregunta5_7 = 1 THEN 1
+                WHEN Pregunta5_7 = 2 THEN 4
+                WHEN Pregunta5_7 = 3 THEN 7
+                WHEN Pregunta5_7 = 4 THEN 10
+                ELSE 0
+                END) AS '7',
+                (
+                CASE 
+                WHEN Pregunta5_8 = 1 THEN 1
+                WHEN Pregunta5_8 = 2 THEN 4
+                WHEN Pregunta5_8 = 3 THEN 7
+                WHEN Pregunta5_8 = 4 THEN 10
+                ELSE 0
+                END) AS '8',
+                (
+                CASE 
+                WHEN Pregunta5_9 = 1 THEN 1
+                WHEN Pregunta5_9 = 2 THEN 4
+                WHEN Pregunta5_9 = 3 THEN 7
+                WHEN Pregunta5_9 = 4 THEN 10
+                ELSE 0
+                END) AS '9',
+                (
+                CASE 
+                WHEN Pregunta5_10 = 1 THEN 1
+                WHEN Pregunta5_10 = 2 THEN 4
+                WHEN Pregunta5_10 = 3 THEN 7
+                WHEN Pregunta5_10 = 4 THEN 10
+                ELSE 0
+                END) AS '10'`
+                    + where +
+                `WHERE A.Pregunta5 = 'S'
+                AND A.IdUsuario = `+ usuario + `) AS C;
+            `
+            } else {
+                query = `
+                SELECT
+                ROUND(((SUM(C.1) + SUM(C.2)) / 2) / COUNT(*),1) AS '1',
+                ROUND(((SUM(C.3) + SUM(C.4) + SUM(C.5)) / 3) / COUNT(*),1) AS '2',
+                ROUND(((SUM(C.6) + SUM(C.7) + SUM(C.8)) / 3) / COUNT(*),1) AS '3',
+                CASE 
+                WHEN C.11 = 0 THEN ROUND(((SUM(C.9) + SUM(C.10)) / 2) / COUNT(*),1) 
+                ELSE ROUND(((SUM(C.9) + SUM(C.10)  + SUM(C.11)) / 3) / COUNT(*),1) 
+                END AS '4'            
+                FROM (
+                SELECT (
+                CASE 
+                WHEN Pregunta5_1 = 1 THEN 1
+                WHEN Pregunta5_1 = 2 THEN 4
+                WHEN Pregunta5_1 = 3 THEN 7
+                WHEN Pregunta5_1 = 4 THEN 10
+                ELSE 0
+                END) AS '1',
+                (
+                CASE 
+                WHEN Pregunta5_2 = 1 THEN 1
+                WHEN Pregunta5_2 = 2 THEN 4
+                WHEN Pregunta5_2 = 3 THEN 7
+                WHEN Pregunta5_2 = 4 THEN 10
+                ELSE 0
+                END) AS '2',
+                (
+                CASE 
+                WHEN Pregunta5_3 = 1 THEN 1
+                WHEN Pregunta5_3 = 2 THEN 4
+                WHEN Pregunta5_3 = 3 THEN 7
+                WHEN Pregunta5_3 = 4 THEN 10
+                ELSE 0
+                END) AS '3',
+                (
+                CASE 
+                WHEN Pregunta5_4 = 1 THEN 1
+                WHEN Pregunta5_4 = 2 THEN 4
+                WHEN Pregunta5_4 = 3 THEN 7
+                WHEN Pregunta5_4 = 4 THEN 10
+                ELSE 0
+                END) AS '4',
+                (
+                CASE 
+                WHEN Pregunta5_5 = 1 THEN 1
+                WHEN Pregunta5_5 = 2 THEN 4
+                WHEN Pregunta5_5 = 3 THEN 7
+                WHEN Pregunta5_5 = 4 THEN 10
+                ELSE 0
+                END) AS '5',
+                (
+                CASE 
+                WHEN Pregunta5_6 = 1 THEN 1
+                WHEN Pregunta5_6 = 2 THEN 4
+                WHEN Pregunta5_6 = 3 THEN 7
+                WHEN Pregunta5_6 = 4 THEN 10
+                ELSE 0
+                END) AS '6',
+                (
+                CASE 
+                WHEN Pregunta5_7 = 1 THEN 1
+                WHEN Pregunta5_7 = 2 THEN 4
+                WHEN Pregunta5_7 = 3 THEN 7
+                WHEN Pregunta5_7 = 4 THEN 10
+                ELSE 0
+                END) AS '7',
+                (
+                CASE 
+                WHEN Pregunta5_8 = 1 THEN 1
+                WHEN Pregunta5_8 = 2 THEN 4
+                WHEN Pregunta5_8 = 3 THEN 7
+                WHEN Pregunta5_8 = 4 THEN 10
+                ELSE 0
+                END) AS '8',
+                (
+                CASE 
+                WHEN Pregunta5_9 = 1 THEN 1
+                WHEN Pregunta5_9 = 2 THEN 4
+                WHEN Pregunta5_9 = 3 THEN 7
+                WHEN Pregunta5_9 = 4 THEN 10
+                ELSE 0
+                END) AS '9',
+                (
+                CASE 
+                WHEN Pregunta5_10 = 1 THEN 1
+                WHEN Pregunta5_10 = 2 THEN 4
+                WHEN Pregunta5_10 = 3 THEN 7
+                WHEN Pregunta5_10 = 4 THEN 10
+                ELSE 0
+                END) AS '10',
+                (
+                CASE 
+                WHEN Pregunta5_11 = 1 THEN 1
+                WHEN Pregunta5_11 = 2 THEN 4
+                WHEN Pregunta5_11 = 3 THEN 7
+                WHEN Pregunta5_11 = 4 THEN 10
+                ELSE 0
+                END) AS '11'`
+                    + where +
+                `WHERE A.Pregunta5 = 'S'
+                AND A.IdUsuario = `+ usuario + `) AS C;
+            `
+            }
+ 
 
         } else {
 
@@ -588,6 +781,15 @@ sistemas_consistentes = async (req, res) => {
         if (empresa == 0) {            
             if (tipo === 2) {
                 where = ` FROM cadomec_innovactionmeter.iam_encuesta90 as A `
+            }
+            if (tipo === 3) {
+                where = ` FROM cadomec_innovactionmeter.iam_encuesta180 as A `
+            }
+            if (tipo === 4) {
+                where = ` FROM cadomec_innovactionmeter.iam_encuesta270 as A `
+            }
+            if (tipo === 5) {
+                where = ` FROM cadomec_innovactionmeter.iam_encuesta360 as A `
             }
             query = `
             SELECT
@@ -691,6 +893,15 @@ cultura_conectada = async (req, res) => {
             if (tipo === 2) {
                 where = ` FROM cadomec_innovactionmeter.iam_encuesta90 as A `
             }
+            if (tipo === 3) {
+                where = ` FROM cadomec_innovactionmeter.iam_encuesta180 as A `
+            }
+            if (tipo === 4) {
+                where = ` FROM cadomec_innovactionmeter.iam_encuesta270 as A `
+            }
+            if (tipo === 5) {
+                where = ` FROM cadomec_innovactionmeter.iam_encuesta360 as A `
+            }
             query = `
             SELECT
             ROUND(SUM(C.1) / COUNT(*),1) AS '1',
@@ -766,35 +977,6 @@ cultura_conectada = async (req, res) => {
         res.status(400).json({ error: e.message })
     }
 }
-
-const actualizar_encuesta = async (req, res) => {
-    try {
-        const data = req.body
-        let query = ""
-
-        if (data.TipoUsuario == 2) {
-            query = "UPDATE iam_encuesta90 SET "
-
-            for (let i in data.Respuestas) {
-                query += i + " = " + data.Respuestas[i] + ", "
-            }
-
-            query += " Pregunta" + data.Pagina + " = 'S' WHERE IdUsuario = " + data.Id            
-        }
-        await connection.query(query, (err, result, fields) => {
-            if (err) {
-                console.log(err.message)
-                res.status(400).json({ error: err.message })
-            } else {
-                res.status(200).json("OK")
-            }
-        })
-    } catch (e) {
-        console.log(e.message)
-        res.status(400).json({ error: e.message })
-    }
-}
-
 
 
 module.exports = {

@@ -48,6 +48,43 @@ export default class EncuestaReporte extends Component {
                     peso_empresa
                 })
             }
+            if (tipo === 3) {
+                let peso_empresa = []
+                let usuario = this.state.usuario_data
+                for (let i in usuario) {
+                    if (i.includes("P18")) {
+                        peso_empresa.push(usuario[i])
+                    }
+                }
+                this.setState({
+                    peso_empresa
+                })
+            }
+            if (tipo === 4) {
+                let peso_empresa = []
+                let usuario = this.state.usuario_data
+                for (let i in usuario) {
+                    if (i.includes("P27")) {
+                        peso_empresa.push(usuario[i])
+                    }
+                }
+                this.setState({
+                    peso_empresa
+                })
+            }
+
+            if (tipo === 5) {
+                let peso_empresa = []
+                let usuario = this.state.usuario_data
+                for (let i in usuario) {
+                    if (i.includes("P36")) {
+                        peso_empresa.push(usuario[i])
+                    }
+                }
+                this.setState({
+                    peso_empresa
+                })
+            }
 
 
             let URL = "http://" + window.location.host.split(":")[0] + ":" + process.env.REACT_APP_PORT + "/resultados_innovacion?user=" + parseInt(usuario) + "&empresa=" + parseInt(empresa) + "&tipo=" + parseInt(tipo)
@@ -149,6 +186,7 @@ export default class EncuestaReporte extends Component {
             let data = await response.json()
             if (response.status === 200) {
                 let datos = data
+                console.log(data)
                 return datos
             } else if (response.status === 400) {
                 window.ModalError("Reporte", data.error)
@@ -254,7 +292,7 @@ export default class EncuestaReporte extends Component {
     }
 
     //1REP
-    reporte_final = (datos, reporte) => {                
+    reporte_final = (datos, reporte) => {
         let suma = 0
         let promedio = 0
         let datos_reporte = {}
@@ -263,8 +301,7 @@ export default class EncuestaReporte extends Component {
         if (reporte === 1) {
             datos_reporte["titulo"] = "ICC (Resultados Innovación)"
             for (let i in datos) {
-                //borrar if                
-                if (parseInt(i) !== 5) {
+                if (datos[i] > 0) {
                     let pregunta = ""
                     let resultado = 0.0
                     pregunta = this.state.resultados[i]
@@ -285,13 +322,15 @@ export default class EncuestaReporte extends Component {
         if (reporte === 2) {
             datos_reporte["titulo"] = "Propósito, Objetivo, Estrategia"
             for (let i in datos) {
-                let pregunta = ""
-                let resultado = 0.0
-                pregunta = this.state.proposito[i - 1]
-                resultado = datos[i]
-                resultados.push(JSON.stringify({ pregunta, resultado }))
-                suma += datos[i]
-                promedio += 1
+                if (datos[i] > 0) {
+                    let pregunta = ""
+                    let resultado = 0.0
+                    pregunta = this.state.proposito[i - 1]
+                    resultado = datos[i]
+                    resultados.push(JSON.stringify({ pregunta, resultado }))
+                    suma += datos[i]
+                    promedio += 1
+                }
             }
             datos_reporte["resultados"] = resultados
             datos_reporte["promedio"] = (suma / promedio).toFixed(1)
@@ -304,13 +343,15 @@ export default class EncuestaReporte extends Component {
         if (reporte === 3) {
             datos_reporte["titulo"] = "Liderazgo Inspirador"
             for (let i in datos) {
-                let pregunta = ""
-                let resultado = 0.0
-                pregunta = this.state.liderazgo[i - 1]
-                resultado = datos[i]
-                resultados.push(JSON.stringify({ pregunta, resultado }))
-                suma += datos[i]
-                promedio += 1
+                if (datos[i] > 0) {
+                    let pregunta = ""
+                    let resultado = 0.0
+                    pregunta = this.state.liderazgo[i - 1]
+                    resultado = datos[i]
+                    resultados.push(JSON.stringify({ pregunta, resultado }))
+                    suma += datos[i]
+                    promedio += 1
+                }
             }
             datos_reporte["resultados"] = resultados
             datos_reporte["promedio"] = (suma / promedio).toFixed(1)
@@ -323,13 +364,15 @@ export default class EncuestaReporte extends Component {
         if (reporte === 4) {
             datos_reporte["titulo"] = "Estructuras Habilitadoras"
             for (let i in datos) {
-                let pregunta = ""
-                let resultado = 0.0
-                pregunta = this.state.estructuras_habilitadoras[i - 1]
-                resultado = datos[i]
-                resultados.push(JSON.stringify({ pregunta, resultado }))
-                suma += datos[i]
-                promedio += 1
+                if (datos[i] > 0) {
+                    let pregunta = ""
+                    let resultado = 0.0
+                    pregunta = this.state.estructuras_habilitadoras[i - 1]
+                    resultado = datos[i]
+                    resultados.push(JSON.stringify({ pregunta, resultado }))
+                    suma += datos[i]
+                    promedio += 1
+                }
             }
             datos_reporte["resultados"] = resultados
             datos_reporte["promedio"] = (suma / promedio).toFixed(1)
@@ -382,7 +425,7 @@ export default class EncuestaReporte extends Component {
 
         this.setState({
             reporte_final
-        })        
+        })
 
     }
 
@@ -408,7 +451,7 @@ export default class EncuestaReporte extends Component {
                 datos = await this.sistemas_consistentes(usuario, empresa, tipo)
                 this.reporte_final(datos, 5)
                 datos = await this.cultura_conectada(usuario, empresa, tipo)
-                this.reporte_final(datos, 5)
+                this.reporte_final(datos, 6)
             } else {
 
             }
@@ -427,13 +470,24 @@ export default class EncuestaReporte extends Component {
     Reporte = () => {
         const usuario = this.state.usuario_data
         const idioma = this.props.idioma
-            
+
         let titulo = ""
         let subtitulo = ""
+        let pie_pagina = ""
         if (idioma === "ESP") {
             subtitulo = "Muchas gracias por su cooperación"
+            pie_pagina = "El equipo de Best Place to Innovate le agradece su participación en contestar esta encuesta."
             if (this.props.tipo_encuesta === 2) {
                 titulo = "Encuesta Comité Ejecutivo Inicial - 90°"
+            }
+            if (this.props.tipo_encuesta === 3) {
+                titulo = "Encuesta Colaboradores - 180°"
+            }
+            if (this.props.tipo_encuesta === 4) {
+                titulo = "Encuesta Proveedores - 270°"
+            }
+            if (this.props.tipo_encuesta === 4) {
+                titulo = "Encuesta Clientes - 360°"
             }
         }
         return (
@@ -477,8 +531,8 @@ export default class EncuestaReporte extends Component {
                                                 </div>
                                                 <div className="card-body form-group">
                                                     {
-                                                        obj.resultados.map((obj, index) => {                                                            
-                                                            let resultados = JSON.parse(obj)                                                            
+                                                        obj.resultados.map((obj, index) => {
+                                                            let resultados = JSON.parse(obj)
                                                             return (
                                                                 <div className="row" key={index}>
                                                                     <div className="col-md-9 py-2 text-left">{resultados.pregunta}</div>
@@ -497,7 +551,10 @@ export default class EncuestaReporte extends Component {
                     </div>
                 </div>
                 <div className="d-flex justify-content-center py-5">
-                    <button type="button" className="btn btn-primary px-5 my-2" onClick={this.props.funcion}>{"<< Anterior"}</button>                    
+                    {pie_pagina}
+                </div>
+                <div className="d-flex justify-content-center py-5">
+                    <button type="button" className="btn btn-primary px-5 my-2" onClick={this.props.funcion}>{"<< Anterior"}</button>
                 </div>
             </div>
         )

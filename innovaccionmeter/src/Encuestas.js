@@ -8,7 +8,7 @@ export default class Encuestas extends Component {
         super(props)
         this.state = {
             pagina: 8,
-            cantidad_preguntas: undefined            
+            cantidad_preguntas: undefined
         }
     }
 
@@ -107,11 +107,11 @@ export default class Encuestas extends Component {
         }
     }
 
-    regresar = async () => {                
+    regresar = async () => {
         await this.setState({
             pagina: this.state.pagina - 1,
             cantidad_preguntas: undefined
-        })                
+        })
         await this.encuesta_data()
     }
 
@@ -151,7 +151,7 @@ export default class Encuestas extends Component {
     }
 
     encuesta_data = async () => {
-        const usuario = this.props.state.usuario        
+        const usuario = this.props.state.usuario
 
         if (this.state.pagina !== 8) {
             if (await this.respuestas_bd(usuario)) {
@@ -191,7 +191,7 @@ export default class Encuestas extends Component {
                             cantidad_preguntas
                         })
 
-                         //CARGA RESPUESTA
+                        //CARGA RESPUESTA
                         this.state.cantidad_preguntas.map((numero) => {
                             let preguntas_filtradas = this.state.preguntas.filter((obj) => obj.id.toString() === numero.toString())
                             if (preguntas_filtradas[0].tipo === "radio" || preguntas_filtradas[0].tipo === "linea") {
@@ -248,6 +248,70 @@ export default class Encuestas extends Component {
 
                 if (this.state.pagina.toString() === "5") subtitulo = "V. Organización para la Innovación"
                 if (this.state.pagina.toString() === "5") explicacion = "Respecto al nivel de desarrollo de la organización para llevar adelante la innovación en su empresa, por favor seleccione el nivel de desarrollo que crea que corresponde a cada una de las siguientes afirmaciones"
+
+                if (this.state.pagina.toString() === "6") subtitulo = "VI. Cultura Pro Innovación"
+                if (this.state.pagina.toString() === "6") explicacion = "Respecto al nivel de desarrollo de las características que representan la cultura de innovación de la organización, por favor seleccione el nivel de desarrollo que crea que corresponde a cada una de las siguientes afirmaciones"
+
+                if (this.state.pagina.toString() === "7") subtitulo = "VII. Facilitadores de Innovación"
+                if (this.state.pagina.toString() === "7") explicacion = "Respecto al uso de herramientas o métodos para innovar que han utilizado en su empresa, por favor seleccione en cada caso el nivel de uso que crea que corresponde."
+            }
+
+            if (usuario.TipoUsuario.toString() === "3") {
+                titulo = "Encuesta Colaboradores - 180°"
+                if (this.state.pagina.toString() === "1") subtitulo = "I. Información General"
+
+                if (this.state.pagina.toString() === "2") subtitulo = "II. Resultados de aplicar Innovación"
+
+                if (this.state.pagina.toString() === "3") subtitulo = "III. Impacto y expectativas de las iniciativas de innovación en los resultados"
+                if (this.state.pagina.toString() === "3") explicacion = "Se refiere a la importancia en el resultado que han tenido o tendrán los distintos esfuerzos de innovación en la empresa. Entienda resultados como crecimiento en ventas, reducción de costos, rentabilidad, etc."
+
+                if (this.state.pagina.toString() === "4") subtitulo = "IV. Liderando la Innovación"
+                if (this.state.pagina.toString() === "4") explicacion = "¿Usted como un líder de la empresa qué tan de acuerdo está con las siguientes afirmaciones?"
+
+                if (this.state.pagina.toString() === "5") subtitulo = "V. Organización para la Innovación"
+                if (this.state.pagina.toString() === "5") explicacion = "Respecto al nivel de desarrollo de la organización para llevar adelante la innovación en su empresa, por favor seleccione el nivel de desarrollo que crea que corresponde a cada una de las siguientes afirmaciones"
+
+                if (this.state.pagina.toString() === "6") subtitulo = "VI. Cultura Pro Innovación"
+                if (this.state.pagina.toString() === "6") explicacion = "Respecto al nivel de desarrollo de las características que representan la cultura de innovación de la organización, por favor seleccione el nivel de desarrollo que crea que corresponde a cada una de las siguientes afirmaciones"
+
+                if (this.state.pagina.toString() === "7") subtitulo = "VII. Facilitadores de Innovación"
+                if (this.state.pagina.toString() === "7") explicacion = "Respecto al uso de herramientas o métodos para innovar que han utilizado en su empresa, por favor seleccione en cada caso el nivel de uso que crea que corresponde."
+            }
+            if (usuario.TipoUsuario.toString() === "4") {
+                titulo = "Encuesta Proveedores - 270°"
+                if (this.state.pagina.toString() === "1") subtitulo = "I. Información General"
+
+                if (this.state.pagina.toString() === "2") subtitulo = "II. Resultados de aplicar Innovación"
+
+                if (this.state.pagina.toString() === "3") subtitulo = "III. Impacto y expectativas de las iniciativas de innovación en los resultados"
+                if (this.state.pagina.toString() === "3") explicacion = "Se refiere a la importancia en el resultado que han tenido o tendrán los distintos esfuerzos de innovación en la empresa. Entienda resultados como crecimiento en ventas, reducción de costos, rentabilidad, etc."
+
+                if (this.state.pagina.toString() === "4") subtitulo = "IV. Liderando la Innovación"
+                if (this.state.pagina.toString() === "4") explicacion = "¿Usted qué tan de acuerdo creería estar con las siguientes afirmaciones?"
+
+                if (this.state.pagina.toString() === "5") subtitulo = "V. Co-Creación"
+                if (this.state.pagina.toString() === "5") explicacion = "Respecto al nivel de desarrollo de la organización para llevar adelante la innovación en LA EMPRESA PARA LA CUAL USTED ES PROVEEDOR, por favor seleccione el nivel de desarrollo que crea que corresponde a cada una de las siguientes"
+
+                if (this.state.pagina.toString() === "6") subtitulo = "VI. Cultura Pro Innovación"
+                if (this.state.pagina.toString() === "6") explicacion = "Respecto al nivel de desarrollo de las características que representan la cultura de innovación de la organización, por favor seleccione el nivel de desarrollo que crea que corresponde a cada una de las siguientes afirmaciones"
+
+                if (this.state.pagina.toString() === "7") subtitulo = "VII. Facilitadores de Innovación"
+                if (this.state.pagina.toString() === "7") explicacion = "Respecto al uso de herramientas o métodos para innovar que han utilizado en su empresa, por favor seleccione en cada caso el nivel de uso que crea que corresponde."
+            }
+            if (usuario.TipoUsuario.toString() === "5") {
+                titulo = "Encuesta Clientes - 360°"
+                if (this.state.pagina.toString() === "1") subtitulo = "I. Información General"
+
+                if (this.state.pagina.toString() === "2") subtitulo = "II. Resultados de aplicar Innovación"
+
+                if (this.state.pagina.toString() === "3") subtitulo = "III. Impacto y expectativas de las iniciativas de innovación en los resultados"
+                if (this.state.pagina.toString() === "3") explicacion = "Se refiere a la importancia en el resultado que han tenido o tendrán los distintos esfuerzos de innovación en la empresa. Entienda resultados como crecimiento en ventas, reducción de costos, rentabilidad, etc."
+
+                if (this.state.pagina.toString() === "4") subtitulo = "IV. Liderando la Innovación"
+                if (this.state.pagina.toString() === "4") explicacion = "¿Usted qué tan de acuerdo creería estar con las siguientes afirmaciones?"
+
+                if (this.state.pagina.toString() === "5") subtitulo = "V. Co-Creación"
+                if (this.state.pagina.toString() === "5") explicacion = "Respecto al nivel de desarrollo de la organización para llevar adelante la innovación en LA EMPRESA PARA LA CUAL USTED ES CLIENTE, por favor seleccione el nivel de desarrollo que crea que corresponde a cada una de las siguientes"
 
                 if (this.state.pagina.toString() === "6") subtitulo = "VI. Cultura Pro Innovación"
                 if (this.state.pagina.toString() === "6") explicacion = "Respecto al nivel de desarrollo de las características que representan la cultura de innovación de la organización, por favor seleccione el nivel de desarrollo que crea que corresponde a cada una de las siguientes afirmaciones"
@@ -447,7 +511,7 @@ export default class Encuestas extends Component {
                         <div id="content">
                             <Menu Nombre={usuario.Nombre} tipo_warning={this.props.tipo_warning} />
                             {(this.state.cantidad_preguntas !== undefined && this.state.pagina !== 8) ? <this.Preguntas /> : ""}
-                            {(this.state.pagina === 8) ? <EncuestaReporte tipo_encuesta = {this.props.state.usuario.TipoUsuario} id_usuario={this.props.state.usuario.Id} id_empresa={0} idioma={this.props.state.idioma} auth_false={this.props.auth_false} funcion={this.regresar}/> : ""}
+                            {(this.state.pagina === 8) ? <EncuestaReporte tipo_encuesta={this.props.state.usuario.TipoUsuario} id_usuario={this.props.state.usuario.Id} id_empresa={0} idioma={this.props.state.idioma} auth_false={this.props.auth_false} funcion={this.regresar} /> : ""}
                         </div>
                         <footer className="sticky-footer bg-white">
                             <div className="container my-auto">

@@ -177,3 +177,536 @@ ESP,linea,2,7,,0,6,Pregunta7-6,6- Contamos con herramientas o métodos para estu
 ESP,linea,2,7,,0,6,Pregunta7-6,Nulo|Alto,1
 ESP,linea,2,7,,0,7,Pregunta7-7,7- Contamos con herramientas o métodos para la implementación de proyectos y gestión del cambio.,999
 ESP,linea,2,7,,0,7,Pregunta7-7,Nulo|Alto,1
+ESP,radio,3,1,,0,1,Pregunta1-1,Por favor seleccione cuál es su rol en o para con la empresa en la cual trabaja,999
+ESP,radio,3,1,,0,1,Pregunta1-1,Gerente Sección,1
+ESP,radio,3,1,,0,1,Pregunta1-1,Supervisor o Jefe,2
+ESP,radio,3,1,,0,1,Pregunta1-1,Empleado,3
+ESP,radio,3,1,,0,2,Pregunta1-2,Por favor indique cuál es el área de trabajo en que se desempeña,999
+ESP,radio,3,1,,0,2,Pregunta1-2,Ventas / Comercial,1
+ESP,radio,3,1,,0,2,Pregunta1-2,Marketing,2
+ESP,radio,3,1,,0,2,Pregunta1-2,Producción / Operaciones / Logística,3
+ESP,radio,3,1,,0,2,Pregunta1-2,Sistemas,4
+ESP,radio,3,1,,0,2,Pregunta1-2,Contabilidad / Finanzas / Legal,5
+ESP,radio,3,1,,0,2,Pregunta1-2,RRHH,6
+ESP,radio,3,1,,0,2,Pregunta1-2,Innovación / Desarrollo,7
+ESP,radio,3,1,,0,2,Pregunta1-2,Dirección,8
+ESP,radio,3,1,,3,2,Pregunta1-2,Otros,9
+ESP,radio,3,1,,0,3,Pregunta1-3,Por favor indique la industria en que compite su empresa,999
+ESP,radio,3,1,,0,3,Pregunta1-3,Retail,1
+ESP,radio,3,1,,0,3,Pregunta1-3,Consumo masivo,2
+ESP,radio,3,1,,0,3,Pregunta1-3,Telecomunicaciones / Tecnologia,3
+ESP,radio,3,1,,0,3,Pregunta1-3,Manufactura industrial,4
+ESP,radio,3,1,,0,3,Pregunta1-3,Servicios financieros,5
+ESP,radio,3,1,,0,3,Pregunta1-3,Servicios educacionales,6
+ESP,radio,3,1,,0,3,Pregunta1-3,"Servicios eléctricos, sanitarios",7
+ESP,radio,3,1,,0,3,Pregunta1-3,Servicios públicos,8
+ESP,radio,3,1,,0,3,Pregunta1-3,Agricultura,9
+ESP,radio,3,1,,0,3,Pregunta1-3,Minería,10
+ESP,radio,3,1,,0,3,Pregunta1-3,Automotriz,11
+ESP,radio,3,1,,1,3,Pregunta1-3,Salud / Otro,12
+ESP,radio,3,1,,2,3,Pregunta1-3,Salud,12
+ESP,radio,3,1,,2,3,Pregunta1-3,Otra industria,13
+ESP,radio,3,1,,3,3,Pregunta1-3,Salud,12
+ESP,radio,3,1,,3,3,Pregunta1-3,Otra industria,13
+ESP,radio,3,1,,0,4,Pregunta1-4,Por favor cuál es su antigüedad en la empresa,999
+ESP,radio,3,1,,0,4,Pregunta1-4,Menos de 2 años,1
+ESP,radio,3,1,,0,4,Pregunta1-4,De 2 a 5 años,2
+ESP,radio,3,1,,0,4,Pregunta1-4,Más de 5 años,3
+ESP,check,3,2,,0,1,Pregunta2-1,1.- ¿Cuáles de las siguientes innovaciones cree usted que ha realizado su empresa en los últimos tres años? <br/> (Puede marcar más de una opción),999
+ESP,check,3,2,Pregunta2-1-1,0,1,Pregunta2-1,Soluciones (Productos y Servicios),1
+ESP,check,3,2,Pregunta2-1-2,0,1,Pregunta2-1,"Canales de comercialización, atención clientes",1
+ESP,check,3,2,Pregunta2-1-3,0,1,Pregunta2-1,Proceso productivo / cadena de suministro,1
+ESP,check,3,2,Pregunta2-1-4,0,1,Pregunta2-1,Estructura y capacidad organizacional,1
+ESP,check,3,2,Pregunta2-1-5,0,1,Pregunta2-1,"Nuevos mercados, segmentos objetivos, Marketing",1
+ESP,check,3,2,Pregunta2-1-6,0,1,Pregunta2-1,Utilización de nuevas Tecnologías,1
+ESP,check,3,2,Pregunta2-1-7,1,1,Pregunta2-1,Otro,1
+ESP,check,3,2,Pregunta2-1-7,2,1,Pregunta2-1,Sostenibilidad,1
+ESP,check,3,2,Pregunta2-1-8,2,1,Pregunta2-1,Otro,1
+ESP,check,3,2,Pregunta2-1-7,3,1,Pregunta2-1,Sostenibilidad,1
+ESP,check,3,2,Pregunta2-1-8,3,1,Pregunta2-1,Otro,1
+ESP,check,3,2,,0,2,Pregunta2-2,2.- ¿Dónde cree usted que ha impactado positivamente la innovación en su empresa en los últimos tres años? </br> (Puede marcar más de una opción),999
+ESP,check,3,2,Pregunta2-2-1,0,2,Pregunta2-2,Ingresos,1
+ESP,check,3,2,Pregunta2-2-2,0,2,Pregunta2-2,Satisfacción del Cliente,1
+ESP,check,3,2,Pregunta2-2-3,0,2,Pregunta2-2,Reducción de costos,1
+ESP,check,3,2,Pregunta2-2-4,0,2,Pregunta2-2,Reducción de gastos,1
+ESP,check,3,2,Pregunta2-2-5,0,2,Pregunta2-2,Rentabilidad,1
+ESP,check,3,2,Pregunta2-2-6,0,2,Pregunta2-2,Modelo de negocio,1
+ESP,check,3,2,Pregunta2-2-7,1,2,Pregunta2-2,Otro,1
+ESP,check,3,2,Pregunta2-2-7,2,2,Pregunta2-2,Cuidado medio ambiente,1
+ESP,check,3,2,Pregunta2-2-8,2,2,Pregunta2-2,Otro,1
+ESP,check,3,2,Pregunta2-2-7,3,2,Pregunta2-2,Cuidado medio ambiente,1
+ESP,check,3,2,Pregunta2-2-9,3,2,Pregunta2-2,Impacto en la sociedad,1
+ESP,check,3,2,Pregunta2-2-8,3,2,Pregunta2-2,Otro,1
+ESP,radio,3,2,,0,3,Pregunta2-3,3.- ¿Quién cree usted que es la persona que conduce con mayor fuerza la innovación en su empresa?,999
+ESP,radio,3,2,,0,3,Pregunta2-3, Directorio o equivalente,1
+ESP,radio,3,2,,0,3,Pregunta2-3, Gerente General o equivalente,2
+ESP,radio,3,2,,0,3,Pregunta2-3," Gerente Marketing, Comercial o equivalente",3
+ESP,radio,3,2,,0,3,Pregunta2-3, Gerente Operaciones o equivalente,4
+ESP,radio,3,2,,0,3,Pregunta2-3, Gerente Administración & Finanzas o equivalente,5
+ESP,radio,3,2,,0,3,Pregunta2-3, Gerente Innovación o equivalente,6
+ESP,radio,3,2,,1,3,Pregunta2-3,Otro,7
+ESP,radio,3,2,,2,3,Pregunta2-3,Gerente Sostenibilidad o equivalente,7
+ESP,radio,3,2,,2,3,Pregunta2-3,Otro,8
+ESP,radio,3,2,,3,3,Pregunta2-3,Gerente Sostenibilidad o equivalente,7
+ESP,radio,3,2,,3,3,Pregunta2-3,Otro,8
+ESP,radio,3,2,,0,4,Pregunta2-4,4.- ¿Qué tan prioritaria cree usted que es la innovación en su cargo o rol?,999
+ESP,radio,3,2,,0,4,Pregunta2-4, Es mi prioridad uno,1
+ESP,radio,3,2,,0,4,Pregunta2-4, Está entre mis prioridades principales,2
+ESP,radio,3,2,,0,4,Pregunta2-4, Es medianamente o no es prioritaria,3
+ESP,radio,3,2,,0,5,Pregunta2-5,5.- ¿Cuál de las siguientes alternativas cree usted que representa mejor la conexión entre la estrategia de su empresa y la innovación?,999
+ESP,radio,3,2,,0,5,Pregunta2-5, La innovación está integrada al plan estratégico de la empresa,1
+ESP,radio,3,2,,0,5,Pregunta2-5, El plan estratégico y la innovación NO están formalmente conectados,2
+ESP,radio,3,2,,0,5,Pregunta2-5, Tenemos un plan corporativo específico dedicado a la innovación,3
+ESP,radio,3,3,,0,1,Pregunta3-1,1- ¿Cuál <u>cree que ha sido</u> el impacto de la innovación en los INGRESOS de su empresa en los últimos 3 años?,999
+ESP,radio,3,3,,0,1,Pregunta3-1, Bajo la industria,1
+ESP,radio,3,3,,0,1,Pregunta3-1, Al nivel de la industria,2
+ESP,radio,3,3,,0,1,Pregunta3-1, Superior a la industria,3
+ESP,radio,3,3,,0,1,Pregunta3-1, No Aplica,4
+ESP,radio,3,3,,0,2,Pregunta3-2,2- ¿Cuál <u>cree que ha sido</u> el impacto de la innovación en la SATISFACCIÓN DEL CLIENTE de su empresa en los últimos 3 años?,999
+ESP,radio,3,3,,0,2,Pregunta3-2, Bajo la industria,1
+ESP,radio,3,3,,0,2,Pregunta3-2, Al nivel de la industria,2
+ESP,radio,3,3,,0,2,Pregunta3-2, Superior a la industria,3
+ESP,radio,3,3,,0,2,Pregunta3-2, No Aplica,4
+ESP,radio,3,3,,0,3,Pregunta3-3,3- ¿Cuál <u>cree que ha sido</u> el impacto de la innovación en la REDUCCIÓN DE COSTOS Y GASTOS de su empresa en los últimos 3 años?,999
+ESP,radio,3,3,,0,3,Pregunta3-3, Bajo la industria,1
+ESP,radio,3,3,,0,3,Pregunta3-3, Al nivel de la industria,2
+ESP,radio,3,3,,0,3,Pregunta3-3, Superior a la industria,3
+ESP,radio,3,3,,0,3,Pregunta3-3, No Aplica,4
+ESP,radio,3,3,,0,4,Pregunta3-4,4- ¿Cuál <u>cree que ha sido</u> el impacto de la innovación en la RENTABILIDAD de su empresa respecto en los últimos 3 años?,999
+ESP,radio,3,3,,0,4,Pregunta3-4, Bajo la industria,1
+ESP,radio,3,3,,0,4,Pregunta3-4, Al nivel de la industria,2
+ESP,radio,3,3,,0,4,Pregunta3-4, Superior a la industria,3
+ESP,radio,3,3,,0,4,Pregunta3-4, No Aplica,4
+ESP,radio,3,3,,0,5,Pregunta3-5,5- ¿Cuál <u>cree que ha sido</u> el impacto de la innovación en el CAMBIO DE MODELO DE NEGOCIO de su empresa en los últimos 3 años?,999
+ESP,radio,3,3,,0,5,Pregunta3-5, Bajo la industria,1
+ESP,radio,3,3,,0,5,Pregunta3-5, Al nivel de la industria,2
+ESP,radio,3,3,,0,5,Pregunta3-5, Superior a la industria,3
+ESP,radio,3,3,,0,5,Pregunta3-5, No Aplica,4
+ESP,radio,3,3,,2,6,Pregunta3-6,6- ¿Cuál <u>cree que ha sido</u> el impacto de la innovación en la SOSTENIBILIDAD de su empresa en los últimos 3 años?,999
+ESP,radio,3,3,,2,6,Pregunta3-6, Bajo la industria,1
+ESP,radio,3,3,,2,6,Pregunta3-6, Al nivel de la industria,2
+ESP,radio,3,3,,2,6,Pregunta3-6, Superior a la industria,3
+ESP,radio,3,3,,2,6,Pregunta3-6, No Aplica,4
+ESP,radio,3,3,,3,6,Pregunta3-6,6- ¿Cuál <u>cree que ha sido</u> el impacto de la innovación en la SOSTENIBILIDAD de su empresa en los últimos 3 años?,999
+ESP,radio,3,3,,3,6,Pregunta3-6, Bajo la industria,1
+ESP,radio,3,3,,3,6,Pregunta3-6, Al nivel de la industria,2
+ESP,radio,3,3,,3,6,Pregunta3-6, Superior a la industria,3
+ESP,radio,3,3,,3,6,Pregunta3-6, No Aplica,4
+ESP,linea,3,4,,0,1,Pregunta4-1,1- El concepto de innovación en la empresa es conocido y compartido por todos.,999
+ESP,linea,3,4,,0,1,Pregunta4-1,Totalmente en desacuerdo|Totalmente en acuerdo,1
+ESP,linea,3,4,,0,2,Pregunta4-2,"2- La innovación está integrada a nuestros objetivos y estrategias de negocio, por lo que el quehacer de la innovación está integrado en nuestro día a día.",999
+ESP,linea,3,4,,0,2,Pregunta4-2,Totalmente en desacuerdo|Totalmente en acuerdo,1
+ESP,linea,3,4,,0,3,Pregunta4-3,3- Tenemos desafíos potentes que requieren soluciones innovadoras para alcanzar las metas que nos hemos propuesto.,999
+ESP,linea,3,4,,0,3,Pregunta4-3,Totalmente en desacuerdo|Totalmente en acuerdo,1
+ESP,linea,3,4,,0,4,Pregunta4-4,"4- Consideramos que para innovar hay que aprender de los errores, por lo que contemplamos formas de levantar y asimilar oportunidades de aprendizajes de los errores cometidos.",999
+ESP,linea,3,4,,0,4,Pregunta4-4,Totalmente en desacuerdo|Totalmente en acuerdo,1
+ESP,linea,3,4,,0,5,Pregunta4-5,5- Contamos con un modelo de cómo gestionar la innovación con herramientas y técnicas para mejorar constantemente la forma en que innovamos.,999
+ESP,linea,3,4,,0,5,Pregunta4-5,Totalmente en desacuerdo|Totalmente en acuerdo,1
+ESP,linea,3,4,,0,6,Pregunta4-6,6- Las responsabilidades y los recursos respecto de la innovación están claramente definidos.,999
+ESP,linea,3,4,,0,6,Pregunta4-6,Totalmente en desacuerdo|Totalmente en acuerdo,1
+ESP,linea,3,4,,0,7,Pregunta4-7,7- Existe en la empresa un ambiente de mutua comunicación y colaboración que fomenta la innovación conjunta entre las áreas.,999
+ESP,linea,3,4,,0,7,Pregunta4-7,Totalmente en desacuerdo|Totalmente en acuerdo,1
+ESP,linea,3,5,,0,1,Pregunta5-1,"1- Talentos: Seleccionamos, desarrollamos y retenemos personas con alto potencial innovador.",999
+ESP,linea,3,5,,0,1,Pregunta5-1,Nulo|Alto,1
+ESP,linea,3,5,,0,2,Pregunta5-2,"2- Talentos: Reconocemos pública y monetariamente los logros de innovación de la organización, equipos y personas.",999
+ESP,linea,3,5,,0,2,Pregunta5-2,Nulo|Alto,1
+ESP,linea,3,5,,0,3,Pregunta5-3,3- Recursos: Asignamos personas a lo largo de la organización para trabajar en tareas de innovación.,999
+ESP,linea,3,5,,0,3,Pregunta5-3,Nulo|Alto,1
+ESP,linea,3,5,,0,4,Pregunta5-4,4- Recursos: Contamos con presupuestos para innovación lo que nos permite crear valor nuevo a nuestros clientes.,999
+ESP,linea,3,5,,0,4,Pregunta5-4,Nulo|Alto,1
+ESP,linea,3,5,,0,5,Pregunta5-5,5- Recursos: Utilizamos tecnologías de comunicación e información para gestionar la innovación en la empresa.,999
+ESP,linea,3,5,,0,5,Pregunta5-5,Nulo|Alto,1
+ESP,linea,3,5,,0,6,Pregunta5-6,6- Procesos: Contamos con procesos y actividades definidos para innovar en la empresa.,999
+ESP,linea,3,5,,0,6,Pregunta5-6,Nulo|Alto,1
+ESP,linea,3,5,,0,7,Pregunta5-7,7- Procesos: Tenemos indicadores que permiten medir el desempeño de nuestra innovación.,999
+ESP,linea,3,5,,0,7,Pregunta5-7,Nulo|Alto,1
+ESP,linea,3,5,,0,8,Pregunta5-8,"8- Procesos: Tenemos criterios, instancias y responsables claros para tomar decisiones respecto a los proyectos de innovación.",999
+ESP,linea,3,5,,0,8,Pregunta5-8,Nulo|Alto,1
+ESP,linea,3,5,,0,9,Pregunta5-9,"9- Co-Creación: Creamos soluciones, proyectos y negocios con nuestros proveedores y aliados.",999
+ESP,linea,3,5,,0,9,Pregunta5-9,Nulo|Alto,1
+ESP,linea,3,5,,0,10,Pregunta5-10,"10- Co-Creación: Tenemos un canal de interacción, con los debidos responsables, que nos permite co-crear con nuestros proveedores y clientes.",999
+ESP,linea,3,5,,0,10,Pregunta5-10,Nulo|Alto,1
+ESP,linea,3,5,,2,11,Pregunta5-11,"11- Co-Creación: Tenemos un canal de interacción, con los debidos responsables, que nos permite co-crear con nuestra comunidad.",999
+ESP,linea,3,5,,2,11,Pregunta5-11,Nulo|Alto,1
+ESP,linea,3,5,,3,11,Pregunta5-11,"11- Co-Creación: Tenemos un canal de interacción, con los debidos responsables, que nos permite co-crear con nuestra comunidad.",999
+ESP,linea,3,5,,3,11,Pregunta5-11,Nulo|Alto,1
+ESP,linea,3,6,,0,1,Pregunta6-1,"1- Cuando ocurren cambios repentinos, reaccionamos con apertura hacia lo nuevo.",999
+ESP,linea,3,6,,0,1,Pregunta6-1,Nulo|Alto,1
+ESP,linea,3,6,,0,2,Pregunta6-2,2- Todos tenemos responsabilidades para conocer y satisfacer las necesidades de clientes y consumidores.,999
+ESP,linea,3,6,,0,2,Pregunta6-2,Nulo|Alto,1
+ESP,linea,3,6,,0,3,Pregunta6-3,3- Somos flexibles ante los cambios que ocurren en la empresa y sus mercados.,999
+ESP,linea,3,6,,0,3,Pregunta6-3,Nulo|Alto,1
+ESP,linea,3,6,,0,4,Pregunta6-4,4- Aceptamos e incorporamos las fallas como algo necesario para aprender e Innovar.,999
+ESP,linea,3,6,,0,4,Pregunta6-4,Nulo|Alto,1
+ESP,linea,3,6,,2,5,Pregunta6-5,5- Somos flexibles ante los cambios que ocurren en la sociedad.,999
+ESP,linea,3,6,,2,5,Pregunta6-5,Nulo|Alto,1
+ESP,linea,3,6,,3,5,Pregunta6-5,5- Somos flexibles ante los cambios que ocurren en la sociedad.,999
+ESP,linea,3,6,,3,5,Pregunta6-5,Nulo|Alto,1
+ESP,linea,3,7,,0,1,Pregunta7-1,1- Contamos con herramientas o métodos para identificar necesidades de clientes y consumidores.,999
+ESP,linea,3,7,,0,1,Pregunta7-1,Nulo|Alto,1
+ESP,linea,3,7,,0,2,Pregunta7-2,"2- Contamos con herramientas o métodos para generar ideas, diseñar y desarrollar soluciones a las necesidades de clientes y consumidores a nivel Productos, Servicios, Canales.",999
+ESP,linea,3,7,,0,2,Pregunta7-2,Nulo|Alto,1
+ESP,linea,3,7,,0,3,Pregunta7-3,3- Contamos con herramientas o métodos para prototipear y testear soluciones.,999
+ESP,linea,3,7,,0,3,Pregunta7-3,Nulo|Alto,1
+ESP,linea,3,7,,0,4,Pregunta7-4,"4- Contamos con herramientas o métodos para compartir aprendizajes, rediseñar y/o reformular proyectos de innovación.",999
+ESP,linea,3,7,,0,4,Pregunta7-4,Nulo|Alto,1
+ESP,linea,3,7,,0,5,Pregunta7-5,5- Contamos con herramientas o métodos para desarrollar el plan de negocio.,999
+ESP,linea,3,7,,0,5,Pregunta7-5,Nulo|Alto,1
+ESP,linea,3,7,,0,6,Pregunta7-6,6- Contamos con herramientas o métodos para estudiar la factibilidad y riesgos de proyectos.,999
+ESP,linea,3,7,,0,6,Pregunta7-6,Nulo|Alto,1
+ESP,linea,3,7,,0,7,Pregunta7-7,7- Contamos con herramientas o métodos para la implementación de proyectos y gestión del cambio.,999
+ESP,linea,3,7,,0,7,Pregunta7-7,Nulo|Alto,1
+ESP,radio,4,1,,0,1,Pregunta1-1,Por favor seleccione cuál es su rol en o para con la empresa en la cual trabaja,999
+ESP,radio,4,1,,0,1,Pregunta1-1,Gerente Sección,1
+ESP,radio,4,1,,0,1,Pregunta1-1,Supervisor o Jefe,2
+ESP,radio,4,1,,0,1,Pregunta1-1,Empleado,3
+ESP,radio,4,1,,0,2,Pregunta1-2,Por favor indique cuál es el área de trabajo en que se desempeña,999
+ESP,radio,4,1,,0,2,Pregunta1-2,Ventas / Comercial,1
+ESP,radio,4,1,,0,2,Pregunta1-2,Marketing,2
+ESP,radio,4,1,,0,2,Pregunta1-2,Producción / Operaciones / Logística,3
+ESP,radio,4,1,,0,2,Pregunta1-2,Sistemas,4
+ESP,radio,4,1,,0,2,Pregunta1-2,Contabilidad / Finanzas / Legal,5
+ESP,radio,4,1,,0,2,Pregunta1-2,RRHH,6
+ESP,radio,4,1,,0,2,Pregunta1-2,Innovación / Desarrollo,7
+ESP,radio,4,1,,0,2,Pregunta1-2,Dirección,8
+ESP,radio,4,1,,3,2,Pregunta1-2,Otros,9
+ESP,check,4,1,,0,3,Pregunta1-3,Por favor indique la industria en que compite su empresa </br> (Puede marcar más de una opción),999
+ESP,check,4,1,Pregunta1-3-1,0,3,Pregunta1-3,Retail,1
+ESP,check,4,1,Pregunta1-3-2,0,3,Pregunta1-3,Consumo masivo,1
+ESP,check,4,1,Pregunta1-3-3,0,3,Pregunta1-3,Telecomunicaciones / Tecnologia,1
+ESP,check,4,1,Pregunta1-3-4,0,3,Pregunta1-3,Manufactura industrial,1
+ESP,check,4,1,Pregunta1-3-5,0,3,Pregunta1-3,Servicios financieros,1
+ESP,check,4,1,Pregunta1-3-6,0,3,Pregunta1-3,Servicios educacionales,1
+ESP,check,4,1,Pregunta1-3-7,0,3,Pregunta1-3,"Servicios eléctricos, sanitarios",1
+ESP,check,4,1,Pregunta1-3-8,0,3,Pregunta1-3,Servicios públicos,1
+ESP,check,4,1,Pregunta1-3-9,0,3,Pregunta1-3,Agricultura,1
+ESP,check,4,1,Pregunta1-3-10,0,3,Pregunta1-3,Minería,1
+ESP,check,4,1,Pregunta1-3-11,0,3,Pregunta1-3,Automotriz,1
+ESP,check,4,1,Pregunta1-3-12,1,3,Pregunta1-3,Salud / Otro,1
+ESP,check,4,1,Pregunta1-3-12,2,3,Pregunta1-3,Salud,1
+ESP,check,4,1,Pregunta1-3-13,2,3,Pregunta1-3,Otra industria,1
+ESP,check,4,1,Pregunta1-3-12,3,3,Pregunta1-3,Salud,1
+ESP,check,4,1,Pregunta1-3-13,3,3,Pregunta1-3,Otra industria,1
+ESP,radio,4,1,,0,4,Pregunta1-4,Por favor cuál es su antigüedad en la empresa,999
+ESP,radio,4,1,,0,4,Pregunta1-4,Menos de 2 años,1
+ESP,radio,4,1,,0,4,Pregunta1-4,De 2 a 5 años,2
+ESP,radio,4,1,,0,4,Pregunta1-4,Más de 5 años,3
+ESP,check,4,2,,0,1,Pregunta2-1,1.- ¿Cuáles de las siguientes innovaciones cree usted que ha realizado la empresa <u> DE LA CUAL USTED ES PROVEEDOR</u> en los últimos tres años? <br/> (Puede marcar más de una opción),999
+ESP,check,4,2,Pregunta2-1-1,0,1,Pregunta2-1,Soluciones (Productos y Servicios),1
+ESP,check,4,2,Pregunta2-1-2,0,1,Pregunta2-1,"Canales de comercialización, atención clientes",1
+ESP,check,4,2,Pregunta2-1-3,0,1,Pregunta2-1,Proceso productivo / cadena de suministro,1
+ESP,check,4,2,Pregunta2-1-4,0,1,Pregunta2-1,Estructura y capacidad organizacional,1
+ESP,check,4,2,Pregunta2-1-5,0,1,Pregunta2-1,"Nuevos mercados, segmentos objetivos, Marketing",1
+ESP,check,4,2,Pregunta2-1-6,0,1,Pregunta2-1,Utilización de nuevas Tecnologías,1
+ESP,check,4,2,Pregunta2-1-7,1,1,Pregunta2-1,Otro,1
+ESP,check,4,2,Pregunta2-1-7,2,1,Pregunta2-1,Sostenibilidad,1
+ESP,check,4,2,Pregunta2-1-8,2,1,Pregunta2-1,Otro,1
+ESP,check,4,2,Pregunta2-1-7,3,1,Pregunta2-1,Sostenibilidad,1
+ESP,check,4,2,Pregunta2-1-8,3,1,Pregunta2-1,Otro,1
+ESP,check,4,2,,0,2,Pregunta2-2,2.- ¿Dónde cree usted que ha impactado positivamente la innovación en la empresa <u> DE LA CUAL USTED ES PROVEEDOR</u> en los últimos tres años? </br> (Puede marcar más de una opción),999
+ESP,check,4,2,Pregunta2-2-1,0,2,Pregunta2-2,Ingresos,1
+ESP,check,4,2,Pregunta2-2-2,0,2,Pregunta2-2,Satisfacción del Cliente,1
+ESP,check,4,2,Pregunta2-2-3,0,2,Pregunta2-2,Reducción de costos,1
+ESP,check,4,2,Pregunta2-2-4,0,2,Pregunta2-2,Reducción de gastos,1
+ESP,check,4,2,Pregunta2-2-5,0,2,Pregunta2-2,Rentabilidad,1
+ESP,check,4,2,Pregunta2-2-6,0,2,Pregunta2-2,Modelo de negocio,1
+ESP,check,4,2,Pregunta2-2-7,1,2,Pregunta2-2,Otro,1
+ESP,check,4,2,Pregunta2-2-7,2,2,Pregunta2-2,Cuidado medio ambiente,1
+ESP,check,4,2,Pregunta2-2-8,2,2,Pregunta2-2,Otro,1
+ESP,check,4,2,Pregunta2-2-7,3,2,Pregunta2-2,Cuidado medio ambiente,1
+ESP,check,4,2,Pregunta2-2-9,3,2,Pregunta2-2,Impacto en la sociedad,1
+ESP,check,4,2,Pregunta2-2-8,3,2,Pregunta2-2,Otro,1
+ESP,radio,4,2,,0,3,Pregunta2-3,3.- ¿Quién cree usted que es la persona que conduce con mayor fuerza la innovación <u> EN LA EMPRESA DE LA CUAL USTED ES PROVEEDOR </u>?,999
+ESP,radio,4,2,,0,3,Pregunta2-3, Directorio o equivalente,1
+ESP,radio,4,2,,0,3,Pregunta2-3, Gerente General o equivalente,2
+ESP,radio,4,2,,0,3,Pregunta2-3," Gerente Marketing, Comercial o equivalente",3
+ESP,radio,4,2,,0,3,Pregunta2-3, Gerente Operaciones o equivalente,4
+ESP,radio,4,2,,0,3,Pregunta2-3, Gerente Administración & Finanzas o equivalente,5
+ESP,radio,4,2,,0,3,Pregunta2-3, Gerente Innovación o equivalente,6
+ESP,radio,4,2,,1,3,Pregunta2-3,Otro,7
+ESP,radio,4,2,,2,3,Pregunta2-3,Gerente Sostenibilidad o equivalente,7
+ESP,radio,4,2,,2,3,Pregunta2-3,Otro,8
+ESP,radio,4,2,,3,3,Pregunta2-3,Gerente Sostenibilidad o equivalente,7
+ESP,radio,4,2,,3,3,Pregunta2-3,Otro,8
+ESP,radio,4,2,,0,4,Pregunta2-4,4.- ¿Qué tan prioritaria cree usted que es la innovación <u>EN LA EMPRESA DE LA CUAL USTED ES PROVEEDOR</u>?,999
+ESP,radio,4,2,,0,4,Pregunta2-4, Es mi prioridad uno,1
+ESP,radio,4,2,,0,4,Pregunta2-4, Está entre mis prioridades principales,2
+ESP,radio,4,2,,0,4,Pregunta2-4, Es medianamente o no es prioritaria,3
+ESP,radio,4,2,,0,5,Pregunta2-5,5.- ¿Cuál de las siguientes alternativas cree usted que representa mejor la conexión entre la estrategia <u>DE LA EMPRESA DE LA CUAL USTED ES PROVEEDOR</u> y la innovación?,999
+ESP,radio,4,2,,0,5,Pregunta2-5, La innovación está integrada al plan estratégico de la empresa,1
+ESP,radio,4,2,,0,5,Pregunta2-5, El plan estratégico y la innovación NO están formalmente conectados,2
+ESP,radio,4,2,,0,5,Pregunta2-5, Tenemos un plan corporativo específico dedicado a la innovación,3
+ESP,radio,4,3,,0,1,Pregunta3-1,1- ¿Cuál <u>cree que ha sido</u> o está <u>siendo</u> el impacto de la innovación en los INGRESOS de la EMPRESA DE LA CUAL USTED ES PROVEEDOR?,999
+ESP,radio,4,3,,0,1,Pregunta3-1, Bajo la industria,1
+ESP,radio,4,3,,0,1,Pregunta3-1, Al nivel de la industria,2
+ESP,radio,4,3,,0,1,Pregunta3-1, Superior a la industria,3
+ESP,radio,4,3,,0,1,Pregunta3-1, No Aplica,4
+ESP,radio,4,3,,0,2,Pregunta3-2,2- ¿Cuál <u>cree que ha sido</u> o está <u>siendo</u> el impacto de la innovación en la SATISFACCIÓN DEL CLIENTE de la EMPRESA DE LA CUAL USTED ES PROVEEDOR?,999
+ESP,radio,4,3,,0,2,Pregunta3-2, Bajo la industria,1
+ESP,radio,4,3,,0,2,Pregunta3-2, Al nivel de la industria,2
+ESP,radio,4,3,,0,2,Pregunta3-2, Superior a la industria,3
+ESP,radio,4,3,,0,2,Pregunta3-2, No Aplica,4
+ESP,radio,4,3,,0,3,Pregunta3-3,3- ¿Cuál <u>cree que ha sido</u> o está <u>siendo</u> el impacto de la innovación en la REDUCCIÓN DE COSTOS Y GASTOS de la EMPRESA DE LA CUAL USTED ES PROVEEDOR?,999
+ESP,radio,4,3,,0,3,Pregunta3-3, Bajo la industria,1
+ESP,radio,4,3,,0,3,Pregunta3-3, Al nivel de la industria,2
+ESP,radio,4,3,,0,3,Pregunta3-3, Superior a la industria,3
+ESP,radio,4,3,,0,3,Pregunta3-3, No Aplica,4
+ESP,radio,4,3,,0,4,Pregunta3-4,4- ¿Cuál <u>cree que ha sido</u> o está <u>siendo</u> el impacto de la innovación en la RENTABILIDAD de la EMPRESA DE LA CUAL USTED ES PROVEEDOR?,999
+ESP,radio,4,3,,0,4,Pregunta3-4, Bajo la industria,1
+ESP,radio,4,3,,0,4,Pregunta3-4, Al nivel de la industria,2
+ESP,radio,4,3,,0,4,Pregunta3-4, Superior a la industria,3
+ESP,radio,4,3,,0,4,Pregunta3-4, No Aplica,4
+ESP,radio,4,3,,0,5,Pregunta3-5,5- ¿Cuál <u>cree que ha sido</u> o está <u>siendo</u> el impacto de la innovación en el CAMBIO DE MODELO DE NEGOCIO de la empresa de la cual usted es proveedor?,999
+ESP,radio,4,3,,0,5,Pregunta3-5, Bajo la industria,1
+ESP,radio,4,3,,0,5,Pregunta3-5, Al nivel de la industria,2
+ESP,radio,4,3,,0,5,Pregunta3-5, Superior a la industria,3
+ESP,radio,4,3,,0,5,Pregunta3-5, No Aplica,4
+ESP,radio,4,3,,2,6,Pregunta3-6,6- ¿Cuál <u>cree que ha sido</u> o está <u>siendo</u> el impacto de la innovación en la SOSTENIBILIDAD de la EMPRESA DE LA CUAL USTED ES PROVEEDOR?,999
+ESP,radio,4,3,,2,6,Pregunta3-6, Bajo la industria,1
+ESP,radio,4,3,,2,6,Pregunta3-6, Al nivel de la industria,2
+ESP,radio,4,3,,2,6,Pregunta3-6, Superior a la industria,3
+ESP,radio,4,3,,2,6,Pregunta3-6, No Aplica,4
+ESP,radio,4,3,,3,6,Pregunta3-6,6- ¿Cuál <u>cree que ha sido</u> o está <u>siendo</u> el impacto de la innovación en la SOSTENIBILIDAD de la EMPRESA DE LA CUAL USTED ES PROVEEDOR?,999
+ESP,radio,4,3,,3,6,Pregunta3-6, Bajo la industria,1
+ESP,radio,4,3,,3,6,Pregunta3-6, Al nivel de la industria,2
+ESP,radio,4,3,,3,6,Pregunta3-6, Superior a la industria,3
+ESP,radio,4,3,,3,6,Pregunta3-6, No Aplica,4
+ESP,linea,4,4,,0,1,Pregunta4-1,1- El concepto de innovación en la <u>EMPRESA DE LA CUAL USTED ES PROVEEDOR</u> es compartido por todos.,999
+ESP,linea,4,4,,0,1,Pregunta4-1,Totalmente en desacuerdo|Totalmente en acuerdo,1
+ESP,linea,4,4,,0,2,Pregunta4-2,2- La innovación está integrada a los objetivos y estrategias de negocio de la <u>EMPRESA DE LA CUAL USTED ES PROVEEDOR</u>.,999
+ESP,linea,4,4,,0,2,Pregunta4-2,Totalmente en desacuerdo|Totalmente en acuerdo,1
+ESP,linea,4,4,,0,3,Pregunta4-3,3- <u>La EMPRESA DE LA CUAL USTED ES PROVEEDOR</u> tiene desafíos que requieren soluciones innovadoras.,999
+ESP,linea,4,4,,0,3,Pregunta4-3,Totalmente en desacuerdo|Totalmente en acuerdo,1
+ESP,linea,4,4,,0,4,Pregunta4-4,"4- La <u>EMPRESA DE LA CUAL USTED ES PROVEEDOR</u> considera que para innovar hay que aprender de errores, por lo que contempla formas de levantar y asimilar oportunidades en base a aprendizajes.",999
+ESP,linea,4,4,,0,4,Pregunta4-4,Totalmente en desacuerdo|Totalmente en acuerdo,1
+ESP,linea,4,4,,0,5,Pregunta4-5,5- La <u>EMPRESA DE LA CUAL USTED ES PROVEEDOR</u> cuenta con un modelo de cómo gestionar la innovación con herramientas y técnicas para mejorar constantemente.,999
+ESP,linea,4,4,,0,5,Pregunta4-5,Totalmente en desacuerdo|Totalmente en acuerdo,1
+ESP,linea,4,4,,0,6,Pregunta4-6,6- En la <u>EMPRESA DE LA CUAL USTED ES PROVEEDOR</u> las responsabilidades y los recursos respecto de la innovación están claramente definidos.,999
+ESP,linea,4,4,,0,6,Pregunta4-6,Totalmente en desacuerdo|Totalmente en acuerdo,1
+ESP,linea,4,4,,0,7,Pregunta4-7,7- Existe en la <u>EMPRESA DE LA CUAL USTED ES PROVEEDOR</u> un ambiente de mutua comunicación y colaboración que fomenta la innovación conjunta entre las áreas.,999
+ESP,linea,4,4,,0,7,Pregunta4-7,Totalmente en desacuerdo|Totalmente en acuerdo,1
+ESP,linea,4,5,,0,1,Pregunta5-1,"1- Co-Creación: La <u>EMPRESA DE LA CUAL USTED ES PROVEEDOR</u> crea soluciones, proyectos y negocios con sus proveedores y aliados.",999
+ESP,linea,4,5,,0,1,Pregunta5-1,Nulo|Alto,1
+ESP,linea,4,5,,0,2,Pregunta5-2,"2- Co-Creación: La <u>EMPRESA DE LA CUAL USTED ES PROVEEDOR</u> tiene un canal de interacción, con los debidos responsables, que les permite co-crear con sus proveedores y clientes.",999
+ESP,linea,4,5,,0,2,Pregunta5-2,Nulo|Alto,1
+ESP,linea,4,5,,2,3,Pregunta5-3,"3- Co-Creación: <u>La EMPRESA DE LA CUAL USTED ES PROVEEDOR</u> tiene un canal de interacción, con los debidos responsables, que les permite co-crear con su comunidad.",999
+ESP,linea,4,5,,2,3,Pregunta5-3,Nulo|Alto,1
+ESP,linea,4,5,,3,3,Pregunta5-3,"3- Co-Creación: <u>La EMPRESA DE LA CUAL USTED ES PROVEEDOR</u> tiene un canal de interacción, con los debidos responsables, que les permite co-crear con su comunidad.",999
+ESP,linea,4,5,,3,3,Pregunta5-3,Nulo|Alto,1
+ESP,linea,4,5,,3,4,Pregunta5-4,"4- Talentos: Seleccionan, desarrollan y retienen personas con alto potencial innovador.",999
+ESP,linea,4,5,,3,4,Pregunta5-4,Nulo|Alto,1
+ESP,linea,4,5,,3,5,Pregunta5-5,5- Recursos: Asignan personas a lo largo de la organización para trabajar en tareas de innovación.,999
+ESP,linea,4,5,,3,5,Pregunta5-5,Nulo|Alto,1
+ESP,linea,4,5,,3,6,Pregunta5-6,6- Recursos: Cuentan con presupuestos para innovación lo que les permite crear valor nuevo a sus clientes.,999
+ESP,linea,4,5,,3,6,Pregunta5-6,Nulo|Alto,1
+ESP,linea,4,5,,3,7,Pregunta5-7,7- Recursos: Utilizan tecnologías de comunicación e información para gestionar la innovación en la empresa.,999
+ESP,linea,4,5,,3,7,Pregunta5-7,Nulo|Alto,1
+ESP,linea,4,5,,3,8,Pregunta5-8,8- Procesos: Cuentan con procesos y actividades definidos para innovar en la empresa.,999
+ESP,linea,4,5,,3,8,Pregunta5-8,Nulo|Alto,1
+ESP,linea,4,5,,3,9,Pregunta5-9,9- Procesos: Tienen indicadores que permiten medir el desempeño de innovación.,999
+ESP,linea,4,5,,3,9,Pregunta5-9,Nulo|Alto,1
+ESP,linea,4,5,,3,10,Pregunta5-10,"10- Procesos: Tienen criterios, instancias y responsables claros para tomar decisiones respecto a los proyectos de innovación.",999
+ESP,linea,4,5,,3,10,Pregunta5-10,Nulo|Alto,1
+ESP,linea,4,6,,0,1,Pregunta6-1,"1- Cuando ocurren cambios repentinos en la <u>EMPRESA DE LA CUAL USTED ES PROVEEDOR</u>, reaccionan con apertura hacia lo nuevo.",999
+ESP,linea,4,6,,0,1,Pregunta6-1,Nulo|Alto,1
+ESP,linea,4,6,,0,2,Pregunta6-2,2- En la <u>EMPRESA DE LA CUAL USTED ES PROVEEDOR</u> tienen responsabilidades para conocer y satisfacer las necesidades de clientes y consumidores.,999
+ESP,linea,4,6,,0,2,Pregunta6-2,Nulo|Alto,1
+ESP,linea,4,6,,0,3,Pregunta6-3,3- En la <u>EMPRESA DE LA CUAL USTED ES PROVEEDOR</u> son flexibles ante los cambios que ocurren en la empresa y sus mercados.,999
+ESP,linea,4,6,,0,3,Pregunta6-3,Nulo|Alto,1
+ESP,linea,4,6,,0,4,Pregunta6-4,4- En la <u>EMPRESA DE LA CUAL USTED ES PROVEEDOR</u> aceptan e incorporan las fallas como algo necesario para aprender e Innovar.,999
+ESP,linea,4,6,,0,4,Pregunta6-4,Nulo|Alto,1
+ESP,linea,4,6,,2,5,Pregunta6-5,5- En la <u>EMPRESA DE LA CUAL USTED ES PROVEEDOR</u> son flexibles ante los cambios que ocurren en la sociedad.,999
+ESP,linea,4,6,,2,5,Pregunta6-5,Nulo|Alto,1
+ESP,linea,4,6,,3,5,Pregunta6-5,5- En la <u>EMPRESA DE LA CUAL USTED ES PROVEEDOR</u> son flexibles ante los cambios que ocurren en la sociedad.,999
+ESP,linea,4,6,,3,5,Pregunta6-5,Nulo|Alto,1
+ESP,linea,4,7,,0,1,Pregunta7-1,1- En la <u>EMPRESA DE LA CUAL USTED ES PROVEEDOR</u> cuentan con herramientas o métodos para identificar necesidades de clientes y consumidores.,999
+ESP,linea,4,7,,0,1,Pregunta7-1,Nulo|Alto,1
+ESP,linea,4,7,,0,2,Pregunta7-2,"2- En la <u>EMPRESA DE LA CUAL USTED ES PROVEEDOR</u> cuentan con herramientas o métodos para generar ideas, diseñar y desarrollar soluciones a las necesidades de clientes y consumidores a nivel Productos, Servicios, Canales.",999
+ESP,linea,4,7,,0,2,Pregunta7-2,Nulo|Alto,1
+ESP,linea,4,7,,0,3,Pregunta7-3,3- En la <u>EMPRESA DE LA CUAL USTED ES PROVEEDOR</u>  cuentan con herramientas o métodos para prototipear y testear soluciones.,999
+ESP,linea,4,7,,0,3,Pregunta7-3,Nulo|Alto,1
+ESP,linea,4,7,,0,4,Pregunta7-4,"4- En la <u>EMPRESA DE LA CUAL USTED ES PROVEEDOR</u>  cuentan con herramientas o métodos para compartir aprendizajes, rediseñar y/o reformular proyectos de innovación.",999
+ESP,linea,4,7,,0,4,Pregunta7-4,Nulo|Alto,1
+ESP,linea,4,7,,0,5,Pregunta7-5,5- En la <u>EMPRESA DE LA CUAL USTED ES PROVEEDOR</u>  cuentan con herramientas o métodos para desarrollar el plan de negocio.,999
+ESP,linea,4,7,,0,5,Pregunta7-5,Nulo|Alto,1
+ESP,linea,4,7,,0,6,Pregunta7-6,6- En la <u>EMPRESA DE LA CUAL USTED ES PROVEEDOR</u>  cuentan con herramientas o métodos para estudiar la factibilidad y riesgos de proyectos.,999
+ESP,linea,4,7,,0,6,Pregunta7-6,Nulo|Alto,1
+ESP,linea,4,7,,0,7,Pregunta7-7,7- En la <u>EMPRESA DE LA CUAL USTED ES PROVEEDOR</u>  cuentan con herramientas o métodos para la implementación de proyectos y gestión del cambio.,999
+ESP,linea,4,7,,0,7,Pregunta7-7,Nulo|Alto,1
+ESP,radio,5,1,,0,1,Pregunta1-1,Por favor seleccione cuál es su rol en o para con la empresa en la cual trabaja,999
+ESP,radio,5,1,,0,1,Pregunta1-1,Gerente Sección,1
+ESP,radio,5,1,,0,1,Pregunta1-1,Supervisor o Jefe,2
+ESP,radio,5,1,,0,1,Pregunta1-1,Empleado,3
+ESP,radio,5,1,,0,2,Pregunta1-2,Por favor indique cuál es el área de trabajo en que se desempeña,999
+ESP,radio,5,1,,0,2,Pregunta1-2,Ventas / Comercial,1
+ESP,radio,5,1,,0,2,Pregunta1-2,Marketing,2
+ESP,radio,5,1,,0,2,Pregunta1-2,Producción / Operaciones / Logística,3
+ESP,radio,5,1,,0,2,Pregunta1-2,Sistemas,4
+ESP,radio,5,1,,0,2,Pregunta1-2,Contabilidad / Finanzas / Legal,5
+ESP,radio,5,1,,0,2,Pregunta1-2,RRHH,6
+ESP,radio,5,1,,0,2,Pregunta1-2,Innovación / Desarrollo,7
+ESP,radio,5,1,,0,2,Pregunta1-2,Dirección,8
+ESP,radio,5,1,,3,2,Pregunta1-2,Otros,9
+ESP,check,5,1,,0,3,Pregunta1-3,Por favor indique la industria en que compite su empresa </br> (Puede marcar más de una opción),999
+ESP,check,5,1,Pregunta1-3-1,0,3,Pregunta1-3,Retail,1
+ESP,check,5,1,Pregunta1-3-2,0,3,Pregunta1-3,Consumo masivo,1
+ESP,check,5,1,Pregunta1-3-3,0,3,Pregunta1-3,Telecomunicaciones / Tecnologia,1
+ESP,check,5,1,Pregunta1-3-4,0,3,Pregunta1-3,Manufactura industrial,1
+ESP,check,5,1,Pregunta1-3-5,0,3,Pregunta1-3,Servicios financieros,1
+ESP,check,5,1,Pregunta1-3-6,0,3,Pregunta1-3,Servicios educacionales,1
+ESP,check,5,1,Pregunta1-3-7,0,3,Pregunta1-3,"Servicios eléctricos, sanitarios",1
+ESP,check,5,1,Pregunta1-3-8,0,3,Pregunta1-3,Servicios públicos,1
+ESP,check,5,1,Pregunta1-3-9,0,3,Pregunta1-3,Agricultura,1
+ESP,check,5,1,Pregunta1-3-10,0,3,Pregunta1-3,Minería,1
+ESP,check,5,1,Pregunta1-3-11,0,3,Pregunta1-3,Automotriz,1
+ESP,check,5,1,Pregunta1-3-12,1,3,Pregunta1-3,Salud / Otro,1
+ESP,check,5,1,Pregunta1-3-12,2,3,Pregunta1-3,Salud,1
+ESP,check,5,1,Pregunta1-3-13,2,3,Pregunta1-3,Otra industria,1
+ESP,check,5,1,Pregunta1-3-12,3,3,Pregunta1-3,Salud,1
+ESP,check,5,1,Pregunta1-3-13,3,3,Pregunta1-3,Otra industria,1
+ESP,radio,5,1,,0,4,Pregunta1-4,Por favor cuál es su antigüedad en la empresa,999
+ESP,radio,5,1,,0,4,Pregunta1-4,Menos de 2 años,1
+ESP,radio,5,1,,0,4,Pregunta1-4,De 2 a 5 años,2
+ESP,radio,5,1,,0,4,Pregunta1-4,Más de 5 años,3
+ESP,check,5,2,,0,1,Pregunta2-1,1.- ¿Cuáles de las siguientes innovaciones cree usted que ha realizado la empresa <u> DE LA CUAL USTED ES CLIENTE</u> en los últimos tres años? <br/> (Puede marcar más de una opción),999
+ESP,check,5,2,Pregunta2-1-1,0,1,Pregunta2-1,Soluciones (Productos y Servicios),1
+ESP,check,5,2,Pregunta2-1-2,0,1,Pregunta2-1,"Canales de comercialización, atención clientes",1
+ESP,check,5,2,Pregunta2-1-3,0,1,Pregunta2-1,Proceso productivo / cadena de suministro,1
+ESP,check,5,2,Pregunta2-1-4,0,1,Pregunta2-1,Estructura y capacidad organizacional,1
+ESP,check,5,2,Pregunta2-1-5,0,1,Pregunta2-1,"Nuevos mercados, segmentos objetivos, Marketing",1
+ESP,check,5,2,Pregunta2-1-6,0,1,Pregunta2-1,Utilización de nuevas Tecnologías,1
+ESP,check,5,2,Pregunta2-1-7,1,1,Pregunta2-1,Otro,1
+ESP,check,5,2,Pregunta2-1-7,2,1,Pregunta2-1,Sostenibilidad,1
+ESP,check,5,2,Pregunta2-1-8,2,1,Pregunta2-1,Otro,1
+ESP,check,5,2,Pregunta2-1-7,3,1,Pregunta2-1,Sostenibilidad,1
+ESP,check,5,2,Pregunta2-1-8,3,1,Pregunta2-1,Otro,1
+ESP,check,5,2,,0,2,Pregunta2-2,2.- ¿Dónde cree usted que ha impactado positivamente la innovación en la empresa <u> DE LA CUAL USTED ES CLIENTE</u> en los últimos tres años? </br> (Puede marcar más de una opción),999
+ESP,check,5,2,Pregunta2-2-1,0,2,Pregunta2-2,Ingresos,1
+ESP,check,5,2,Pregunta2-2-2,0,2,Pregunta2-2,Satisfacción del Cliente,1
+ESP,check,5,2,Pregunta2-2-3,0,2,Pregunta2-2,Reducción de costos,1
+ESP,check,5,2,Pregunta2-2-4,0,2,Pregunta2-2,Reducción de gastos,1
+ESP,check,5,2,Pregunta2-2-5,0,2,Pregunta2-2,Rentabilidad,1
+ESP,check,5,2,Pregunta2-2-6,0,2,Pregunta2-2,Modelo de negocio,1
+ESP,check,5,2,Pregunta2-2-7,1,2,Pregunta2-2,Otro,1
+ESP,check,5,2,Pregunta2-2-7,2,2,Pregunta2-2,Cuidado medio ambiente,1
+ESP,check,5,2,Pregunta2-2-8,2,2,Pregunta2-2,Otro,1
+ESP,check,5,2,Pregunta2-2-7,3,2,Pregunta2-2,Cuidado medio ambiente,1
+ESP,check,5,2,Pregunta2-2-9,3,2,Pregunta2-2,Impacto en la sociedad,1
+ESP,check,5,2,Pregunta2-2-8,3,2,Pregunta2-2,Otro,1
+ESP,radio,5,2,,0,3,Pregunta2-3,3.- ¿Quién cree usted que es la persona que conduce con mayor fuerza la innovación <u> EN LA EMPRESA DE LA CUAL USTED ES CLIENTE </u>?,999
+ESP,radio,5,2,,0,3,Pregunta2-3, Directorio o equivalente,1
+ESP,radio,5,2,,0,3,Pregunta2-3, Gerente General o equivalente,2
+ESP,radio,5,2,,0,3,Pregunta2-3," Gerente Marketing, Comercial o equivalente",3
+ESP,radio,5,2,,0,3,Pregunta2-3, Gerente Operaciones o equivalente,4
+ESP,radio,5,2,,0,3,Pregunta2-3, Gerente Administración & Finanzas o equivalente,5
+ESP,radio,5,2,,0,3,Pregunta2-3, Gerente Innovación o equivalente,6
+ESP,radio,5,2,,1,3,Pregunta2-3,Otro,7
+ESP,radio,5,2,,2,3,Pregunta2-3,Gerente Sostenibilidad o equivalente,7
+ESP,radio,5,2,,2,3,Pregunta2-3,Otro,8
+ESP,radio,5,2,,3,3,Pregunta2-3,Gerente Sostenibilidad o equivalente,7
+ESP,radio,5,2,,3,3,Pregunta2-3,Otro,8
+ESP,radio,5,2,,0,4,Pregunta2-4,4.- ¿Qué tan prioritaria cree usted que es la innovación <u>EN LA EMPRESA DE LA CUAL USTED ES CLIENTE</u>?,999
+ESP,radio,5,2,,0,4,Pregunta2-4, Es mi prioridad uno,1
+ESP,radio,5,2,,0,4,Pregunta2-4, Está entre mis prioridades principales,2
+ESP,radio,5,2,,0,4,Pregunta2-4, Es medianamente o no es prioritaria,3
+ESP,radio,5,2,,0,5,Pregunta2-5,5.- ¿Cuál de las siguientes alternativas cree usted que representa mejor la conexión entre la estrategia <u>DE LA EMPRESA DE LA CUAL USTED ES CLIENTE</u> y la innovación?,999
+ESP,radio,5,2,,0,5,Pregunta2-5, La innovación está integrada al plan estratégico de la empresa,1
+ESP,radio,5,2,,0,5,Pregunta2-5, El plan estratégico y la innovación NO están formalmente conectados,2
+ESP,radio,5,2,,0,5,Pregunta2-5, Tenemos un plan corporativo específico dedicado a la innovación,3
+ESP,radio,5,3,,0,1,Pregunta3-1,1- ¿Cuál <u>cree que ha sido</u> o está <u>siendo</u> el impacto de la innovación en los INGRESOS de la EMPRESA DE LA CUAL USTED ES CLIENTE?,999
+ESP,radio,5,3,,0,1,Pregunta3-1, Bajo la industria,1
+ESP,radio,5,3,,0,1,Pregunta3-1, Al nivel de la industria,2
+ESP,radio,5,3,,0,1,Pregunta3-1, Superior a la industria,3
+ESP,radio,5,3,,0,1,Pregunta3-1, No Aplica,4
+ESP,radio,5,3,,0,2,Pregunta3-2,2- ¿Cuál <u>cree que ha sido</u> o está <u>siendo</u> el impacto de la innovación en la SATISFACCIÓN DEL CLIENTE de la EMPRESA DE LA CUAL USTED ES CLIENTE?,999
+ESP,radio,5,3,,0,2,Pregunta3-2, Bajo la industria,1
+ESP,radio,5,3,,0,2,Pregunta3-2, Al nivel de la industria,2
+ESP,radio,5,3,,0,2,Pregunta3-2, Superior a la industria,3
+ESP,radio,5,3,,0,2,Pregunta3-2, No Aplica,4
+ESP,radio,5,3,,0,3,Pregunta3-3,3- ¿Cuál <u>cree que ha sido</u> o está <u>siendo</u> el impacto de la innovación en la REDUCCIÓN DE COSTOS Y GASTOS de la EMPRESA DE LA CUAL USTED ES CLIENTE?,999
+ESP,radio,5,3,,0,3,Pregunta3-3, Bajo la industria,1
+ESP,radio,5,3,,0,3,Pregunta3-3, Al nivel de la industria,2
+ESP,radio,5,3,,0,3,Pregunta3-3, Superior a la industria,3
+ESP,radio,5,3,,0,3,Pregunta3-3, No Aplica,4
+ESP,radio,5,3,,0,4,Pregunta3-4,4- ¿Cuál <u>cree que ha sido</u> o está <u>siendo</u> el impacto de la innovación en la RENTABILIDAD de la EMPRESA DE LA CUAL USTED ES CLIENTE?,999
+ESP,radio,5,3,,0,4,Pregunta3-4, Bajo la industria,1
+ESP,radio,5,3,,0,4,Pregunta3-4, Al nivel de la industria,2
+ESP,radio,5,3,,0,4,Pregunta3-4, Superior a la industria,3
+ESP,radio,5,3,,0,4,Pregunta3-4, No Aplica,4
+ESP,radio,5,3,,0,5,Pregunta3-5,5- ¿Cuál <u>cree que ha sido</u> o está <u>siendo</u> el impacto de la innovación en el CAMBIO DE MODELO DE NEGOCIO de la empresa de la cual usted es cliente?,999
+ESP,radio,5,3,,0,5,Pregunta3-5, Bajo la industria,1
+ESP,radio,5,3,,0,5,Pregunta3-5, Al nivel de la industria,2
+ESP,radio,5,3,,0,5,Pregunta3-5, Superior a la industria,3
+ESP,radio,5,3,,0,5,Pregunta3-5, No Aplica,4
+ESP,radio,5,3,,2,6,Pregunta3-6,6- ¿Cuál <u>cree que ha sido</u> o está <u>siendo</u> el impacto de la innovación en la SOSTENIBILIDAD de la EMPRESA DE LA CUAL USTED ES CLIENTE?,999
+ESP,radio,5,3,,2,6,Pregunta3-6, Bajo la industria,1
+ESP,radio,5,3,,2,6,Pregunta3-6, Al nivel de la industria,2
+ESP,radio,5,3,,2,6,Pregunta3-6, Superior a la industria,3
+ESP,radio,5,3,,2,6,Pregunta3-6, No Aplica,4
+ESP,radio,5,3,,3,6,Pregunta3-6,6- ¿Cuál <u>cree que ha sido</u> o está <u>siendo</u> el impacto de la innovación en la SOSTENIBILIDAD de la EMPRESA DE LA CUAL USTED ES CLIENTE?,999
+ESP,radio,5,3,,3,6,Pregunta3-6, Bajo la industria,1
+ESP,radio,5,3,,3,6,Pregunta3-6, Al nivel de la industria,2
+ESP,radio,5,3,,3,6,Pregunta3-6, Superior a la industria,3
+ESP,radio,5,3,,3,6,Pregunta3-6, No Aplica,4
+ESP,linea,5,4,,0,1,Pregunta4-1,1- El concepto de innovación en la <u>EMPRESA DE LA CUAL USTED ES CLIENTE</u> es compartido por todos.,999
+ESP,linea,5,4,,0,1,Pregunta4-1,Totalmente en desacuerdo|Totalmente en acuerdo,1
+ESP,linea,5,4,,0,2,Pregunta4-2,2- La innovación está integrada a los objetivos y estrategias de negocio de la <u>EMPRESA DE LA CUAL USTED ES CLIENTE</u>.,999
+ESP,linea,5,4,,0,2,Pregunta4-2,Totalmente en desacuerdo|Totalmente en acuerdo,1
+ESP,linea,5,4,,0,3,Pregunta4-3,3- <u>La EMPRESA DE LA CUAL USTED ES CLIENTE</u> tiene desafíos que requieren soluciones innovadoras.,999
+ESP,linea,5,4,,0,3,Pregunta4-3,Totalmente en desacuerdo|Totalmente en acuerdo,1
+ESP,linea,5,4,,0,4,Pregunta4-4,"4- La <u>EMPRESA DE LA CUAL USTED ES CLIENTE</u> considera que para innovar hay que aprender de errores, por lo que contempla formas de levantar y asimilar oportunidades en base a aprendizajes.",999
+ESP,linea,5,4,,0,4,Pregunta4-4,Totalmente en desacuerdo|Totalmente en acuerdo,1
+ESP,linea,5,4,,0,5,Pregunta4-5,5- La <u>EMPRESA DE LA CUAL USTED ES CLIENTE</u> cuenta con un modelo de cómo gestionar la innovación con herramientas y técnicas para mejorar constantemente.,999
+ESP,linea,5,4,,0,5,Pregunta4-5,Totalmente en desacuerdo|Totalmente en acuerdo,1
+ESP,linea,5,4,,0,6,Pregunta4-6,6- En la <u>EMPRESA DE LA CUAL USTED ES CLIENTE</u> las responsabilidades y los recursos respecto de la innovación están claramente definidos.,999
+ESP,linea,5,4,,0,6,Pregunta4-6,Totalmente en desacuerdo|Totalmente en acuerdo,1
+ESP,linea,5,4,,0,7,Pregunta4-7,7- Existe en la <u>EMPRESA DE LA CUAL USTED ES CLIENTE</u> un ambiente de mutua comunicación y colaboración que fomenta la innovación conjunta entre las áreas.,999
+ESP,linea,5,4,,0,7,Pregunta4-7,Totalmente en desacuerdo|Totalmente en acuerdo,1
+ESP,linea,5,5,,0,1,Pregunta5-1,"1- Co-Creación: La <u>EMPRESA DE LA CUAL USTED ES CLIENTE</u> crea soluciones, proyectos y negocios con sus proveedores y aliados.",999
+ESP,linea,5,5,,0,1,Pregunta5-1,Nulo|Alto,1
+ESP,linea,5,5,,0,2,Pregunta5-2,"2- Co-Creación: La <u>EMPRESA DE LA CUAL USTED ES CLIENTE</u> tiene un canal de interacción, con los debidos responsables, que les permite co-crear con sus proveedores y clientes.",999
+ESP,linea,5,5,,0,2,Pregunta5-2,Nulo|Alto,1
+ESP,linea,5,5,,2,3,Pregunta5-3,"3- Co-Creación: <u>La EMPRESA DE LA CUAL USTED ES CLIENTE</u> tiene un canal de interacción, con los debidos responsables, que les permite co-crear con su comunidad.",999
+ESP,linea,5,5,,2,3,Pregunta5-3,Nulo|Alto,1
+ESP,linea,5,5,,3,3,Pregunta5-3,"3- Co-Creación: <u>La EMPRESA DE LA CUAL USTED ES CLIENTE</u> tiene un canal de interacción, con los debidos responsables, que les permite co-crear con su comunidad.",999
+ESP,linea,5,5,,3,3,Pregunta5-3,Nulo|Alto,1
+ESP,linea,5,5,,3,4,Pregunta5-4,"4- Talentos: Seleccionan, desarrollan y retienen personas con alto potencial innovador.",999
+ESP,linea,5,5,,3,4,Pregunta5-4,Nulo|Alto,1
+ESP,linea,5,5,,3,5,Pregunta5-5,5- Recursos: Asignan personas a lo largo de la organización para trabajar en tareas de innovación.,999
+ESP,linea,5,5,,3,5,Pregunta5-5,Nulo|Alto,1
+ESP,linea,5,5,,3,6,Pregunta5-6,6- Recursos: Cuentan con presupuestos para innovación lo que les permite crear valor nuevo a sus clientes.,999
+ESP,linea,5,5,,3,6,Pregunta5-6,Nulo|Alto,1
+ESP,linea,5,5,,3,7,Pregunta5-7,7- Recursos: Utilizan tecnologías de comunicación e información para gestionar la innovación en la empresa.,999
+ESP,linea,5,5,,3,7,Pregunta5-7,Nulo|Alto,1
+ESP,linea,5,5,,3,8,Pregunta5-8,8- Procesos: Cuentan con procesos y actividades definidos para innovar en la empresa.,999
+ESP,linea,5,5,,3,8,Pregunta5-8,Nulo|Alto,1
+ESP,linea,5,5,,3,9,Pregunta5-9,9- Procesos: Tienen indicadores que permiten medir el desempeño de innovación.,999
+ESP,linea,5,5,,3,9,Pregunta5-9,Nulo|Alto,1
+ESP,linea,5,5,,3,10,Pregunta5-10,"10- Procesos: Tienen criterios, instancias y responsables claros para tomar decisiones respecto a los proyectos de innovación.",999
+ESP,linea,5,5,,3,10,Pregunta5-10,Nulo|Alto,1
+ESP,linea,5,6,,0,1,Pregunta6-1,"1- Cuando ocurren cambios repentinos en la <u>EMPRESA DE LA CUAL USTED ES CLIENTE</u>, reaccionan con apertura hacia lo nuevo.",999
+ESP,linea,5,6,,0,1,Pregunta6-1,Nulo|Alto,1
+ESP,linea,5,6,,0,2,Pregunta6-2,2- En la <u>EMPRESA DE LA CUAL USTED ES CLIENTE</u> tienen responsabilidades para conocer y satisfacer las necesidades de clientes y consumidores.,999
+ESP,linea,5,6,,0,2,Pregunta6-2,Nulo|Alto,1
+ESP,linea,5,6,,0,3,Pregunta6-3,3- En la <u>EMPRESA DE LA CUAL USTED ES CLIENTE</u> son flexibles ante los cambios que ocurren en la empresa y sus mercados.,999
+ESP,linea,5,6,,0,3,Pregunta6-3,Nulo|Alto,1
+ESP,linea,5,6,,0,4,Pregunta6-4,4- En la <u>EMPRESA DE LA CUAL USTED ES CLIENTE</u> aceptan e incorporan las fallas como algo necesario para aprender e Innovar.,999
+ESP,linea,5,6,,0,4,Pregunta6-4,Nulo|Alto,1
+ESP,linea,5,6,,2,5,Pregunta6-5,5- En la <u>EMPRESA DE LA CUAL USTED ES CLIENTE</u> son flexibles ante los cambios que ocurren en la sociedad.,999
+ESP,linea,5,6,,2,5,Pregunta6-5,Nulo|Alto,1
+ESP,linea,5,6,,3,5,Pregunta6-5,5- En la <u>EMPRESA DE LA CUAL USTED ES CLIENTE</u> son flexibles ante los cambios que ocurren en la sociedad.,999
+ESP,linea,5,6,,3,5,Pregunta6-5,Nulo|Alto,1
+ESP,linea,5,7,,0,1,Pregunta7-1,1- En la <u>EMPRESA DE LA CUAL USTED ES CLIENTE</u> cuentan con herramientas o métodos para identificar necesidades de clientes y consumidores.,999
+ESP,linea,5,7,,0,1,Pregunta7-1,Nulo|Alto,1
+ESP,linea,5,7,,0,2,Pregunta7-2,"2- En la <u>EMPRESA DE LA CUAL USTED ES CLIENTE</u> cuentan con herramientas o métodos para generar ideas, diseñar y desarrollar soluciones a las necesidades de clientes y consumidores a nivel Productos, Servicios, Canales.",999
+ESP,linea,5,7,,0,2,Pregunta7-2,Nulo|Alto,1
+ESP,linea,5,7,,0,3,Pregunta7-3,3- En la <u>EMPRESA DE LA CUAL USTED ES CLIENTE</u>  cuentan con herramientas o métodos para prototipear y testear soluciones.,999
+ESP,linea,5,7,,0,3,Pregunta7-3,Nulo|Alto,1
+ESP,linea,5,7,,0,4,Pregunta7-4,"4- En la <u>EMPRESA DE LA CUAL USTED ES CLIENTE</u>  cuentan con herramientas o métodos para compartir aprendizajes, rediseñar y/o reformular proyectos de innovación.",999
+ESP,linea,5,7,,0,4,Pregunta7-4,Nulo|Alto,1
+ESP,linea,5,7,,0,5,Pregunta7-5,5- En la <u>EMPRESA DE LA CUAL USTED ES CLIENTE</u>  cuentan con herramientas o métodos para desarrollar el plan de negocio.,999
+ESP,linea,5,7,,0,5,Pregunta7-5,Nulo|Alto,1
+ESP,linea,5,7,,0,6,Pregunta7-6,6- En la <u>EMPRESA DE LA CUAL USTED ES CLIENTE</u>  cuentan con herramientas o métodos para estudiar la factibilidad y riesgos de proyectos.,999
+ESP,linea,5,7,,0,6,Pregunta7-6,Nulo|Alto,1
+ESP,linea,5,7,,0,7,Pregunta7-7,7- En la <u>EMPRESA DE LA CUAL USTED ES CLIENTE</u>  cuentan con herramientas o métodos para la implementación de proyectos y gestión del cambio.,999
+ESP,linea,5,7,,0,7,Pregunta7-7,Nulo|Alto,1
