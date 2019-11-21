@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
+import { AppContext } from './App'
 
 
 export default class EncuestaReporte extends Component {
     constructor(props) {
         super(props)
+
+        EncuestaReporte.contextType = AppContext
 
         this.state = {
             mostrar: false,
@@ -38,11 +41,24 @@ export default class EncuestaReporte extends Component {
             headers.append("x-access-token", sessionStorage.getItem('innovaccionmeter_session'))
             if (tipo === 2) {
                 let peso_empresa = []
-                let usuario = this.state.usuario_data
-                for (let i in usuario) {
-                    if (i.includes("P09")) {
-                        peso_empresa.push(usuario[i])
+                if (empresa === 0) {
+                    let usuario = this.state.usuario_data
+                    for (let i in usuario) {
+                        if (i.includes("P09")) {
+                            peso_empresa.push(usuario[i])
+                        }
                     }
+                } else {
+                    let empresa = this.state.datos_empresa                                      
+                    for (let i in empresa) {
+                        if (i.includes("P09")) {
+                            peso_empresa.push(empresa[i])
+                        }
+                    }
+                    this.setState({
+                        conclusion: (empresa["Conclusion90"]) !== null ? empresa["Conclusion90"] : "",
+                        recomendacion: (empresa["Recomendacion90"]) !== null ? empresa["Recomendacion90"] : ""
+                    })
                 }
                 this.setState({
                     peso_empresa
@@ -50,11 +66,24 @@ export default class EncuestaReporte extends Component {
             }
             if (tipo === 3) {
                 let peso_empresa = []
-                let usuario = this.state.usuario_data
-                for (let i in usuario) {
-                    if (i.includes("P18")) {
-                        peso_empresa.push(usuario[i])
+                if (empresa === 0) {
+                    let usuario = this.state.usuario_data
+                    for (let i in usuario) {
+                        if (i.includes("P18")) {
+                            peso_empresa.push(empresa[i])
+                        }
                     }
+                } else {
+                    let empresa = this.state.datos_empresa
+                    for (let i in empresa) {
+                        if (i.includes("P18")) {
+                            peso_empresa.push(usuario[i])
+                        }
+                    }
+                    this.setState({
+                        conclusion: (empresa["Conclusion180"]) !== null ? empresa["Conclusion180"] : "",
+                        recomendacion: (empresa["Recomendacion180"]) !== null ? empresa["Recomendacion180"] : ""
+                    })
                 }
                 this.setState({
                     peso_empresa
@@ -62,11 +91,24 @@ export default class EncuestaReporte extends Component {
             }
             if (tipo === 4) {
                 let peso_empresa = []
-                let usuario = this.state.usuario_data
-                for (let i in usuario) {
-                    if (i.includes("P27")) {
-                        peso_empresa.push(usuario[i])
+                if (empresa === 0) {
+                    let usuario = this.state.usuario_data
+                    for (let i in usuario) {
+                        if (i.includes("P27")) {
+                            peso_empresa.push(empresa[i])
+                        }
                     }
+                } else {
+                    let empresa = this.state.datos_empresa
+                    for (let i in empresa) {
+                        if (i.includes("P27")) {
+                            peso_empresa.push(usuario[i])
+                        }
+                    }
+                    this.setState({
+                        conclusion: (empresa["Conclusion270"]) !== null ? empresa["Conclusion270"] : "",
+                        recomendacion: (empresa["Recomendacion270"]) !== null ? empresa["Recomendacion270"] : ""
+                    })
                 }
                 this.setState({
                     peso_empresa
@@ -75,11 +117,24 @@ export default class EncuestaReporte extends Component {
 
             if (tipo === 5) {
                 let peso_empresa = []
-                let usuario = this.state.usuario_data
-                for (let i in usuario) {
-                    if (i.includes("P36")) {
-                        peso_empresa.push(usuario[i])
+                if (empresa === 0) {
+                    let usuario = this.state.usuario_data
+                    for (let i in usuario) {
+                        if (i.includes("P36")) {
+                            peso_empresa.push(empresa[i])
+                        }
                     }
+                } else {
+                    let empresa = this.state.datos_empresa
+                    for (let i in empresa) {
+                        if (i.includes("P36")) {
+                            peso_empresa.push(usuario[i])
+                        }
+                    }
+                    this.setState({
+                        conclusion: (empresa["Conclusion360"]) !== null ? empresa["Conclusion360"] : "",
+                        recomendacion: (empresa["Recomendacion360"]) !== null ? empresa["Recomendacion360"] : ""
+                    })
                 }
                 this.setState({
                     peso_empresa
@@ -101,7 +156,7 @@ export default class EncuestaReporte extends Component {
                 window.ModalError("Reporte", data.error)
                 return {}
             } else {
-                this.props.auth_false()
+                this.state.auth_false()
                 return {}
             }
 
@@ -131,7 +186,7 @@ export default class EncuestaReporte extends Component {
                 window.ModalError("Reporte", data.error)
                 return {}
             } else {
-                this.props.auth_false()
+                this.state.auth_false()
                 return {}
             }
 
@@ -161,7 +216,7 @@ export default class EncuestaReporte extends Component {
                 window.ModalError("Reporte", data.error)
                 return {}
             } else {
-                this.props.auth_false()
+                this.state.auth_false()
                 return {}
             }
 
@@ -186,13 +241,12 @@ export default class EncuestaReporte extends Component {
             let data = await response.json()
             if (response.status === 200) {
                 let datos = data
-                console.log(data)
                 return datos
             } else if (response.status === 400) {
                 window.ModalError("Reporte", data.error)
                 return {}
             } else {
-                this.props.auth_false()
+                this.state.auth_false()
                 return {}
             }
 
@@ -222,7 +276,7 @@ export default class EncuestaReporte extends Component {
                 window.ModalError("Reporte", data.error)
                 return {}
             } else {
-                this.props.auth_false()
+                this.state.auth_false()
                 return {}
             }
 
@@ -252,7 +306,7 @@ export default class EncuestaReporte extends Component {
                 window.ModalError("Reporte", data.error)
                 return {}
             } else {
-                this.props.auth_false()
+                this.state.auth_false()
                 return {}
             }
 
@@ -283,7 +337,36 @@ export default class EncuestaReporte extends Component {
             } else if (response.status === 400) {
                 window.ModalError("Reporte", data.error)
             } else {
-                this.props.auth_false()
+                this.state.auth_false()
+            }
+
+        } catch (e) {
+            window.ModalError("Reporte", e.error)
+        }
+    }
+
+    datos_empresa = async (id) => {
+        try {
+            let headers = new Headers()
+            headers.append("Content-Type", "application/json")
+            headers.append("x-access-token", sessionStorage.getItem('innovaccionmeter_session'))
+
+
+            let URL = "http://" + window.location.host.split(":")[0] + ":" + process.env.REACT_APP_PORT + "/datos_empresa?id=" + parseInt(id)
+
+            const response = await fetch(URL, {
+                method: "GET",
+                headers: headers,
+            })
+            let data = await response.json()
+            if (response.status === 200) {
+                this.setState({
+                    datos_empresa: data
+                })
+            } else if (response.status === 400) {
+                window.ModalError("Reporte", data.error)
+            } else {
+                this.state.auth_false()
             }
 
         } catch (e) {
@@ -437,30 +520,35 @@ export default class EncuestaReporte extends Component {
             const empresa = this.props.id_empresa
             const tipo = this.props.tipo_encuesta
 
+            const { state, auth_false } = await this.context
+            this.setState({
+                state,
+                auth_false
+            })            
+
             if (empresa === 0) {
                 await this.datos_usuario(usuario)
-                let datos = []
-                datos = await this.resultados_innovacion(usuario, empresa, tipo)
-                this.reporte_final(datos, 1)
-                datos = await this.proposito(usuario, empresa, tipo)
-                this.reporte_final(datos, 2)
-                datos = await this.liderazgo(usuario, empresa, tipo)
-                this.reporte_final(datos, 3)
-                datos = await this.estructuras_habilitadoras(usuario, empresa, tipo)
-                this.reporte_final(datos, 4)
-                datos = await this.sistemas_consistentes(usuario, empresa, tipo)
-                this.reporte_final(datos, 5)
-                datos = await this.cultura_conectada(usuario, empresa, tipo)
-                this.reporte_final(datos, 6)
             } else {
-
+                await this.datos_empresa(empresa)
             }
+            let datos = []
+            datos = await this.resultados_innovacion(usuario, empresa, tipo)
+            this.reporte_final(datos, 1)
+            datos = await this.proposito(usuario, empresa, tipo)
+            this.reporte_final(datos, 2)
+            datos = await this.liderazgo(usuario, empresa, tipo)
+            this.reporte_final(datos, 3)
+            datos = await this.estructuras_habilitadoras(usuario, empresa, tipo)
+            this.reporte_final(datos, 4)
+            datos = await this.sistemas_consistentes(usuario, empresa, tipo)
+            this.reporte_final(datos, 5)
+            datos = await this.cultura_conectada(usuario, empresa, tipo)
+            this.reporte_final(datos, 6)
 
 
             this.setState({
                 mostrar: true
             })
-
 
         } catch (e) {
             window.ModalError("Reporte", e.error)
@@ -469,25 +557,27 @@ export default class EncuestaReporte extends Component {
 
     Reporte = () => {
         const usuario = this.state.usuario_data
-        const idioma = this.props.idioma
+        const idioma = this.state.idioma
+        const empresa = this.props.id_empresa        
 
         let titulo = ""
         let subtitulo = ""
         let pie_pagina = ""
+
         if (idioma === "ESP") {
             subtitulo = "Muchas gracias por su cooperación"
             pie_pagina = "El equipo de Best Place to Innovate le agradece su participación en contestar esta encuesta."
             if (this.props.tipo_encuesta === 2) {
-                titulo = "Encuesta Comité Ejecutivo Inicial - 90°"
+                titulo = "Resultado Encuesta 90°"
             }
             if (this.props.tipo_encuesta === 3) {
-                titulo = "Encuesta Colaboradores - 180°"
+                titulo = "Resultado Encuesta 180°"
             }
             if (this.props.tipo_encuesta === 4) {
-                titulo = "Encuesta Proveedores - 270°"
+                titulo = "Resultado Encuesta 270°"
             }
             if (this.props.tipo_encuesta === 4) {
-                titulo = "Encuesta Clientes - 360°"
+                titulo = "Resultado Encuesta 360°"
             }
         }
         return (
@@ -498,16 +588,16 @@ export default class EncuestaReporte extends Component {
                     <div className="h5 card-header bg-white text-dark text-center">
                         <div className="row">
                             <div className="col-md-4 py-2">
-                                {usuario.NombreEmpresa}
+                                {(empresa === 0) ? usuario.NombreEmpresa : ""}
                             </div>
                             <div className="col-md-4 py-2">
-                                {usuario.nombre}
+                                {(empresa === 0) ? usuario.nombre : ""}
                             </div>
                             <div className="col-md-4">
                                 <div className="row">
                                     <div className="col-md-6 font-weight-bold py-2">SCORE TOTAL</div>
                                     <div className="col-md-6 py-2">
-                                        <span className={this.Style((this.state.promedio_general / 6).toFixed(2))}>{(this.state.promedio_general / 6).toFixed(2)}</span>
+                                        <span className={this.Style((this.state.promedio_general / 6).toFixed(1))}>{(this.state.promedio_general / 6).toFixed(1)}</span>
                                     </div>
                                 </div>
                             </div>
@@ -550,11 +640,27 @@ export default class EncuestaReporte extends Component {
                         </div>
                     </div>
                 </div>
+                {(empresa !== 0) ? <this.conclusion /> : ""}
                 <div className="d-flex justify-content-center py-5">
                     {pie_pagina}
                 </div>
-                <div className="d-flex justify-content-center py-5">
+                <div className="d-flex justify-content-center py-1">
                     <button type="button" className="btn btn-primary px-5 my-2" onClick={this.props.funcion}>{"<< Anterior"}</button>
+                </div>
+            </div>
+        )
+    }
+
+    conclusion = () => {
+        return (
+            <div className="px-5">
+                <div className="form-group">
+                    <label htmlFor="comment">Conclusión</label>
+        <textarea className="form-control" rows="3" id="comment" readOnly={(this.state.state.usuario.TipoUsuario === 88) ? true : false} value={this.state.conclusion} />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="comment">Recomendación</label>
+                    <textarea className="form-control" rows="3" id="comment" readOnly={(this.state.state.usuario.TipoUsuario === 88) ? true : false} value={this.state.recomendacion}/>
                 </div>
             </div>
         )

@@ -45,12 +45,23 @@ app.post('/preguntas_encuesta', main.verifytoken, main.preguntas_encuesta)
 app.get('/session', main.verifytoken, main.session)
 app.get('/encuesta', main.verifytoken, main.encuesta)
 app.get('/datos_usuario', main.verifytoken, main.datos_usuario)
+app.get('/datos_empresa', main.verifytoken, main.datos_empresa)
 app.get('/resultados_innovacion', main.verifytoken, main.resultados_innovacion)
 app.get('/proposito', main.verifytoken, main.proposito)
 app.get('/liderazgo', main.verifytoken, main.liderazgo)
 app.get('/estructuras_habilitadoras', main.verifytoken, main.estructuras_habilitadoras)
 app.get('/sistemas_consistentes', main.verifytoken, main.sistemas_consistentes)
 app.get('/cultura_conectada', main.verifytoken, main.cultura_conectada)
+app.get('/lista_reporte_administrador', main.verifytoken, main.lista_reporte_administrador)
+app.get('/lista_reporte_empleado', main.verifytoken, main.lista_reporte_empleado)
+
+
+
+
+
+
+
+
 
 
 

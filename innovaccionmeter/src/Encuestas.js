@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { AppContext } from './App'
 
 import Menu from './Menu'
 import EncuestaReporte from './EncuestaReporte'
@@ -6,8 +7,9 @@ import EncuestaReporte from './EncuestaReporte'
 export default class Encuestas extends Component {
     constructor(props) {
         super(props)
+        Encuestas.contextType = AppContext  
         this.state = {
-            pagina: 8,
+            pagina: 1,
             cantidad_preguntas: undefined
         }
     }
@@ -71,8 +73,8 @@ export default class Encuestas extends Component {
         })
 
         if (valid) {
-            form_data["TipoUsuario"] = this.props.state.usuario.TipoUsuario
-            form_data["Id"] = this.props.state.usuario.Id
+            form_data["TipoUsuario"] = this.state.state.usuario.TipoUsuario
+            form_data["Id"] = this.state.state.usuario.Id
             form_data["Pagina"] = this.state.pagina
             form_data["Respuestas"] = form_respuesta
 
@@ -99,7 +101,7 @@ export default class Encuestas extends Component {
                 } else if (response.status === 400) {
                     window.ModalError("Encuesta", data.error)
                 } else {
-                    this.props.auth_false()
+                    this.state.auth_false()
                 }
             } catch (e) {
                 window.ModalError("Encuesta", e.error)
@@ -140,7 +142,7 @@ export default class Encuestas extends Component {
                 window.ModalError("Encuesta", data.error)
                 return false
             } else {
-                this.props.auth_false()
+                this.state.auth_false()
                 return false
             }
 
@@ -151,13 +153,18 @@ export default class Encuestas extends Component {
     }
 
     encuesta_data = async () => {
-        const usuario = this.props.state.usuario
+        const { state, auth_false } = await this.context   
+        this.setState({
+            state,            
+            auth_false
+        })         
+        const usuario = this.state.state.usuario                
 
         if (this.state.pagina !== 8) {
             if (await this.respuestas_bd(usuario)) {
                 let form_data = {}
 
-                form_data["idioma"] = this.props.state.idioma
+                form_data["idioma"] = this.state.state.idioma
                 form_data["TipoUsuario"] = usuario.TipoUsuario.toString()
                 form_data["pagina"] = this.state.pagina.toString()
 
@@ -208,7 +215,7 @@ export default class Encuestas extends Component {
                     } else if (response.status === 400) {
                         window.ModalError("Encuesta", data.error)
                     } else {
-                        this.props.auth_false()
+                        this.state.auth_false()
                     }
 
                 } catch (e) {
@@ -225,14 +232,14 @@ export default class Encuestas extends Component {
     }
 
     Preguntas = () => {
-        const usuario = this.props.state.usuario
+        const usuario = this.state.state.usuario
         let titulo = ""
         let subtitulo = ""
         let explicacion = ""
         let paginacion = "(" + this.state.pagina + "/7)"
 
 
-        if (this.props.state.idioma === "ESP") {
+        if (this.state.state.idioma === "ESP") {
 
             if (usuario.TipoUsuario.toString() === "2") {
                 titulo = "Encuesta Comité Ejecutivo Inicial - 90°"
@@ -502,16 +509,15 @@ export default class Encuestas extends Component {
         )
     }
 
-    render() {
-        const usuario = this.props.state.usuario
-        return (
+    render() {                
+        return (            
             <div className="">
                 <div id="wrapper" className="">
                     <div id="content-wrapper" className="d-flex flex-column">
                         <div id="content">
-                            <Menu Nombre={usuario.Nombre} tipo_warning={this.props.tipo_warning} />
+                            <Menu />
                             {(this.state.cantidad_preguntas !== undefined && this.state.pagina !== 8) ? <this.Preguntas /> : ""}
-                            {(this.state.pagina === 8) ? <EncuestaReporte tipo_encuesta={this.props.state.usuario.TipoUsuario} id_usuario={this.props.state.usuario.Id} id_empresa={0} idioma={this.props.state.idioma} auth_false={this.props.auth_false} funcion={this.regresar} /> : ""}
+                            {(this.state.pagina === 8) ? <EncuestaReporte tipo_encuesta={this.state.state.usuario.TipoUsuario} id_usuario={this.state.state.usuario.Id} id_empresa={0} funcion={this.regresar} /> : ""}
                         </div>
                         <footer className="sticky-footer bg-white">
                             <div className="container my-auto">

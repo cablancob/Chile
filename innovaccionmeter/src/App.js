@@ -8,8 +8,18 @@ import ModalWarning from './Modals/ModalWarning'
 
 import Login from './Login'
 import Encuestas from './Encuestas'
+import Administrador from './Administrador'
 
 require('dotenv').config()
+
+
+export const AppContext = React.createContext({
+  state: undefined,
+  idioma: undefined,
+  tipo_warning: () => { },
+  auth_false: () => { }
+})
+
 
 export default class App extends Component {
 
@@ -22,11 +32,12 @@ export default class App extends Component {
     }
   }
 
+
   tipo_warning = (warning, titulo, texto) => {
     this.setState({
       tipo_warning: warning
     })
-    window.ModalWarning(titulo,texto)
+    window.ModalWarning(titulo, texto)
   }
 
   validar_session = () => {
@@ -54,8 +65,11 @@ export default class App extends Component {
 
   pagina_inicial = () => {
     if (this.state.usuario !== undefined) {
-      return (        
-        (this.state.usuario.TipoUsuario >= 2 && this.state.usuario.TipoUsuario <= 5) ? <Encuestas state={this.state} tipo_warning={this.tipo_warning} auth_false={this.auth_false} /> : ""
+      return (
+        (this.state.usuario.TipoUsuario >= 2 && this.state.usuario.TipoUsuario <= 5) ? <Encuestas />
+          : (this.state.usuario.TipoUsuario === 88) ? <Administrador />
+            : ""
+
       )
     } else {
       return (
@@ -112,12 +126,19 @@ export default class App extends Component {
 
   render() {
     return (
-      <div className="container">
-        <ModalError />
-        <ModalOk />
-        <ModalWarning logout={this.logout} tipo={this.state.tipo_warning}/>
-        <this.pagina_inicial />
-      </div>
+      <AppContext.Provider value={{
+        state: this.state,
+        idioma: this.state.idioma,
+        tipo_warning: this.tipo_warning,
+        auth_false: this.auth_false
+      }}>
+        <div className="container">
+          <ModalError />
+          <ModalOk />
+          <ModalWarning logout={this.logout} tipo={this.state.tipo_warning} />
+          <this.pagina_inicial />
+        </div>
+      </AppContext.Provider>
     )
   }
 }

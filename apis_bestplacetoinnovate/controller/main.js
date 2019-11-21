@@ -156,7 +156,7 @@ const encuesta = async (req, res) => {
         if (req.query.tipousuario == "3") { query = "SELECT * FROM iam_encuesta180 WHERE IdUsuario = " + req.query.user }
         if (req.query.tipousuario == "4") { query = "SELECT * FROM iam_encuesta270 WHERE IdUsuario = " + req.query.user }
         if (req.query.tipousuario == "5") { query = "SELECT * FROM iam_encuesta360 WHERE IdUsuario = " + req.query.user }
-        
+
         await connection.query(query, (err, result, fields) => {
             if (err) {
                 console.log(err.message)
@@ -187,7 +187,7 @@ const actualizar_encuesta = async (req, res) => {
                 query += i + " = " + data.Respuestas[i] + ", "
             }
 
-            query += " Pregunta" + data.Pagina + " = 'S' WHERE IdUsuario = " + data.Id            
+            query += " Pregunta" + data.Pagina + " = 'S' WHERE IdUsuario = " + data.Id
         }
         if (data.TipoUsuario == 3) {
             query = "UPDATE iam_encuesta180 SET "
@@ -196,7 +196,7 @@ const actualizar_encuesta = async (req, res) => {
                 query += i + " = " + data.Respuestas[i] + ", "
             }
 
-            query += " Pregunta" + data.Pagina + " = 'S' WHERE IdUsuario = " + data.Id            
+            query += " Pregunta" + data.Pagina + " = 'S' WHERE IdUsuario = " + data.Id
         }
         if (data.TipoUsuario == 4) {
             query = "UPDATE iam_encuesta270 SET "
@@ -205,7 +205,7 @@ const actualizar_encuesta = async (req, res) => {
                 query += i + " = " + data.Respuestas[i] + ", "
             }
 
-            query += " Pregunta" + data.Pagina + " = 'S' WHERE IdUsuario = " + data.Id            
+            query += " Pregunta" + data.Pagina + " = 'S' WHERE IdUsuario = " + data.Id
         }
         if (data.TipoUsuario == 5) {
             query = "UPDATE iam_encuesta360 SET "
@@ -214,9 +214,9 @@ const actualizar_encuesta = async (req, res) => {
                 query += i + " = " + data.Respuestas[i] + ", "
             }
 
-            query += " Pregunta" + data.Pagina + " = 'S' WHERE IdUsuario = " + data.Id            
-        }        
-        
+            query += " Pregunta" + data.Pagina + " = 'S' WHERE IdUsuario = " + data.Id
+        }
+
         await connection.query(query, (err, result, fields) => {
             if (err) {
                 console.log(err.message)
@@ -259,21 +259,27 @@ const resultados_innovacion = async (req, res) => {
         const tipo = parseInt(req.query.tipo)
         let query = ``
         let where = ``
+        let grupo = ``
 
-        if (empresa == 0) {            
-            if (tipo === 2) {
-                where = ` FROM cadomec_innovactionmeter.iam_encuesta90 as A `
-            }
-            if (tipo === 3) {
-                where = ` FROM cadomec_innovactionmeter.iam_encuesta180 as A `
-            }
-            if (tipo === 4) {
-                where = ` FROM cadomec_innovactionmeter.iam_encuesta270 as A `
-            }
-            if (tipo === 5) {
-                where = ` FROM cadomec_innovactionmeter.iam_encuesta360 as A `
-            }
-            query = `
+        if (empresa == 0) {
+            grupo = " AND A.IdUsuario = " + usuario + ") AS C; "
+        } else {
+            grupo = " AND A.IdEmpresa = " + empresa + ") AS C; "
+        }
+        if (tipo === 2) {
+            where = ` FROM cadomec_innovactionmeter.iam_encuesta90 as A `
+        }
+        if (tipo === 3) {
+            where = ` FROM cadomec_innovactionmeter.iam_encuesta180 as A `
+        }
+        if (tipo === 4) {
+            where = ` FROM cadomec_innovactionmeter.iam_encuesta270 as A `
+        }
+        if (tipo === 5) {
+            where = ` FROM cadomec_innovactionmeter.iam_encuesta360 as A `
+        }
+        //CAMBIAR a 1 OPCION 4
+        query = `
             SELECT
             ROUND(SUM(C.0) / COUNT(*),1) AS '0',
             ROUND(SUM(C.1) / COUNT(*),1) AS '1',
@@ -287,7 +293,7 @@ const resultados_innovacion = async (req, res) => {
             WHEN Pregunta3_1 = 1 THEN 1
             WHEN Pregunta3_1 = 2 THEN 5
             WHEN Pregunta3_1 = 3 THEN 10
-            WHEN Pregunta3_1 = 4 THEN 1
+            WHEN Pregunta3_1 = 4 THEN 0
             ELSE 0
             END) AS '0',
             (
@@ -295,7 +301,7 @@ const resultados_innovacion = async (req, res) => {
             WHEN Pregunta3_3 = 1 THEN 1
             WHEN Pregunta3_3 = 2 THEN 5
             WHEN Pregunta3_3 = 3 THEN 10
-            WHEN Pregunta3_3 = 4 THEN 1
+            WHEN Pregunta3_3 = 4 THEN 0
             ELSE 0
             END) AS '1',
             (
@@ -303,7 +309,7 @@ const resultados_innovacion = async (req, res) => {
             WHEN Pregunta3_4 = 1 THEN 1
             WHEN Pregunta3_4 = 2 THEN 5
             WHEN Pregunta3_4 = 3 THEN 10
-            WHEN Pregunta3_4 = 4 THEN 1
+            WHEN Pregunta3_4 = 4 THEN 0
             ELSE 0
             END) AS '2',
             (
@@ -311,7 +317,7 @@ const resultados_innovacion = async (req, res) => {
             WHEN Pregunta3_5 = 1 THEN 1
             WHEN Pregunta3_5 = 2 THEN 5
             WHEN Pregunta3_5 = 3 THEN 10
-            WHEN Pregunta3_5 = 4 THEN 1
+            WHEN Pregunta3_5 = 4 THEN 0
             ELSE 0
             END) AS '3',
             (
@@ -319,7 +325,7 @@ const resultados_innovacion = async (req, res) => {
             WHEN Pregunta3_2 = 1 THEN 1
             WHEN Pregunta3_2 = 2 THEN 5
             WHEN Pregunta3_2 = 3 THEN 10
-            WHEN Pregunta3_2 = 4 THEN 1
+            WHEN Pregunta3_2 = 4 THEN 0
             ELSE 0
             END) AS '4',
             (
@@ -327,29 +333,25 @@ const resultados_innovacion = async (req, res) => {
             WHEN Pregunta3_6 = 1 THEN 1
             WHEN Pregunta3_6 = 2 THEN 5
             WHEN Pregunta3_6 = 3 THEN 10
-            WHEN Pregunta3_6 = 4 THEN 1
+            WHEN Pregunta3_6 = 4 THEN 0
             ELSE 0
             END) AS '5'`
-                + where +
-            `WHERE A.Pregunta3 = 'S'
-            AND A.IdUsuario = `+ usuario + `) AS C;
-        `
+            + where +
+            `WHERE A.Pregunta3 = 'S'`
+            + grupo
 
-        } else {
-
-        }
         await connection.query(query, (err, result, fields) => {
             if (err) {
                 console.log(err.message)
                 res.status(400).json({ error: err.message })
             } else {
-                if (result.length > 0) {                    
+                if (result.length > 0) {
                     res.status(200).json(result[0])
                 } else {
                     res.status(400).json({ error: "No hay datos." })
                 }
             }
-        });        
+        });
     } catch (e) {
         console.log(e.message)
         res.status(400).json({ error: e.message })
@@ -363,21 +365,28 @@ const proposito = async (req, res) => {
         const tipo = parseInt(req.query.tipo)
         let query = ``
         let where = ``
+        let grupo = ``
 
-        if (empresa == 0) {            
-            if (tipo === 2) {
-                where = ` FROM cadomec_innovactionmeter.iam_encuesta90 as A `
-            }
-            if (tipo === 3) {
-                where = ` FROM cadomec_innovactionmeter.iam_encuesta180 as A `
-            }
-            if (tipo === 4) {
-                where = ` FROM cadomec_innovactionmeter.iam_encuesta270 as A `
-            }
-            if (tipo === 5) {
-                where = ` FROM cadomec_innovactionmeter.iam_encuesta360 as A `
-            }
-            query = `
+        if (tipo === 2) {
+            where = ` FROM cadomec_innovactionmeter.iam_encuesta90 as A `
+        }
+        if (tipo === 3) {
+            where = ` FROM cadomec_innovactionmeter.iam_encuesta180 as A `
+        }
+        if (tipo === 4) {
+            where = ` FROM cadomec_innovactionmeter.iam_encuesta270 as A `
+        }
+        if (tipo === 5) {
+            where = ` FROM cadomec_innovactionmeter.iam_encuesta360 as A `
+        }
+
+        if (empresa == 0) {
+            grupo = " AND A.IdUsuario = " + usuario + ") AS C; "
+        } else {
+            grupo = " AND A.IdEmpresa = " + empresa + ") AS C; "
+        }
+
+        query = `
             SELECT
             ROUND(SUM(C.1) / COUNT(*),1) AS '1',
             ROUND(SUM(C.2) / COUNT(*),1) AS '2',
@@ -415,26 +424,22 @@ const proposito = async (req, res) => {
             WHEN Pregunta2_5 = 3 THEN 1
             ELSE 0
             END) AS '4'`
-                + where +
-            `WHERE A.Pregunta2 = 'S' AND A.Pregunta4 = 'S'
-            AND A.IdUsuario = `+ usuario + `) AS C;
-        `
+            + where +
+            `WHERE A.Pregunta2 = 'S' AND A.Pregunta4 = 'S'`
+            + grupo
 
-        } else {
-
-        }
         await connection.query(query, (err, result, fields) => {
             if (err) {
                 console.log(err.message)
                 res.status(400).json({ error: err.message })
             } else {
-                if (result.length > 0) {                    
+                if (result.length > 0) {
                     res.status(200).json(result[0])
                 } else {
                     res.status(400).json({ error: "No hay datos." })
                 }
             }
-        });        
+        });
     } catch (e) {
         console.log(e.message)
         res.status(400).json({ error: e.message })
@@ -448,21 +453,29 @@ const liderazgo = async (req, res) => {
         const tipo = parseInt(req.query.tipo)
         let query = ``
         let where = ``
+        let grupo = ``
 
-        if (empresa == 0) {            
-            if (tipo === 2) {
-                where = ` FROM cadomec_innovactionmeter.iam_encuesta90 as A `
-            }
-            if (tipo === 3) {
-                where = ` FROM cadomec_innovactionmeter.iam_encuesta180 as A `
-            }
-            if (tipo === 4) {
-                where = ` FROM cadomec_innovactionmeter.iam_encuesta270 as A `
-            }
-            if (tipo === 5) {
-                where = ` FROM cadomec_innovactionmeter.iam_encuesta360 as A `
-            }
-            query = `
+        if (tipo === 2) {
+            where = ` FROM cadomec_innovactionmeter.iam_encuesta90 as A `
+        }
+        if (tipo === 3) {
+            where = ` FROM cadomec_innovactionmeter.iam_encuesta180 as A `
+        }
+        if (tipo === 4) {
+            where = ` FROM cadomec_innovactionmeter.iam_encuesta270 as A `
+        }
+        if (tipo === 5) {
+            where = ` FROM cadomec_innovactionmeter.iam_encuesta360 as A `
+        }
+
+        if (empresa == 0) {
+            grupo = " AND A.IdUsuario = " + usuario + ") AS C; "
+        } else {
+            grupo = " AND A.IdEmpresa = " + empresa + ") AS C; "
+        }
+
+
+        query = `
             SELECT
             ROUND(SUM(C.1) / COUNT(*),1) AS '1',
             ROUND(SUM(C.2) / COUNT(*),1) AS '2',
@@ -501,31 +514,27 @@ const liderazgo = async (req, res) => {
             WHEN Pregunta4_7 = 4 THEN 10
             ELSE 0
             END) AS '4'`
-                + where +
-            `WHERE A.Pregunta4 = 'S'
-            AND A.IdUsuario = `+ usuario + `) AS C;
-        `
+            + where +
+            `WHERE A.Pregunta4 = 'S'`
+            + grupo
 
-        } else {
-
-        }
         await connection.query(query, (err, result, fields) => {
             if (err) {
                 console.log(err.message)
                 res.status(400).json({ error: err.message })
             } else {
-                if (result.length > 0) {                    
+                if (result.length > 0) {
                     res.status(200).json(result[0])
                 } else {
                     res.status(400).json({ error: "No hay datos." })
                 }
             }
-        });        
+        });
     } catch (e) {
         console.log(e.message)
         res.status(400).json({ error: e.message })
     }
-} 
+}
 
 const estructuras_habilitadoras = async (req, res) => {
     try {
@@ -534,25 +543,32 @@ const estructuras_habilitadoras = async (req, res) => {
         const tipo = parseInt(req.query.tipo)
         let query = ``
         let where = ``
+        let grupo = ``
 
-        if (empresa == 0) {            
-            if (tipo === 2) {
-                where = ` FROM cadomec_innovactionmeter.iam_encuesta90 as A `
-            }
-            if (tipo === 3) {
-                where = ` FROM cadomec_innovactionmeter.iam_encuesta180 as A `
-            }
-            if (tipo === 4) {
-                where = ` FROM cadomec_innovactionmeter.iam_encuesta270 as A `
-            }
-            if (tipo === 5) {
-                where = ` FROM cadomec_innovactionmeter.iam_encuesta360 as A `
-            }
-            if (tipo === 4 || tipo === 5) {
-                query = `
+        if (tipo === 2) {
+            where = ` FROM cadomec_innovactionmeter.iam_encuesta90 as A `
+        }
+        if (tipo === 3) {
+            where = ` FROM cadomec_innovactionmeter.iam_encuesta180 as A `
+        }
+        if (tipo === 4) {
+            where = ` FROM cadomec_innovactionmeter.iam_encuesta270 as A `
+        }
+        if (tipo === 5) {
+            where = ` FROM cadomec_innovactionmeter.iam_encuesta360 as A `
+        }
+
+        if (empresa == 0) {
+            grupo = " AND A.IdUsuario = " + usuario + ") AS C; "
+        } else {
+            grupo = " AND A.IdEmpresa = " + empresa + ") AS C; "
+        }
+
+        if (tipo === 4 || tipo === 5) {
+            query = `
                 SELECT
                 CASE
-                WHEN C.3 = 0 THEN ROUND(((SUM(C.1) + SUM(C.2)) / 2) / COUNT(*),1)
+                WHEN SUM(C.3) = 0 THEN ROUND(((SUM(C.1) + SUM(C.2)) / 2) / COUNT(*),1)
                 ELSE ROUND(((SUM(C.1) + SUM(C.2) + SUM(C.3)) / 3) / COUNT(*),1)
                 END AS '1',
                 ROUND(SUM(C.4) / COUNT(*),1) AS '2',
@@ -639,18 +655,17 @@ const estructuras_habilitadoras = async (req, res) => {
                 WHEN Pregunta5_10 = 4 THEN 10
                 ELSE 0
                 END) AS '10'`
-                    + where +
-                `WHERE A.Pregunta5 = 'S'
-                AND A.IdUsuario = `+ usuario + `) AS C;
-            `
-            } else {
-                query = `
+                + where +
+                `WHERE A.Pregunta5 = 'S'`
+                + grupo
+        } else {
+            query = `
                 SELECT
                 ROUND(((SUM(C.1) + SUM(C.2)) / 2) / COUNT(*),1) AS '1',
                 ROUND(((SUM(C.3) + SUM(C.4) + SUM(C.5)) / 3) / COUNT(*),1) AS '2',
                 ROUND(((SUM(C.6) + SUM(C.7) + SUM(C.8)) / 3) / COUNT(*),1) AS '3',
                 CASE 
-                WHEN C.11 = 0 THEN ROUND(((SUM(C.9) + SUM(C.10)) / 2) / COUNT(*),1) 
+                WHEN SUM(C.11) = 0 THEN ROUND(((SUM(C.9) + SUM(C.10)) / 2) / COUNT(*),1) 
                 ELSE ROUND(((SUM(C.9) + SUM(C.10)  + SUM(C.11)) / 3) / COUNT(*),1) 
                 END AS '4'            
                 FROM (
@@ -742,28 +757,23 @@ const estructuras_habilitadoras = async (req, res) => {
                 WHEN Pregunta5_11 = 4 THEN 10
                 ELSE 0
                 END) AS '11'`
-                    + where +
-                `WHERE A.Pregunta5 = 'S'
-                AND A.IdUsuario = `+ usuario + `) AS C;
-            `
-            }
- 
+                + where +
+                `WHERE A.Pregunta5 = 'S'`
+                + grupo
+        }        
 
-        } else {
-
-        }
         await connection.query(query, (err, result, fields) => {
             if (err) {
                 console.log(err.message)
                 res.status(400).json({ error: err.message })
             } else {
-                if (result.length > 0) {                    
+                if (result.length > 0) {
                     res.status(200).json(result[0])
                 } else {
                     res.status(400).json({ error: "No hay datos." })
                 }
             }
-        });        
+        });
     } catch (e) {
         console.log(e.message)
         res.status(400).json({ error: e.message })
@@ -777,21 +787,29 @@ sistemas_consistentes = async (req, res) => {
         const tipo = parseInt(req.query.tipo)
         let query = ``
         let where = ``
+        let grupo = ``
 
-        if (empresa == 0) {            
-            if (tipo === 2) {
-                where = ` FROM cadomec_innovactionmeter.iam_encuesta90 as A `
-            }
-            if (tipo === 3) {
-                where = ` FROM cadomec_innovactionmeter.iam_encuesta180 as A `
-            }
-            if (tipo === 4) {
-                where = ` FROM cadomec_innovactionmeter.iam_encuesta270 as A `
-            }
-            if (tipo === 5) {
-                where = ` FROM cadomec_innovactionmeter.iam_encuesta360 as A `
-            }
-            query = `
+        if (tipo === 2) {
+            where = ` FROM cadomec_innovactionmeter.iam_encuesta90 as A `
+        }
+        if (tipo === 3) {
+            where = ` FROM cadomec_innovactionmeter.iam_encuesta180 as A `
+        }
+        if (tipo === 4) {
+            where = ` FROM cadomec_innovactionmeter.iam_encuesta270 as A `
+        }
+        if (tipo === 5) {
+            where = ` FROM cadomec_innovactionmeter.iam_encuesta360 as A `
+        }
+
+        if (empresa == 0) {
+            grupo = " AND A.IdUsuario = " + usuario + ") AS C; "
+        } else {
+            grupo = " AND A.IdEmpresa = " + empresa + ") AS C; "
+        }
+
+
+        query = `
             SELECT
             ROUND(SUM(C.1) / COUNT(*),1) AS '1',
             ROUND(((SUM(C.2) + SUM(C.3)) / 2) / COUNT(*),1) AS '2',
@@ -854,26 +872,22 @@ sistemas_consistentes = async (req, res) => {
             WHEN Pregunta7_7 = 4 THEN 10
             ELSE 0
             END) AS '7'`
-                + where +
-            `WHERE A.Pregunta7 = 'S'
-            AND A.IdUsuario = `+ usuario + `) AS C;
-        `
+            + where +
+            `WHERE A.Pregunta7 = 'S'`
+            + grupo
 
-        } else {
-
-        }
         await connection.query(query, (err, result, fields) => {
             if (err) {
                 console.log(err.message)
                 res.status(400).json({ error: err.message })
             } else {
-                if (result.length > 0) {                    
+                if (result.length > 0) {
                     res.status(200).json(result[0])
                 } else {
                     res.status(400).json({ error: "No hay datos." })
                 }
             }
-        });        
+        });
     } catch (e) {
         console.log(e.message)
         res.status(400).json({ error: e.message })
@@ -888,26 +902,33 @@ cultura_conectada = async (req, res) => {
         const tipo = parseInt(req.query.tipo)
         let query = ``
         let where = ``
+        let grupo = ``
 
-        if (empresa == 0) {            
-            if (tipo === 2) {
-                where = ` FROM cadomec_innovactionmeter.iam_encuesta90 as A `
-            }
-            if (tipo === 3) {
-                where = ` FROM cadomec_innovactionmeter.iam_encuesta180 as A `
-            }
-            if (tipo === 4) {
-                where = ` FROM cadomec_innovactionmeter.iam_encuesta270 as A `
-            }
-            if (tipo === 5) {
-                where = ` FROM cadomec_innovactionmeter.iam_encuesta360 as A `
-            }
-            query = `
+        if (empresa == 0) {
+            grupo = " AND A.IdUsuario = " + usuario + ") AS C; "
+        } else {
+            grupo = " AND A.IdEmpresa = " + empresa + ") AS C; "
+        }
+
+
+        if (tipo === 2) {
+            where = ` FROM cadomec_innovactionmeter.iam_encuesta90 as A `
+        }
+        if (tipo === 3) {
+            where = ` FROM cadomec_innovactionmeter.iam_encuesta180 as A `
+        }
+        if (tipo === 4) {
+            where = ` FROM cadomec_innovactionmeter.iam_encuesta270 as A `
+        }
+        if (tipo === 5) {
+            where = ` FROM cadomec_innovactionmeter.iam_encuesta360 as A `
+        }
+        query = `
             SELECT
             ROUND(SUM(C.1) / COUNT(*),1) AS '1',
             ROUND(SUM(C.2) / COUNT(*),1) AS '2',
             CASE
-            WHEN C.5 = 0 THEN ROUND(SUM(C.3) / COUNT(*),1)
+            WHEN SUM(C.5) = 0 THEN ROUND(SUM(C.3) / COUNT(*),1)
             ELSE ROUND(((SUM(C.3) + SUM(C.5)) / 2) / COUNT(*),1)
             END AS '3',
             ROUND(SUM(C.4) / COUNT(*),1) AS '4'
@@ -952,26 +973,147 @@ cultura_conectada = async (req, res) => {
             WHEN Pregunta6_5 = 4 THEN 10
             ELSE 0
             END) AS '5'`
-                + where +
-            `WHERE A.Pregunta6 = 'S'
-            AND A.IdUsuario = `+ usuario + `) AS C;
-        `
+            + where +
+            `WHERE A.Pregunta6 = 'S'`
+            + grupo
 
-        } else {
-
-        }
         await connection.query(query, (err, result, fields) => {
             if (err) {
                 console.log(err.message)
                 res.status(400).json({ error: err.message })
             } else {
-                if (result.length > 0) {                    
+                if (result.length > 0) {
                     res.status(200).json(result[0])
                 } else {
                     res.status(400).json({ error: "No hay datos." })
                 }
             }
-        });        
+        });
+    } catch (e) {
+        console.log(e.message)
+        res.status(400).json({ error: e.message })
+    }
+}
+
+const lista_reporte_administrador = async (req, res) => {
+    try {
+        let query = `
+        SELECT 
+        A.IdEmpresa,
+        A.NombreEmpresa,
+        2 as 'Tipo',
+        'Equipo Gerencial 90°' as titulo,
+        (SELECT COUNT(*) FROM iam_usuarios WHERE TipoUsuario = 2 AND IdEmpresa = A.IdEmpresa) as total,
+        (SELECT COUNT(*) FROM iam_encuesta90 as B WHERE B.IdEmpresa = A.IdEmpresa AND B.Pregunta1 = 'S' AND B.Pregunta2 = 'S' AND B.Pregunta3 = 'S' AND B.Pregunta4 = 'S' AND B.Pregunta5 = 'S' AND B.Pregunta6 = 'S' AND B.Pregunta7 = 'S') as total_contestado
+        FROM iam_empresa A WHERE A.Encuesta90 = 'S' AND A.IdEmpresa = ` + req.query.id_empresa + `
+        UNION ALL
+        SELECT 
+        A.IdEmpresa,
+        A.NombreEmpresa,
+        3 as 'Tipo',
+        'Colaboradores 180°' as titulo,
+        (SELECT COUNT(*) FROM iam_usuarios WHERE TipoUsuario = 3 AND IdEmpresa = A.IdEmpresa) as total,
+        (SELECT COUNT(*) FROM iam_encuesta180 as B WHERE B.IdEmpresa = A.IdEmpresa AND B.Pregunta1 = 'S' AND B.Pregunta2 = 'S' AND B.Pregunta3 = 'S' AND B.Pregunta4 = 'S' AND B.Pregunta5 = 'S' AND B.Pregunta6 = 'S' AND B.Pregunta7 = 'S') as total_contestado
+        FROM iam_empresa A WHERE A.Encuesta180 = 'S' AND A.IdEmpresa = ` + req.query.id_empresa + `
+        UNION ALL
+        SELECT 
+        A.IdEmpresa,
+        A.NombreEmpresa,
+        4 as 'Tipo',
+        'Proveedores 270°' as titulo,
+        (SELECT COUNT(*) FROM iam_usuarios WHERE TipoUsuario = 4 AND IdEmpresa = A.IdEmpresa) as total,
+        (SELECT COUNT(*) FROM iam_encuesta270 as B WHERE B.IdEmpresa = A.IdEmpresa AND B.Pregunta1 = 'S' AND B.Pregunta2 = 'S' AND B.Pregunta3 = 'S' AND B.Pregunta4 = 'S' AND B.Pregunta5 = 'S' AND B.Pregunta6 = 'S' AND B.Pregunta7 = 'S') as total_contestado
+        FROM iam_empresa A WHERE A.Encuesta270 = 'S' AND A.IdEmpresa = ` + req.query.id_empresa + `
+        UNION ALL
+        SELECT 
+        A.IdEmpresa,
+        A.NombreEmpresa,
+        5 as 'Tipo',
+        'Clientes 360°' as titulo,
+        (SELECT COUNT(*) FROM iam_usuarios WHERE TipoUsuario = 5 AND IdEmpresa = A.IdEmpresa) as total,
+        (SELECT COUNT(*) FROM iam_encuesta360 as B WHERE B.IdEmpresa = A.IdEmpresa AND B.Pregunta1 = 'S' AND B.Pregunta2 = 'S' AND B.Pregunta3 = 'S' AND B.Pregunta4 = 'S' AND B.Pregunta5 = 'S' AND B.Pregunta6 = 'S' AND B.Pregunta7 = 'S') as total_contestado
+        FROM iam_empresa A WHERE A.Encuesta360 = 'S' AND A.IdEmpresa = ` + req.query.id_empresa + `
+        `
+        await connection.query(query, (err, result, fields) => {
+            if (err) {
+                console.log(err.message)
+                res.status(400).json({ error: err.message })
+            } else {
+                if (result.length > 0) {
+                    res.status(200).json(result)
+                } else {
+                    res.status(400).json({ error: "No hay datos." })
+                }
+            }
+        });
+    } catch (e) {
+        console.log(e.message)
+        res.status(400).json({ error: e.message })
+    }
+}
+
+
+const lista_reporte_empleado = async (req, res) => {
+    const empresa = parseInt(req.query.empresa)
+    const tipo = parseInt(req.query.tipo)
+
+    let tabla = ""
+
+    if (tipo === 2) {
+        tabla = " iam_encuesta90 A "
+    }
+    if (tipo === 3) {
+        tabla = " iam_encuesta180 A "
+    }
+    if (tipo === 4) {
+        tabla = " iam_encuesta270 A "
+    }
+    if (tipo === 5) {
+        tabla = " iam_encuesta360 A "
+    }
+    try {
+        let query = `
+        SELECT B.Id, B.Nombre, B.TipoUsuario, C.NombreEmpresa
+        FROM 
+        ` + tabla + `
+        INNER JOIN iam_usuarios B ON A.IdUsuario = B.Id
+        INNER JOIN iam_empresa C ON A.IdEmpresa = C.IdEmpresa
+        WHERE A.IdEmpresa = ` + empresa + `
+        AND A.Pregunta1 = 'S' AND A.Pregunta2 = 'S' AND A.Pregunta3 = 'S' AND A.Pregunta4 = 'S' AND A.Pregunta5 = 'S' AND A.Pregunta6 = 'S' AND A.Pregunta7 = 'S'
+         `
+        await connection.query(query, (err, result, fields) => {
+            if (err) {
+                console.log(err.message)
+                res.status(400).json({ error: err.message })
+            } else {
+                if (result.length > 0) {
+                    res.status(200).json(result)
+                } else {
+                    res.status(400).json({ error: "No hay datos." })
+                }
+            }
+        });
+    } catch (e) {
+        console.log(e.message)
+        res.status(400).json({ error: e.message })
+    }
+}
+
+const datos_empresa = async (req, res) => {
+    try {
+        let query = "SELECT * FROM cadomec_innovactionmeter.iam_empresa WHERE IdEmpresa = " + req.query.id
+        await connection.query(query, (err, result, fields) => {
+            if (err) {
+                console.log(err.message)
+                res.status(400).json({ error: err.message })
+            } else {
+                if (result.length > 0) {
+                    res.status(200).json(result[0])
+                } else {
+                    res.status(400).json({ error: "No hay datos." })
+                }
+            }
+        });
     } catch (e) {
         console.log(e.message)
         res.status(400).json({ error: e.message })
@@ -989,10 +1131,14 @@ module.exports = {
     encuesta,
     actualizar_encuesta,
     datos_usuario,
+    datos_empresa,
     resultados_innovacion,
     proposito,
     liderazgo,
     estructuras_habilitadoras,
     sistemas_consistentes,
-    cultura_conectada
+    cultura_conectada,
+    lista_reporte_administrador,
+    lista_reporte_empleado
+
 }
