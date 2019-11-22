@@ -1120,6 +1120,52 @@ const datos_empresa = async (req, res) => {
     }
 }
 
+const total_encuestas_empresas = async (req, res) => {
+    try {
+        const tipo = req.query.tipo
+        let tabla = ""
+    
+        if (tipo == 2) {            
+            tabla = " iam_encuesta90 "
+        }
+        if (tipo == 3) {
+            tabla = " iam_encuesta180 "
+        }
+        if (tipo == 4) {
+            tabla = " iam_encuesta270 "
+        }
+        if (tipo == 5) {
+            tabla = " iam_encuesta360 "
+        }
+
+        let query = `
+        SELECT A.IdEmpresa ,A.NombreEmpresa, A.Sigla,
+        (SELECT COUNT(*) FROM ` + tabla + ` C WHERE C.IdEmpresa = A.IdEmpresa AND C.Pregunta1 = 'S' AND C.Pregunta2 = 'S' AND C.Pregunta3 = 'S' AND C.Pregunta4 = 'S' AND C.Pregunta5 = 'S' AND C.Pregunta6 = 'S' AND C.Pregunta7 = 'S' ) as total_contestado,
+        (SELECT COUNT(*) FROM iam_usuarios B WHERE B.IdEmpresa = A.IdEmpresa AND B.TipoUsuario = ` + tipo + `) as total
+        FROM 
+        iam_empresa A 
+        WHERE 
+        A.Encuesta90 = 'S'
+        ORDER BY A.NombreEmpresa;
+        `        
+        await connection.query(query, (err, result, fields) => {
+            if (err) {
+                console.log(err.message)
+                res.status(400).json({ error: err.message })
+            } else {
+                if (result.length > 0) {
+                    res.status(200).json(result)
+                } else {
+                    res.status(400).json({ error: "No hay datos." })
+                }
+            }
+        });
+    } catch (e) {
+        console.log(e.message)
+        res.status(400).json({ error: e.message })
+    }
+}
+
 
 module.exports = {
     pregunta_archivo,
@@ -1139,6 +1185,7 @@ module.exports = {
     sistemas_consistentes,
     cultura_conectada,
     lista_reporte_administrador,
-    lista_reporte_empleado
+    lista_reporte_empleado,
+    total_encuestas_empresas
 
 }

@@ -656,11 +656,11 @@ export default class EncuestaReporte extends Component {
             <div className="px-5">
                 <div className="form-group">
                     <label htmlFor="comment">Conclusión</label>
-        <textarea className="form-control" rows="3" id="comment" readOnly={(this.state.state.usuario.TipoUsuario === 88) ? true : false} value={this.state.conclusion} />
+        <textarea className="form-control" rows="3" id="comment" readOnly={(this.state.state.usuario.TipoUsuario === 88) ? true : false} defaultValue={this.state.conclusion} />
                 </div>
                 <div className="form-group">
                     <label htmlFor="comment">Recomendación</label>
-                    <textarea className="form-control" rows="3" id="comment" readOnly={(this.state.state.usuario.TipoUsuario === 88) ? true : false} value={this.state.recomendacion}/>
+                    <textarea className="form-control" rows="3" id="comment" readOnly={(this.state.state.usuario.TipoUsuario === 88) ? true : false} defaultValue={this.state.recomendacion}/>
                 </div>
             </div>
         )

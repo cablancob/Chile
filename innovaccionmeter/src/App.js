@@ -9,6 +9,7 @@ import ModalWarning from './Modals/ModalWarning'
 import Login from './Login'
 import Encuestas from './Encuestas'
 import Administrador from './Administrador'
+import Coach from './Coach'
 
 require('dotenv').config()
 
@@ -68,7 +69,8 @@ export default class App extends Component {
       return (
         (this.state.usuario.TipoUsuario >= 2 && this.state.usuario.TipoUsuario <= 5) ? <Encuestas />
           : (this.state.usuario.TipoUsuario === 88) ? <Administrador />
-            : ""
+            : (this.state.usuario.TipoUsuario === 99) ? <Coach />
+              : ""
 
       )
     } else {
