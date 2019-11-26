@@ -760,7 +760,7 @@ const estructuras_habilitadoras = async (req, res) => {
                 + where +
                 `WHERE A.Pregunta5 = 'S'`
                 + grupo
-        }        
+        }
 
         await connection.query(query, (err, result, fields) => {
             if (err) {
@@ -1124,8 +1124,8 @@ const total_encuestas_empresas = async (req, res) => {
     try {
         const tipo = req.query.tipo
         let tabla = ""
-    
-        if (tipo == 2) {            
+
+        if (tipo == 2) {
             tabla = " iam_encuesta90 "
         }
         if (tipo == 3) {
@@ -1147,7 +1147,7 @@ const total_encuestas_empresas = async (req, res) => {
         WHERE 
         A.Encuesta90 = 'S'
         ORDER BY A.NombreEmpresa;
-        `        
+        `
         await connection.query(query, (err, result, fields) => {
             if (err) {
                 console.log(err.message)
@@ -1155,6 +1155,398 @@ const total_encuestas_empresas = async (req, res) => {
             } else {
                 if (result.length > 0) {
                     res.status(200).json(result)
+                } else {
+                    res.status(400).json({ error: "No hay datos." })
+                }
+            }
+        });
+    } catch (e) {
+        console.log(e.message)
+        res.status(400).json({ error: e.message })
+    }
+}
+
+
+const tool_tips_data = async (req, res) => {
+    try {
+        const usuario = parseInt(req.query.user)
+        const empresa = parseInt(req.query.empresa)
+        const tipo = parseInt(req.query.tipo)
+
+        let query = ``
+        let where = ``
+        let grupo = ``
+
+        if (empresa == 0) {
+            grupo = " AND IdUsuario = " + usuario + ") AS C; "
+        } else {
+            grupo = " AND IdEmpresa = " + empresa + ") AS C; "
+        }
+        if (tipo === 2) {
+            where = ` FROM cadomec_innovactionmeter.iam_encuesta90 `
+        }
+        if (tipo === 3) {
+            where = ` FROM cadomec_innovactionmeter.iam_encuesta180 `
+        }
+        if (tipo === 4) {
+            where = ` FROM cadomec_innovactionmeter.iam_encuesta270 `
+        }
+        if (tipo === 5) {
+            where = ` FROM cadomec_innovactionmeter.iam_encuesta360 `
+        }
+        //CAMBIAR a 1 OPCION 4        
+        query = `        
+        SELECT
+        CONCAT("0", "|", "0", "|", ROUND(SUM(C.0),1), "|", "¿Cuál cree que ha sido el impacto de la innovación en los INGRESOS de su empresa en los últimos 3 años?", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("0", "|", "1", "|", ROUND(SUM(C.1),1), "|", "¿Cuál cree que ha sido el impacto de la innovación en la REDUCCIÓN DE COSTOS Y GASTOS de su empresa en los últimos 3 años?", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("0", "|", "2", "|", ROUND(SUM(C.2),1), "|", "¿Cuál cree que ha sido el impacto de la innovación en la RENTABILIDAD de su empresa respecto en los últimos 3 años?", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("0", "|", "3", "|", ROUND(SUM(C.3),1), "|", "¿Cuál cree que ha sido el impacto de la innovación en el CAMBIO DE MODELO DE NEGOCIO de su empresa en los últimos 3 años?", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("0", "|", "4", "|", ROUND(SUM(C.4),1), "|", "¿Cuál cree que ha sido el impacto de la innovación en la SATISFACCIÓN DEL CLIENTE de su empresa en los últimos 3 años?", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("0", "|", "5", "|", ROUND(SUM(C.5),1), "|", "¿Cuál cree que ha sido el impacto de la innovación en la SOSTENIBILIDAD de su empresa en los últimos 3 años?", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("1", "|", "0", "|", ROUND(SUM(C.6),1), "|", "El concepto de innovación en la empresa es conocido y compartido por todos.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("1", "|", "1", "|", ROUND(SUM(C.7),1), "|", "La innovación está integrada a nuestros objetivos y estrategias de negocio, por lo que el quehacer de la innovación está integrado en nuestro día a día.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("1", "|", "2", "|", ROUND(SUM(C.8),1), "|", "Tenemos desafíos potentes que requieren soluciones innovadoras para alcanzar las metas que nos hemos propuesto.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("1", "|", "3", "|", ROUND(SUM(C.9),1), "|", "¿Cuál de las siguientes alternativas representa mejor la conexión entre la estrategia de su empresa y la innovación?", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("2", "|", "0", "|", ROUND(SUM(C.10),1), "|", "Consideramos que para innovar hay que aprender de los errores, por lo que contemplamos formas de levantar y asimilar oportunidades de aprendizajes de los errores cometidos.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("2", "|", "1", "|", ROUND(SUM(C.11),1), "|", "Contamos con un modelo de cómo gestionar la innovación con herramientas y técnicas para mejorar constantemente la forma en que innovamos.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("2", "|", "2", "|", ROUND(SUM(C.12),1), "|", "Las responsabilidades y los recursos respecto de la innovación están claramente definidos.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("2", "|", "3", "|", ROUND(SUM(C.13),1), "|", "Existe en la empresa un ambiente de mutua comunicación y colaboración que fomenta la innovación conjunta entre las áreas.", "|", CAST(COUNT(*) AS CHAR(2))),`
+
+        if (tipo === 2 || tipo === 3) {
+            query += `
+        CONCAT("3", "|", "0", "|", ROUND(SUM(C.14),1), "|", "Talentos: Seleccionamos, desarrollamos y retenemos personas con alto potencial innovador.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("3", "|", "0", "|", ROUND(SUM(C.15),1), "|", "Talentos: Reconocemos pública y monetariamente los logros de innovación de la organización, equipos y personas.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("3", "|", "1", "|", ROUND(SUM(C.16),1), "|", "Recursos: Asignamos personas a lo largo de la organización para trabajar en tareas de innovación.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("3", "|", "1", "|", ROUND(SUM(C.17),1), "|", "Recursos: Contamos con presupuestos para innovación lo que nos permite crear valor nuevo a nuestros clientes.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("3", "|", "1", "|", ROUND(SUM(C.18),1), "|", "Recursos: Utilizamos tecnologías de comunicación e información para gestionar la innovación en la empresa.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("3", "|", "2", "|", ROUND(SUM(C.19),1), "|", "Procesos: Contamos con procesos y actividades definidos para innovar en la empresa.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("3", "|", "2", "|", ROUND(SUM(C.20),1), "|", "Procesos: Tenemos indicadores que permiten medir el desempeño de nuestra innovación.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("3", "|", "2", "|", ROUND(SUM(C.21),1), "|", "Procesos: Tenemos criterios, instancias y responsables claros para tomar decisiones respecto a los proyectos de innovación.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("3", "|", "3", "|", ROUND(SUM(C.22),1), "|", "Co-Creación: Creamos soluciones, proyectos y negocios con nuestros proveedores y aliados", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("3", "|", "3", "|", ROUND(SUM(C.23),1), "|", "Co-Creación: Tenemos un canal de interacción, con los debidos responsables, que nos permite co-crear con nuestros proveedores y clientes.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("3", "|", "3", "|", ROUND(SUM(C.24),1), "|", "Co-Creación: Tenemos un canal de interacción, con los debidos responsables, que nos permite co-crear con nuestra comunidad.", "|", CAST(COUNT(*) AS CHAR(2))),`
+
+        }
+        query += `
+        CONCAT("4", "|", "0", "|", ROUND(SUM(C.25),1), "|", "Contamos con herramientas o métodos para identificar necesidades de clientes y consumidores.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("4", "|", "1", "|", ROUND(SUM(C.26),1), "|", "Contamos con herramientas o métodos para generar ideas, diseñar y desarrollar soluciones a las necesidades de clientes y consumidores a nivel Productos, Servicios, Canales.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("4", "|", "1", "|", ROUND(SUM(C.27),1), "|", "Contamos con herramientas o métodos para prototipear y testear soluciones.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("4", "|", "2", "|", ROUND(SUM(C.29),1), "|", "Contamos con herramientas o métodos para desarrollar el plan de negocio.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("4", "|", "2", "|", ROUND(SUM(C.30),1), "|", "Contamos con herramientas o métodos para estudiar la factibilidad y riesgos de proyectos.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("4", "|", "3", "|", ROUND(SUM(C.28),1), "|", "Contamos con herramientas o métodos para compartir aprendizajes, rediseñar y/o reformular proyectos de innovación.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("4", "|", "3", "|", ROUND(SUM(C.31),1), "|", "Contamos con herramientas o métodos para la implementación de proyectos y gestión del cambio.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("5", "|", "0", "|", ROUND(SUM(C.32),1), "|", "Cuando ocurren cambios repentinos, reaccionamos con apertura hacia lo nuevo.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("5", "|", "1", "|", ROUND(SUM(C.33),1), "|", "Todos tenemos responsabilidades para conocer y satisfacer las necesidades de clientes y consumidores.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("5", "|", "2", "|", ROUND(SUM(C.34),1), "|", "Somos flexibles ante los cambios que ocurren en la empresa y sus mercados.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("5", "|", "3", "|", ROUND(SUM(C.35),1), "|", "Aceptamos e incorporamos las fallas como algo necesario para aprender e Innovar.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("5", "|", "2", "|", ROUND(SUM(C.36),1), "|", "Somos flexibles ante los cambios que ocurren en la sociedad.", "|", CAST(COUNT(*) AS CHAR(2)))
+        FROM (
+        SELECT (
+        CASE 
+        WHEN Pregunta3_1 = 1 THEN 1
+        WHEN Pregunta3_1 = 2 THEN 5
+        WHEN Pregunta3_1 = 3 THEN 10
+        WHEN Pregunta3_1 = 4 THEN 0
+        ELSE 0
+        END) AS '0',
+        (
+        CASE 
+        WHEN Pregunta3_3 = 1 THEN 1
+        WHEN Pregunta3_3 = 2 THEN 5
+        WHEN Pregunta3_3 = 3 THEN 10
+        WHEN Pregunta3_3 = 4 THEN 0
+        ELSE 0
+        END) AS '1',
+        (
+        CASE 
+        WHEN Pregunta3_4 = 1 THEN 1
+        WHEN Pregunta3_4 = 2 THEN 5
+        WHEN Pregunta3_4 = 3 THEN 10
+        WHEN Pregunta3_4 = 4 THEN 0
+        ELSE 0
+        END) AS '2',
+        (
+        CASE 
+        WHEN Pregunta3_5 = 1 THEN 1
+        WHEN Pregunta3_5 = 2 THEN 5
+        WHEN Pregunta3_5 = 3 THEN 10
+        WHEN Pregunta3_5 = 4 THEN 0
+        ELSE 0
+        END) AS '3',
+        (
+        CASE 
+        WHEN Pregunta3_2 = 1 THEN 1
+        WHEN Pregunta3_2 = 2 THEN 5
+        WHEN Pregunta3_2 = 3 THEN 10
+        WHEN Pregunta3_2 = 4 THEN 0
+        ELSE 0
+        END) AS '4',
+        (
+        CASE 
+        WHEN Pregunta3_6 = 1 THEN 1
+        WHEN Pregunta3_6 = 2 THEN 5
+        WHEN Pregunta3_6 = 3 THEN 10
+        WHEN Pregunta3_6 = 4 THEN 0
+        ELSE 0
+        END) AS '5',
+        (
+        CASE 
+        WHEN Pregunta4_1 = 1 THEN 1
+        WHEN Pregunta4_1 = 2 THEN 4
+        WHEN Pregunta4_1 = 3 THEN 7
+        WHEN Pregunta4_1 = 4 THEN 10
+        ELSE 0
+        END) AS '6',
+        (
+        CASE 
+        WHEN Pregunta4_2 = 1 THEN 1
+        WHEN Pregunta4_2 = 2 THEN 4
+        WHEN Pregunta4_2 = 3 THEN 7
+        WHEN Pregunta4_2 = 4 THEN 10
+        ELSE 0
+        END) AS '7',
+        (
+        CASE 
+        WHEN Pregunta4_3 = 1 THEN 1
+        WHEN Pregunta4_3 = 2 THEN 4
+        WHEN Pregunta4_3 = 3 THEN 7
+        WHEN Pregunta4_3 = 4 THEN 10
+        ELSE 0
+        END) AS '8',
+        (
+        CASE 
+        WHEN Pregunta2_5 = 1 THEN 10
+        WHEN Pregunta2_5 = 2 THEN 5
+        WHEN Pregunta2_5 = 3 THEN 1
+        ELSE 0
+        END) AS '9',
+        (
+        CASE 
+        WHEN Pregunta4_4 = 1 THEN 1
+        WHEN Pregunta4_4 = 2 THEN 4
+        WHEN Pregunta4_4 = 3 THEN 7
+        WHEN Pregunta4_4 = 4 THEN 10
+        ELSE 0
+        END) AS '10',
+        (
+        CASE 
+        WHEN Pregunta4_5 = 1 THEN 1
+        WHEN Pregunta4_5 = 2 THEN 4
+        WHEN Pregunta4_5 = 3 THEN 7
+        WHEN Pregunta4_5 = 4 THEN 10
+        ELSE 0
+        END) AS '11',
+        (
+        CASE 
+        WHEN Pregunta4_6 = 1 THEN 1
+        WHEN Pregunta4_6 = 2 THEN 4
+        WHEN Pregunta4_6 = 3 THEN 7
+        WHEN Pregunta4_6 = 4 THEN 10
+        ELSE 0
+        END) AS '12',
+        (
+        CASE 
+        WHEN Pregunta4_7 = 1 THEN 1
+        WHEN Pregunta4_7 = 2 THEN 4
+        WHEN Pregunta4_7 = 3 THEN 7
+        WHEN Pregunta4_7 = 4 THEN 10
+        ELSE 0
+        END) AS '13',
+        (
+        CASE 
+        WHEN Pregunta5_1 = 1 THEN 1
+        WHEN Pregunta5_1 = 2 THEN 4
+        WHEN Pregunta5_1 = 3 THEN 7
+        WHEN Pregunta5_1 = 4 THEN 10
+        ELSE 0
+        END) AS '14',
+        (
+        CASE 
+        WHEN Pregunta5_2 = 1 THEN 1
+        WHEN Pregunta5_2 = 2 THEN 4
+        WHEN Pregunta5_2 = 3 THEN 7
+        WHEN Pregunta5_2 = 4 THEN 10
+        ELSE 0
+        END) AS '15',
+        (
+        CASE 
+        WHEN Pregunta5_3 = 1 THEN 1
+        WHEN Pregunta5_3 = 2 THEN 4
+        WHEN Pregunta5_3 = 3 THEN 7
+        WHEN Pregunta5_3 = 4 THEN 10
+        ELSE 0
+        END) AS '16',
+        (
+        CASE 
+        WHEN Pregunta5_4 = 1 THEN 1
+        WHEN Pregunta5_4 = 2 THEN 4
+        WHEN Pregunta5_4 = 3 THEN 7
+        WHEN Pregunta5_4 = 4 THEN 10
+        ELSE 0
+        END) AS '17',
+        (
+        CASE 
+        WHEN Pregunta5_5 = 1 THEN 1
+        WHEN Pregunta5_5 = 2 THEN 4
+        WHEN Pregunta5_5 = 3 THEN 7
+        WHEN Pregunta5_5 = 4 THEN 10
+        ELSE 0
+        END) AS '18',
+        (
+        CASE 
+        WHEN Pregunta5_6 = 1 THEN 1
+        WHEN Pregunta5_6 = 2 THEN 4
+        WHEN Pregunta5_6 = 3 THEN 7
+        WHEN Pregunta5_6 = 4 THEN 10
+        ELSE 0
+        END) AS '19',
+        (
+        CASE 
+        WHEN Pregunta5_7 = 1 THEN 1
+        WHEN Pregunta5_7 = 2 THEN 4
+        WHEN Pregunta5_7 = 3 THEN 7
+        WHEN Pregunta5_7 = 4 THEN 10
+        ELSE 0
+        END) AS '20',
+        (
+        CASE 
+        WHEN Pregunta5_8 = 1 THEN 1
+        WHEN Pregunta5_8 = 2 THEN 4
+        WHEN Pregunta5_8 = 3 THEN 7
+        WHEN Pregunta5_8 = 4 THEN 10
+        ELSE 0
+        END) AS '21',
+        (
+        CASE 
+        WHEN Pregunta5_9 = 1 THEN 1
+        WHEN Pregunta5_9 = 2 THEN 4
+        WHEN Pregunta5_9 = 3 THEN 7
+        WHEN Pregunta5_9 = 4 THEN 10
+        ELSE 0
+        END) AS '22',
+        (
+        CASE 
+        WHEN Pregunta5_10 = 1 THEN 1
+        WHEN Pregunta5_10 = 2 THEN 4
+        WHEN Pregunta5_10 = 3 THEN 7
+        WHEN Pregunta5_10 = 4 THEN 10
+        ELSE 0
+        END) AS '23',
+        (
+        CASE 
+        WHEN Pregunta5_11 = 1 THEN 1
+        WHEN Pregunta5_11 = 2 THEN 4
+        WHEN Pregunta5_11 = 3 THEN 7
+        WHEN Pregunta5_11 = 4 THEN 10
+        ELSE 0
+        END) AS '24',
+        (
+        CASE 
+        WHEN Pregunta7_1 = 1 THEN 1
+        WHEN Pregunta7_1 = 2 THEN 4
+        WHEN Pregunta7_1 = 3 THEN 7
+        WHEN Pregunta7_1 = 4 THEN 10
+        ELSE 0
+        END) AS '25',
+        (
+        CASE 
+        WHEN Pregunta7_2 = 1 THEN 1
+        WHEN Pregunta7_2 = 2 THEN 4
+        WHEN Pregunta7_2 = 3 THEN 7
+        WHEN Pregunta7_2 = 4 THEN 10
+        ELSE 0
+        END) AS '26',
+        (
+        CASE 
+        WHEN Pregunta7_3 = 1 THEN 1
+        WHEN Pregunta7_3 = 2 THEN 4
+        WHEN Pregunta7_3 = 3 THEN 7
+        WHEN Pregunta7_3 = 4 THEN 10
+        ELSE 0
+        END) AS '27',
+        (
+        CASE 
+        WHEN Pregunta7_4 = 1 THEN 1
+        WHEN Pregunta7_4 = 2 THEN 4
+        WHEN Pregunta7_4 = 3 THEN 7
+        WHEN Pregunta7_4 = 4 THEN 10
+        ELSE 0
+        END) AS '28',
+        (
+        CASE 
+        WHEN Pregunta7_5 = 1 THEN 1
+        WHEN Pregunta7_5 = 2 THEN 4
+        WHEN Pregunta7_5 = 3 THEN 7
+        WHEN Pregunta7_5 = 4 THEN 10
+        ELSE 0
+        END) AS '29',
+        (
+        CASE 
+        WHEN Pregunta7_6 = 1 THEN 1
+        WHEN Pregunta7_6 = 2 THEN 4
+        WHEN Pregunta7_6 = 3 THEN 7
+        WHEN Pregunta7_6 = 4 THEN 10
+        ELSE 0
+        END) AS '30',
+        (
+        CASE 
+        WHEN Pregunta7_7 = 1 THEN 1
+        WHEN Pregunta7_7 = 2 THEN 4
+        WHEN Pregunta7_7 = 3 THEN 7
+        WHEN Pregunta7_7 = 4 THEN 10
+        ELSE 0
+        END) AS '31',
+        (
+        CASE 
+        WHEN Pregunta6_1 = 1 THEN 1
+        WHEN Pregunta6_1 = 2 THEN 4
+        WHEN Pregunta6_1 = 3 THEN 7
+        WHEN Pregunta6_1 = 4 THEN 10
+        ELSE 0
+        END) AS '32',
+        (
+        CASE 
+        WHEN Pregunta6_2 = 1 THEN 1
+        WHEN Pregunta6_2 = 2 THEN 4
+        WHEN Pregunta6_2 = 3 THEN 7
+        WHEN Pregunta6_2 = 4 THEN 10
+        ELSE 0
+        END) AS '33',
+        (
+        CASE 
+        WHEN Pregunta6_3 = 1 THEN 1
+        WHEN Pregunta6_3 = 2 THEN 4
+        WHEN Pregunta6_3 = 3 THEN 7
+        WHEN Pregunta6_3 = 4 THEN 10
+        ELSE 0
+        END) AS '34',
+        (
+        CASE 
+        WHEN Pregunta6_4 = 1 THEN 1
+        WHEN Pregunta6_4 = 2 THEN 4
+        WHEN Pregunta6_4 = 3 THEN 7
+        WHEN Pregunta6_4 = 4 THEN 10
+        ELSE 0
+        END) AS '35',
+        (
+        CASE 
+        WHEN Pregunta6_5 = 1 THEN 1
+        WHEN Pregunta6_5 = 2 THEN 4
+        WHEN Pregunta6_5 = 3 THEN 7
+        WHEN Pregunta6_5 = 4 THEN 10
+        ELSE 0
+        END) AS '36'`
+            + where +
+            ` WHERE Pregunta1 = 'S' AND Pregunta2 = 'S' AND Pregunta3 = 'S' AND Pregunta4 = 'S' AND Pregunta5 = 'S' AND Pregunta6 = 'S' AND Pregunta7 = 'S'`
+            + grupo
+
+        await connection.query(query, (err, result, fields) => {
+            if (err) {
+                console.log(err.message)
+                res.status(400).json({ error: err.message })
+            } else {
+                if (result.length > 0) {
+                    res.status(200).json(result[0])
                 } else {
                     res.status(400).json({ error: "No hay datos." })
                 }
@@ -1186,6 +1578,7 @@ module.exports = {
     cultura_conectada,
     lista_reporte_administrador,
     lista_reporte_empleado,
-    total_encuestas_empresas
+    total_encuestas_empresas,
+    tool_tips_data
 
 }

@@ -55,6 +55,7 @@ app.get('/cultura_conectada', main.verifytoken, main.cultura_conectada)
 app.get('/lista_reporte_administrador', main.verifytoken, main.lista_reporte_administrador)
 app.get('/lista_reporte_empleado', main.verifytoken, main.lista_reporte_empleado)
 app.get('/total_encuestas_empresas', main.verifytoken, main.total_encuestas_empresas)
+app.get('/tool_tips_data', main.verifytoken, main.tool_tips_data)
 
 
 app.listen(process.env.PORT || 3000, () => {

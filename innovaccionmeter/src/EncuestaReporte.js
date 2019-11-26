@@ -49,7 +49,7 @@ export default class EncuestaReporte extends Component {
                         }
                     }
                 } else {
-                    let empresa = this.state.datos_empresa                                      
+                    let empresa = this.state.datos_empresa
                     for (let i in empresa) {
                         if (i.includes("P09")) {
                             peso_empresa.push(empresa[i])
@@ -70,14 +70,14 @@ export default class EncuestaReporte extends Component {
                     let usuario = this.state.usuario_data
                     for (let i in usuario) {
                         if (i.includes("P18")) {
-                            peso_empresa.push(empresa[i])
+                            peso_empresa.push(usuario[i])
                         }
                     }
                 } else {
                     let empresa = this.state.datos_empresa
                     for (let i in empresa) {
                         if (i.includes("P18")) {
-                            peso_empresa.push(usuario[i])
+                            peso_empresa.push(empresa[i])
                         }
                     }
                     this.setState({
@@ -95,14 +95,14 @@ export default class EncuestaReporte extends Component {
                     let usuario = this.state.usuario_data
                     for (let i in usuario) {
                         if (i.includes("P27")) {
-                            peso_empresa.push(empresa[i])
+                            peso_empresa.push(usuario[i])
                         }
                     }
                 } else {
                     let empresa = this.state.datos_empresa
                     for (let i in empresa) {
                         if (i.includes("P27")) {
-                            peso_empresa.push(usuario[i])
+                            peso_empresa.push(empresa[i])
                         }
                     }
                     this.setState({
@@ -121,14 +121,14 @@ export default class EncuestaReporte extends Component {
                     let usuario = this.state.usuario_data
                     for (let i in usuario) {
                         if (i.includes("P36")) {
-                            peso_empresa.push(empresa[i])
+                            peso_empresa.push(usuario[i])
                         }
                     }
                 } else {
                     let empresa = this.state.datos_empresa
                     for (let i in empresa) {
                         if (i.includes("P36")) {
-                            peso_empresa.push(usuario[i])
+                            peso_empresa.push(empresa[i])
                         }
                     }
                     this.setState({
@@ -315,6 +315,52 @@ export default class EncuestaReporte extends Component {
         }
     }
 
+    tool_tips_data = async (usuario, empresa, tipo) => {
+        try {
+            let headers = new Headers()
+            headers.append("Content-Type", "application/json")
+            headers.append("x-access-token", sessionStorage.getItem('innovaccionmeter_session'))
+
+
+            let URL = "http://" + window.location.host.split(":")[0] + ":" + process.env.REACT_APP_PORT + "/tool_tips_data?user=" + parseInt(usuario) + "&empresa=" + parseInt(empresa) + "&tipo=" + parseInt(tipo)
+
+            const response = await fetch(URL, {
+                method: "GET",
+                headers: headers,
+            })
+            let data = await response.json()
+            if (response.status === 200) {
+                let json_data = []
+                for (let i in data) {
+                    let item = {}
+                    let datos = data[i].split("|")
+
+                    if (parseInt(datos[2]) !== 0) {
+                        item["pagina"] = datos[0]
+                        item["pregunta"] = datos[1]
+                        item["valor"] = datos[2]
+                        item["texto"] = datos[3]
+                        item["total"] = datos[4]
+                        json_data.push(item)
+                    }
+
+
+                }
+
+                this.setState({
+                    tooltips: json_data
+                })
+            } else if (response.status === 400) {
+                window.ModalError("Reporte", data.error)
+            } else {
+                this.state.auth_false()
+            }
+
+        } catch (e) {
+            window.ModalError("Reporte", e.error)
+        }
+    }
+
     datos_usuario = async (id) => {
         try {
             let headers = new Headers()
@@ -353,7 +399,6 @@ export default class EncuestaReporte extends Component {
 
 
             let URL = "http://" + window.location.host.split(":")[0] + ":" + process.env.REACT_APP_PORT + "/datos_empresa?id=" + parseInt(id)
-
             const response = await fetch(URL, {
                 method: "GET",
                 headers: headers,
@@ -520,17 +565,23 @@ export default class EncuestaReporte extends Component {
             const empresa = this.props.id_empresa
             const tipo = this.props.tipo_encuesta
 
+
             const { state, auth_false } = await this.context
             this.setState({
                 state,
                 auth_false
-            })            
+            })
 
             if (empresa === 0) {
                 await this.datos_usuario(usuario)
             } else {
                 await this.datos_empresa(empresa)
             }
+
+            if (this.state.state.usuario.TipoUsuario === 99) {
+                await this.tool_tips_data(usuario, empresa, tipo)
+            }
+
             let datos = []
             datos = await this.resultados_innovacion(usuario, empresa, tipo)
             this.reporte_final(datos, 1)
@@ -548,7 +599,7 @@ export default class EncuestaReporte extends Component {
 
             this.setState({
                 mostrar: true
-            })
+            })            
 
         } catch (e) {
             window.ModalError("Reporte", e.error)
@@ -558,7 +609,7 @@ export default class EncuestaReporte extends Component {
     Reporte = () => {
         const usuario = this.state.usuario_data
         const idioma = this.state.idioma
-        const empresa = this.props.id_empresa        
+        const empresa = this.props.id_empresa
 
         let titulo = ""
         let subtitulo = ""
@@ -588,7 +639,7 @@ export default class EncuestaReporte extends Component {
                     <div className="h5 card-header bg-white text-dark text-center">
                         <div className="row">
                             <div className="col-md-4 py-2">
-                                {(empresa === 0) ? usuario.NombreEmpresa : ""}
+                                {(empresa === 0) ? usuario.NombreEmpresa : this.state.datos_empresa.NombreEmpresa}
                             </div>
                             <div className="col-md-4 py-2">
                                 {(empresa === 0) ? usuario.nombre : ""}
@@ -607,6 +658,7 @@ export default class EncuestaReporte extends Component {
                         <div className="row">
                             {
                                 this.state.reporte_final.map((obj, index) => {
+                                    let index_superior = index
                                     return (
                                         <div className="col-md-4 py-2" key={index}>
                                             <div className="card form-group h-100">
@@ -623,12 +675,29 @@ export default class EncuestaReporte extends Component {
                                                     {
                                                         obj.resultados.map((obj, index) => {
                                                             let resultados = JSON.parse(obj)
-                                                            return (
-                                                                <div className="row" key={index}>
-                                                                    <div className="col-md-9 py-2 text-left">{resultados.pregunta}</div>
-                                                                    <div className="col-md-3 py-2 text-center"><span className={this.Style(resultados.resultado)}>{resultados.resultado.toFixed(1)}</span></div>
-                                                                </div>
-                                                            )
+                                                            if (this.state.tooltips === undefined) {
+                                                                return (
+                                                                    <div className="row" key={index}>
+                                                                        <div className="col-md-9 py-2 text-left">{resultados.pregunta}</div>
+                                                                        <div className="col-md-3 py-2 text-center"><span className={this.Style(resultados.resultado)}>{resultados.resultado.toFixed(1)}</span></div>
+                                                                    </div>
+                                                                )
+                                                            } else {
+                                                                let texto = ""
+                                                                this.state.tooltips.map((obj) => {
+                                                                    if (obj.pagina === index_superior.toString() && obj.pregunta === index.toString()) {                                                                        
+                                                                        texto += obj.texto + " Puntaje: ( " + (obj.valor / obj.total).toFixed(1) + " ) \n\n"
+
+                                                                    }
+                                                                    return true
+                                                                })
+                                                                return (
+                                                                    <div className="row" key={index}>
+                                                                        <div className="col-md-9 py-2 text-left" data-toggle="tooltip" title={texto}>{resultados.pregunta}</div>
+                                                                        <div className="col-md-3 py-2 text-center"><span className={this.Style(resultados.resultado)}>{resultados.resultado.toFixed(1)}</span></div>
+                                                                    </div>
+                                                                )
+                                                            }
                                                         })
                                                     }
                                                 </div>
@@ -656,11 +725,11 @@ export default class EncuestaReporte extends Component {
             <div className="px-5">
                 <div className="form-group">
                     <label htmlFor="comment">Conclusión</label>
-        <textarea className="form-control" rows="3" id="comment" readOnly={(this.state.state.usuario.TipoUsuario === 88) ? true : false} defaultValue={this.state.conclusion} />
+                    <textarea className="form-control" rows="3" id="comment" readOnly={(this.state.state.usuario.TipoUsuario === 88) ? true : false} defaultValue={this.state.conclusion} />
                 </div>
                 <div className="form-group">
                     <label htmlFor="comment">Recomendación</label>
-                    <textarea className="form-control" rows="3" id="comment" readOnly={(this.state.state.usuario.TipoUsuario === 88) ? true : false} defaultValue={this.state.recomendacion}/>
+                    <textarea className="form-control" rows="3" id="comment" readOnly={(this.state.state.usuario.TipoUsuario === 88) ? true : false} defaultValue={this.state.recomendacion} />
                 </div>
             </div>
         )
