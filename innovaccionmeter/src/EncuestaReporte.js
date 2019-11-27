@@ -15,7 +15,7 @@ export default class EncuestaReporte extends Component {
             resultados: ["Ingresos", "Reducción de costos & gastos", "Rentabilidad", "Modelo de negocio", "Satisfacción del Cliente", "Sostenibilidad"],
             proposito: ["Propósito de Innovación", "Alineamiento a Resultados", "Desafíos Concretos", "Estrategias"],
             liderazgo: ["Aprendizaje Continuo", "Herramientas", "Asignación Recursos y Responsables", "Comunicación"],
-            estructuras_habilitadoras: ["Talento", "Recursos", "Procesos", "Co-Creación"],
+            estructuras_habilitadoras: ["Co-Creación", "Talento", "Recursos", "Procesos"],
             sistemas_consistentes: ["Búsqueda de Oportunidades", "Desarrollo de Soluciones", "Desarrollo de Modelo de Negocio", "Gestión del Cambio"],
             cultura_conectada: ["Apertura hacia lo nuevo", "Orientación Comercial", "Flexibilidad ante Cambios", "Tolerancia a Fallar"]
         }

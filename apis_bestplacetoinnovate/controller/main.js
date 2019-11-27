@@ -661,13 +661,13 @@ const estructuras_habilitadoras = async (req, res) => {
         } else {
             query = `
                 SELECT
-                ROUND(((SUM(C.1) + SUM(C.2)) / 2) / COUNT(*),1) AS '1',
-                ROUND(((SUM(C.3) + SUM(C.4) + SUM(C.5)) / 3) / COUNT(*),1) AS '2',
-                ROUND(((SUM(C.6) + SUM(C.7) + SUM(C.8)) / 3) / COUNT(*),1) AS '3',
                 CASE 
                 WHEN SUM(C.11) = 0 THEN ROUND(((SUM(C.9) + SUM(C.10)) / 2) / COUNT(*),1) 
                 ELSE ROUND(((SUM(C.9) + SUM(C.10)  + SUM(C.11)) / 3) / COUNT(*),1) 
-                END AS '4'            
+                END AS '1', 
+                ROUND(((SUM(C.1) + SUM(C.2)) / 2) / COUNT(*),1) AS '2',
+                ROUND(((SUM(C.3) + SUM(C.4) + SUM(C.5)) / 3) / COUNT(*),1) AS '3',
+                ROUND(((SUM(C.6) + SUM(C.7) + SUM(C.8)) / 3) / COUNT(*),1) AS '4'            
                 FROM (
                 SELECT (
                 CASE 
@@ -1214,18 +1214,29 @@ const tool_tips_data = async (req, res) => {
 
         if (tipo === 2 || tipo === 3) {
             query += `
-        CONCAT("3", "|", "0", "|", ROUND(SUM(C.14),1), "|", "Talentos: Seleccionamos, desarrollamos y retenemos personas con alto potencial innovador.", "|", CAST(COUNT(*) AS CHAR(2))),
-        CONCAT("3", "|", "0", "|", ROUND(SUM(C.15),1), "|", "Talentos: Reconocemos pública y monetariamente los logros de innovación de la organización, equipos y personas.", "|", CAST(COUNT(*) AS CHAR(2))),
-        CONCAT("3", "|", "1", "|", ROUND(SUM(C.16),1), "|", "Recursos: Asignamos personas a lo largo de la organización para trabajar en tareas de innovación.", "|", CAST(COUNT(*) AS CHAR(2))),
-        CONCAT("3", "|", "1", "|", ROUND(SUM(C.17),1), "|", "Recursos: Contamos con presupuestos para innovación lo que nos permite crear valor nuevo a nuestros clientes.", "|", CAST(COUNT(*) AS CHAR(2))),
-        CONCAT("3", "|", "1", "|", ROUND(SUM(C.18),1), "|", "Recursos: Utilizamos tecnologías de comunicación e información para gestionar la innovación en la empresa.", "|", CAST(COUNT(*) AS CHAR(2))),
-        CONCAT("3", "|", "2", "|", ROUND(SUM(C.19),1), "|", "Procesos: Contamos con procesos y actividades definidos para innovar en la empresa.", "|", CAST(COUNT(*) AS CHAR(2))),
-        CONCAT("3", "|", "2", "|", ROUND(SUM(C.20),1), "|", "Procesos: Tenemos indicadores que permiten medir el desempeño de nuestra innovación.", "|", CAST(COUNT(*) AS CHAR(2))),
-        CONCAT("3", "|", "2", "|", ROUND(SUM(C.21),1), "|", "Procesos: Tenemos criterios, instancias y responsables claros para tomar decisiones respecto a los proyectos de innovación.", "|", CAST(COUNT(*) AS CHAR(2))),
-        CONCAT("3", "|", "3", "|", ROUND(SUM(C.22),1), "|", "Co-Creación: Creamos soluciones, proyectos y negocios con nuestros proveedores y aliados", "|", CAST(COUNT(*) AS CHAR(2))),
-        CONCAT("3", "|", "3", "|", ROUND(SUM(C.23),1), "|", "Co-Creación: Tenemos un canal de interacción, con los debidos responsables, que nos permite co-crear con nuestros proveedores y clientes.", "|", CAST(COUNT(*) AS CHAR(2))),
-        CONCAT("3", "|", "3", "|", ROUND(SUM(C.24),1), "|", "Co-Creación: Tenemos un canal de interacción, con los debidos responsables, que nos permite co-crear con nuestra comunidad.", "|", CAST(COUNT(*) AS CHAR(2))),`
-
+        CONCAT("3", "|", "0", "|", ROUND(SUM(C.22),1), "|", "Co-Creación: Creamos soluciones, proyectos y negocios con nuestros proveedores y aliados", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("3", "|", "0", "|", ROUND(SUM(C.23),1), "|", "Co-Creación: Tenemos un canal de interacción, con los debidos responsables, que nos permite co-crear con nuestros proveedores y clientes.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("3", "|", "0", "|", ROUND(SUM(C.24),1), "|", "Co-Creación: Tenemos un canal de interacción, con los debidos responsables, que nos permite co-crear con nuestra comunidad.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("3", "|", "1", "|", ROUND(SUM(C.14),1), "|", "Talentos: Seleccionamos, desarrollamos y retenemos personas con alto potencial innovador.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("3", "|", "1", "|", ROUND(SUM(C.15),1), "|", "Talentos: Reconocemos pública y monetariamente los logros de innovación de la organización, equipos y personas.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("3", "|", "2", "|", ROUND(SUM(C.16),1), "|", "Recursos: Asignamos personas a lo largo de la organización para trabajar en tareas de innovación.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("3", "|", "2", "|", ROUND(SUM(C.17),1), "|", "Recursos: Contamos con presupuestos para innovación lo que nos permite crear valor nuevo a nuestros clientes.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("3", "|", "2", "|", ROUND(SUM(C.18),1), "|", "Recursos: Utilizamos tecnologías de comunicación e información para gestionar la innovación en la empresa.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("3", "|", "3", "|", ROUND(SUM(C.19),1), "|", "Procesos: Contamos con procesos y actividades definidos para innovar en la empresa.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("3", "|", "3", "|", ROUND(SUM(C.20),1), "|", "Procesos: Tenemos indicadores que permiten medir el desempeño de nuestra innovación.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("3", "|", "3", "|", ROUND(SUM(C.21),1), "|", "Procesos: Tenemos criterios, instancias y responsables claros para tomar decisiones respecto a los proyectos de innovación.", "|", CAST(COUNT(*) AS CHAR(2))),`
+        } else {
+            query += `
+        CONCAT("3", "|", "0", "|", ROUND(SUM(C.14),1), "|", "Co-Creación: Creamos soluciones, proyectos y negocios con nuestros proveedores y aliados", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("3", "|", "0", "|", ROUND(SUM(C.15),1), "|", "Co-Creación: Tenemos un canal de interacción, con los debidos responsables, que nos permite co-crear con nuestros proveedores y clientes.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("3", "|", "0", "|", ROUND(SUM(C.16),1), "|", "Co-Creación: Tenemos un canal de interacción, con los debidos responsables, que nos permite co-crear con nuestra comunidad.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("3", "|", "1", "|", ROUND(SUM(C.17),1), "|", "Talentos: Seleccionamos, desarrollamos y retenemos personas con alto potencial innovador.", "|", CAST(COUNT(*) AS CHAR(2))),        
+        CONCAT("3", "|", "2", "|", ROUND(SUM(C.18),1), "|", "Recursos: Asignamos personas a lo largo de la organización para trabajar en tareas de innovación.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("3", "|", "2", "|", ROUND(SUM(C.19),1), "|", "Recursos: Contamos con presupuestos para innovación lo que nos permite crear valor nuevo a nuestros clientes.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("3", "|", "2", "|", ROUND(SUM(C.20),1), "|", "Recursos: Utilizamos tecnologías de comunicación e información para gestionar la innovación en la empresa.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("3", "|", "3", "|", ROUND(SUM(C.21),1), "|", "Procesos: Contamos con procesos y actividades definidos para innovar en la empresa.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("3", "|", "3", "|", ROUND(SUM(C.22),1), "|", "Procesos: Tenemos indicadores que permiten medir el desempeño de nuestra innovación.", "|", CAST(COUNT(*) AS CHAR(2))),
+        CONCAT("3", "|", "3", "|", ROUND(SUM(C.23),1), "|", "Procesos: Tenemos criterios, instancias y responsables claros para tomar decisiones respecto a los proyectos de innovación.", "|", CAST(COUNT(*) AS CHAR(2))),`
         }
         query += `
         CONCAT("4", "|", "0", "|", ROUND(SUM(C.25),1), "|", "Contamos con herramientas o métodos para identificar necesidades de clientes y consumidores.", "|", CAST(COUNT(*) AS CHAR(2))),
@@ -1431,7 +1442,9 @@ const tool_tips_data = async (req, res) => {
         WHEN Pregunta5_10 = 3 THEN 7
         WHEN Pregunta5_10 = 4 THEN 10
         ELSE 0
-        END) AS '23',
+        END) AS '23',`
+        if (tipo === 2 || tipo === 3) {
+        query += `
         (
         CASE 
         WHEN Pregunta5_11 = 1 THEN 1
@@ -1439,8 +1452,10 @@ const tool_tips_data = async (req, res) => {
         WHEN Pregunta5_11 = 3 THEN 7
         WHEN Pregunta5_11 = 4 THEN 10
         ELSE 0
-        END) AS '24',
-        (
+        END) AS '24',`
+        }
+        query += `
+        (            
         CASE 
         WHEN Pregunta7_1 = 1 THEN 1
         WHEN Pregunta7_1 = 2 THEN 4
