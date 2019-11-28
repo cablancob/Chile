@@ -113,7 +113,7 @@ const recuperar_clave = async (req, res) => {
                     } else {
 
                         res.status(200).json("OK")
-
+                        //CORREO
                         /*
 $para  = $fila['Correo'] ; 
 		// título
@@ -1101,7 +1101,12 @@ const lista_reporte_empleado = async (req, res) => {
 
 const datos_empresa = async (req, res) => {
     try {
-        let query = "SELECT * FROM cadomec_innovactionmeter.iam_empresa WHERE IdEmpresa = " + req.query.id
+        let query = `
+        SELECT A.*, B.Correo as correo_contacto FROM cadomec_innovactionmeter.iam_empresa as A
+        INNER JOIN iam_usuarios B on A.IdEmpresa = B.IdEmpresa
+        WHERE A.IdEmpresa = ` + req.query.id +
+            ` AND B.TipoUsuario = 88 AND B.Correo != "" LIMIT 1;
+        `
         await connection.query(query, (err, result, fields) => {
             if (err) {
                 console.log(err.message)
@@ -1444,7 +1449,7 @@ const tool_tips_data = async (req, res) => {
         ELSE 0
         END) AS '23',`
         if (tipo === 2 || tipo === 3) {
-        query += `
+            query += `
         (
         CASE 
         WHEN Pregunta5_11 = 1 THEN 1
@@ -1573,6 +1578,82 @@ const tool_tips_data = async (req, res) => {
     }
 }
 
+const enviar_conclusion = async (req, res) => {
+
+    const data = await req.body
+    let tipo_encuesta = ""
+    numero = ""
+    if (data.tipo_encuesta === 2) {
+        tipo_encuesta = "Comite Ejecutivo - 90°"
+        numero = "90"
+    }
+    if (data.tipo_encuesta === 3) {
+        tipo_encuesta = "Colaboradores - 180°"
+        numero = "180"
+    }
+    if (data.tipo_encuesta === 4) {
+        tipo_encuesta = "Proveedores - 270°"
+        numero = "270"
+    }
+    if (data.tipo_encuesta === 5) {
+        tipo_encuesta = "Clientes - 360°"
+        numero = "360"
+    }
+
+    const query = "UPDATE iam_empresa SET Conclusion" + numero + " = '" + data.conclusion_coach + "' , " + "Recomendacion" + numero + " = '" + data.recomendacion_coach + "' WHERE IdEmpresa = " + data.IdEmpresa
+    //CORREO
+    const html = `
+    <html>
+<head>
+    <title>Resultado encuesta de Clientes para ".$filaEmpresa[Sigla]."</title>
+</head>
+<body>
+    <img src='https://www.bestplacetoinnovate.org/InnovAccionMeter/Image/Logo_bp2i.jpg' alt='Best Place to Innovate' />
+    <h1 align=center>
+        <font color='#006600'>.: Best Place to Innovate:.</font>
+    </h1>
+    <h2 align=center>
+        <font color='#ff0000'>`+ tipo_encuesta + `</font>
+    </h2>
+    <p><b><i>`+ data.Contacto + `</i></b>, de nuestra consideración:</p>
+    <p>Adjuntamos resultado de encuesta correspondiente a `+ tipo_encuesta + ` de .: Best Place to Innovate:. solicitada
+        por su empresa <b><i>`+ data.NombreEmpresa + `</i></b>.</p>
+        <br>
+        <br>
+        <br>
+        <table align='center'>
+        <tr>
+        <td>
+        <img src=`+ data.imagen + `></img>
+        </td>
+        </tr>
+        </table>
+    <br>
+    <br>
+    <br>
+    <table align='center' width='auto' border='1' cellspacing='2'>
+        <tr>
+            <td><br><b>Conclusión:</b><br>&nbsp;</td>
+            <td><br>`+ data.conclusion_coach + `<br>&nbsp;</td>
+        </tr>
+        <tr>
+            <td><br><b>Recomendación:</b><br>&nbsp;</td>
+            <td><br>`+ data.recomendacion_coach + `<br>&nbsp;</td>
+        </tr>
+    </table>
+    <br><br>Atentamente equipo de <i>Best Place to Innovate</i>
+</html>
+    `
+
+    await connection.query(query, (err, result, fields) => {
+        if (err) {
+            console.log(err.message)
+            res.status(400).json({ error: err.message })
+        } else {
+            res.status(200).json(result)
+        }
+    });
+}
 
 module.exports = {
     pregunta_archivo,
@@ -1594,6 +1675,7 @@ module.exports = {
     lista_reporte_administrador,
     lista_reporte_empleado,
     total_encuestas_empresas,
-    tool_tips_data
+    tool_tips_data,
+    enviar_conclusion
 
 }

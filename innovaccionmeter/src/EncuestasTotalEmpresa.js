@@ -127,9 +127,10 @@ export default class EncuestasTotalEmpresa extends Component {
             <div>
                 <div className="table-responsive p-4">
                     <table className="table table-bordered">
+                    <caption className="d-md-none" style={{"captionSide": "top"}}>Deslice a la derecha</caption>
                         <thead className="text-center">
                             <tr className="bg-primary text-white h5">
-                                <th className="d-none d-md-table-cell">Empresa</th>
+                                <th>Empresa</th>
                                 <th>Sigla</th>
                                 <th>Completas/Total</th>
                             </tr>
@@ -138,7 +139,7 @@ export default class EncuestasTotalEmpresa extends Component {
                             {datos.map((obj, index) => {
                                 return (
                                     <tr key={index} className="h5">
-                                        <td className="d-none d-md-table-cell"><this.link_reporte_empresa tipo={tipo} obj={obj} /></td>
+                                        <td><this.link_reporte_empresa tipo={tipo} obj={obj} /></td>
                                         <td>{obj.Sigla}</td>
                                         <td><this.link_reporte_empleado tipo={tipo} obj={obj} /></td>
                                     </tr>

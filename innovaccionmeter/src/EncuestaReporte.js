@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { AppContext } from './App'
 
 
+
 export default class EncuestaReporte extends Component {
     constructor(props) {
         super(props)
@@ -18,6 +19,77 @@ export default class EncuestaReporte extends Component {
             estructuras_habilitadoras: ["Co-Creación", "Talento", "Recursos", "Procesos"],
             sistemas_consistentes: ["Búsqueda de Oportunidades", "Desarrollo de Soluciones", "Desarrollo de Modelo de Negocio", "Gestión del Cambio"],
             cultura_conectada: ["Apertura hacia lo nuevo", "Orientación Comercial", "Flexibilidad ante Cambios", "Tolerancia a Fallar"]
+        }
+    }
+
+    enviar_encuesta = async (e) => {
+        e.preventDefault()
+        let valid = true
+        let focus = true
+        let form_data = {}
+        const form_id = "form_con_coach"
+
+        Array.from(document.getElementById(form_id).elements).map((obj) => {
+            show_validate(form_id, obj.id)
+            return true
+        })
+
+        function show_validate(form_id, id) {
+            if (document.getElementById(form_id).elements[id].value.trim() === "") {
+                valid = false
+                document.getElementById(form_id).elements[id].classList.remove("is-valid")
+                document.getElementById(form_id).elements[id].classList.add("is-invalid")
+                if (focus) {
+                    document.getElementById(form_id).elements[id].focus()
+                    focus = false
+                }
+            } else {
+                document.getElementById(form_id).elements[id].classList.remove("is-invalid")
+                document.getElementById(form_id).elements[id].classList.add("is-valid")
+                form_data[id] = document.getElementById(form_id).elements[id].value
+            }
+        }
+
+        if (valid) {
+            try {
+                let canvas_image = ""
+                await window.html2canvas(document.getElementById("tabla-final"), {
+                    onrendered: function (canvas) {
+                        canvas_image = canvas.toDataURL()                        
+                    }
+                });                
+                form_data["IdEmpresa"] = this.state.datos_empresa.IdEmpresa
+                form_data["NombreEmpresa"] = this.state.datos_empresa.NombreEmpresa
+                form_data["Contacto"] = this.state.datos_empresa.Contacto
+                form_data["correo_contacto"] = this.state.datos_empresa.correo_contacto
+                form_data["tipo_encuesta"] = this.props.tipo_encuesta
+                form_data["imagen"] = canvas_image
+
+                let headers = new Headers()
+                headers.append("Content-Type", "application/json")
+                headers.append("x-access-token", sessionStorage.getItem('innovaccionmeter_session'))
+
+                const URL = "http://" + window.location.host.split(":")[0] + ":" + process.env.REACT_APP_PORT + "/enviar_conclusion"
+                let response = await fetch(URL, {
+                    method: "POST",
+                    headers: headers,
+                    body: JSON.stringify(form_data)
+                })
+
+                let data = await response.json()
+
+                if (response.status === 200) {                    
+                    window.ModalOk("Env&iacute;o de Conclusi&oacute;n", "Se env&iacute;o satisfactoriamente la conclusi&oacute;n y recomendacion a: " + data.Contacto)                    
+         
+                } else if (response.status === 400) {
+                    window.ModalError("Env&iacute;o de Conclusi&oacute;n", data.error)                    
+                } else {
+                    this.state.auth_false()                    
+                }
+            } catch (e) {
+                window.ModalError("Env&iacute;o de Conclusi&oacute;n", e.error)
+                document.getElementById(form_id).reset()
+            }            
         }
     }
 
@@ -404,7 +476,7 @@ export default class EncuestaReporte extends Component {
                 headers: headers,
             })
             let data = await response.json()
-            if (response.status === 200) {
+            if (response.status === 200) {                
                 this.setState({
                     datos_empresa: data
                 })
@@ -599,7 +671,7 @@ export default class EncuestaReporte extends Component {
 
             this.setState({
                 mostrar: true
-            })            
+            })
 
         } catch (e) {
             window.ModalError("Reporte", e.error)
@@ -635,7 +707,7 @@ export default class EncuestaReporte extends Component {
             <div className="container-fluid">
                 <h1 className="h3 mb-4 text-gray-800 text-center">{titulo}</h1>
                 <h1 className="h4 mb-4 text-gray-800 text-center px-2">{subtitulo}</h1>
-                <div className="card form-group">
+                <div className="card form-group" id="tabla-final">
                     <div className="h5 card-header bg-white text-dark text-center">
                         <div className="row">
                             <div className="col-md-4 py-2">
@@ -685,7 +757,7 @@ export default class EncuestaReporte extends Component {
                                                             } else {
                                                                 let texto = ""
                                                                 this.state.tooltips.map((obj) => {
-                                                                    if (obj.pagina === index_superior.toString() && obj.pregunta === index.toString()) {                                                                        
+                                                                    if (obj.pagina === index_superior.toString() && obj.pregunta === index.toString()) {
                                                                         texto += obj.texto + " Puntaje: ( " + (obj.valor / obj.total).toFixed(1) + " ) \n\n"
 
                                                                     }
@@ -713,26 +785,47 @@ export default class EncuestaReporte extends Component {
                 <div className="d-flex justify-content-center py-5">
                     {pie_pagina}
                 </div>
-                <div className="d-flex justify-content-center py-1">
-                    <button type="button" className="btn btn-primary px-5 my-2" onClick={this.props.funcion}>{"<< Anterior"}</button>
-                </div>
+                <this.boton />                
             </div>
         )
     }
 
     conclusion = () => {
         return (
-            <div className="px-5">
+            <form className="form-group" id="form_con_coach">
                 <div className="form-group">
                     <label htmlFor="comment">Conclusión</label>
-                    <textarea className="form-control" rows="3" id="comment" readOnly={(this.state.state.usuario.TipoUsuario === 88) ? true : false} defaultValue={this.state.conclusion} />
+                    <textarea className="form-control" rows="3" id="conclusion_coach" readOnly={(this.state.state.usuario.TipoUsuario === 88) ? true : false} defaultValue={this.state.conclusion} />
+                    <div className="invalid-feedback">Campo Obligatorio</div>
                 </div>
                 <div className="form-group">
                     <label htmlFor="comment">Recomendación</label>
-                    <textarea className="form-control" rows="3" id="comment" readOnly={(this.state.state.usuario.TipoUsuario === 88) ? true : false} defaultValue={this.state.recomendacion} />
+                    <textarea className="form-control" rows="3" id="recomendacion_coach" readOnly={(this.state.state.usuario.TipoUsuario === 88) ? true : false} defaultValue={this.state.recomendacion} />
+                    <div className="invalid-feedback">Campo Obligatorio</div>
                 </div>
-            </div>
+            </form>
         )
+    }
+
+    boton = () => {
+        if (this.state.state.usuario.TipoUsuario === 99 && this.props.id_empresa !== 0) {
+            return (
+                <div className="row text-center pb-5">
+                    <div className="col-md-6 py-3">
+                        <button type="button" className="btn btn-primary px-5" onClick={this.props.funcion}>{"<< Anterior"}</button>
+                    </div>
+                    <div className="col-md-6 py-3">
+                        <button type="button" className="btn btn-primary px-5" onClick={this.enviar_encuesta}>{"Enviar Encuesta"}</button>
+                    </div>
+                </div>
+            )
+        } else {
+            return (
+                <div className="d-flex justify-content-center py-1">
+                    <button type="button" className="btn btn-primary px-5 my-2" onClick={this.props.funcion}>{"<< Anterior"}</button>
+                </div>
+            )
+        }
     }
 
 

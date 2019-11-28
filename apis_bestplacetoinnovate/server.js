@@ -34,12 +34,16 @@ cargar_archivo()
 app.use(helmet());
 //app.use(cors(corsOptions));
 app.use(cors());
-app.use(bodyParser.json());
+//app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '1mb', extended: true}))
 
 app.post('/login', main.login)
 app.post('/recuperar_clave', main.recuperar_clave)
 app.post('/actualizar_encuesta', main.verifytoken, main.actualizar_encuesta)
 app.post('/preguntas_encuesta', main.verifytoken, main.preguntas_encuesta)
+app.post('/enviar_conclusion', main.verifytoken, main.enviar_conclusion)
+
+
 
 
 app.get('/session', main.verifytoken, main.session)
