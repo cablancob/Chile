@@ -517,7 +517,7 @@ export default class Encuestas extends Component {
                         <div id="content">
                             <Menu />
                             {(this.state.cantidad_preguntas !== undefined && this.state.pagina !== 8) ? <this.Preguntas /> : ""}
-                            {(this.state.pagina === 8) ? <EncuestaReporte tipo_encuesta={this.state.state.usuario.TipoUsuario} id_usuario={this.state.state.usuario.Id} id_empresa={0} funcion={this.regresar} /> : ""}
+                            {(this.state.pagina === 8) ? <EncuestaReporte tipo_encuesta={this.state.state.usuario.TipoUsuario} id_usuario={this.state.state.usuario.Id} id_empresa={0} funcion={this.regresar} correo={1} /> : ""}
                         </div>
                         <footer className="sticky-footer bg-white">
                             <div className="container my-auto">

@@ -42,9 +42,7 @@ app.post('/recuperar_clave', main.recuperar_clave)
 app.post('/actualizar_encuesta', main.verifytoken, main.actualizar_encuesta)
 app.post('/preguntas_encuesta', main.verifytoken, main.preguntas_encuesta)
 app.post('/enviar_conclusion', main.verifytoken, main.enviar_conclusion)
-
-
-
+app.post('/correo_encuesta_finalizada', main.verifytoken, main.correo_encuesta_finalizada)
 
 app.get('/session', main.verifytoken, main.session)
 app.get('/encuesta', main.verifytoken, main.encuesta)

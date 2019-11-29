@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken")
 const nodeMailer = require('nodemailer')
 const mysql = require('mysql')
 
+const fs = require('fs');
 const connection = mysql.createConnection({
     host: process.env.DATABASE_ADDRESS,
     user: process.env.DATABASE_USER,
@@ -293,7 +294,7 @@ const resultados_innovacion = async (req, res) => {
             WHEN Pregunta3_1 = 1 THEN 1
             WHEN Pregunta3_1 = 2 THEN 5
             WHEN Pregunta3_1 = 3 THEN 10
-            WHEN Pregunta3_1 = 4 THEN 0
+            WHEN Pregunta3_1 = 4 THEN 5
             ELSE 0
             END) AS '0',
             (
@@ -301,7 +302,7 @@ const resultados_innovacion = async (req, res) => {
             WHEN Pregunta3_3 = 1 THEN 1
             WHEN Pregunta3_3 = 2 THEN 5
             WHEN Pregunta3_3 = 3 THEN 10
-            WHEN Pregunta3_3 = 4 THEN 0
+            WHEN Pregunta3_3 = 4 THEN 5
             ELSE 0
             END) AS '1',
             (
@@ -309,7 +310,7 @@ const resultados_innovacion = async (req, res) => {
             WHEN Pregunta3_4 = 1 THEN 1
             WHEN Pregunta3_4 = 2 THEN 5
             WHEN Pregunta3_4 = 3 THEN 10
-            WHEN Pregunta3_4 = 4 THEN 0
+            WHEN Pregunta3_4 = 4 THEN 5
             ELSE 0
             END) AS '2',
             (
@@ -317,7 +318,7 @@ const resultados_innovacion = async (req, res) => {
             WHEN Pregunta3_5 = 1 THEN 1
             WHEN Pregunta3_5 = 2 THEN 5
             WHEN Pregunta3_5 = 3 THEN 10
-            WHEN Pregunta3_5 = 4 THEN 0
+            WHEN Pregunta3_5 = 4 THEN 5
             ELSE 0
             END) AS '3',
             (
@@ -325,7 +326,7 @@ const resultados_innovacion = async (req, res) => {
             WHEN Pregunta3_2 = 1 THEN 1
             WHEN Pregunta3_2 = 2 THEN 5
             WHEN Pregunta3_2 = 3 THEN 10
-            WHEN Pregunta3_2 = 4 THEN 0
+            WHEN Pregunta3_2 = 4 THEN 5
             ELSE 0
             END) AS '4',
             (
@@ -333,7 +334,7 @@ const resultados_innovacion = async (req, res) => {
             WHEN Pregunta3_6 = 1 THEN 1
             WHEN Pregunta3_6 = 2 THEN 5
             WHEN Pregunta3_6 = 3 THEN 10
-            WHEN Pregunta3_6 = 4 THEN 0
+            WHEN Pregunta3_6 = 4 THEN 5
             ELSE 0
             END) AS '5'`
             + where +
@@ -1262,7 +1263,7 @@ const tool_tips_data = async (req, res) => {
         WHEN Pregunta3_1 = 1 THEN 1
         WHEN Pregunta3_1 = 2 THEN 5
         WHEN Pregunta3_1 = 3 THEN 10
-        WHEN Pregunta3_1 = 4 THEN 0
+        WHEN Pregunta3_1 = 4 THEN 5
         ELSE 0
         END) AS '0',
         (
@@ -1270,7 +1271,7 @@ const tool_tips_data = async (req, res) => {
         WHEN Pregunta3_3 = 1 THEN 1
         WHEN Pregunta3_3 = 2 THEN 5
         WHEN Pregunta3_3 = 3 THEN 10
-        WHEN Pregunta3_3 = 4 THEN 0
+        WHEN Pregunta3_3 = 4 THEN 5
         ELSE 0
         END) AS '1',
         (
@@ -1278,7 +1279,7 @@ const tool_tips_data = async (req, res) => {
         WHEN Pregunta3_4 = 1 THEN 1
         WHEN Pregunta3_4 = 2 THEN 5
         WHEN Pregunta3_4 = 3 THEN 10
-        WHEN Pregunta3_4 = 4 THEN 0
+        WHEN Pregunta3_4 = 4 THEN 5
         ELSE 0
         END) AS '2',
         (
@@ -1286,7 +1287,7 @@ const tool_tips_data = async (req, res) => {
         WHEN Pregunta3_5 = 1 THEN 1
         WHEN Pregunta3_5 = 2 THEN 5
         WHEN Pregunta3_5 = 3 THEN 10
-        WHEN Pregunta3_5 = 4 THEN 0
+        WHEN Pregunta3_5 = 4 THEN 5
         ELSE 0
         END) AS '3',
         (
@@ -1294,7 +1295,7 @@ const tool_tips_data = async (req, res) => {
         WHEN Pregunta3_2 = 1 THEN 1
         WHEN Pregunta3_2 = 2 THEN 5
         WHEN Pregunta3_2 = 3 THEN 10
-        WHEN Pregunta3_2 = 4 THEN 0
+        WHEN Pregunta3_2 = 4 THEN 5
         ELSE 0
         END) AS '4',
         (
@@ -1302,7 +1303,7 @@ const tool_tips_data = async (req, res) => {
         WHEN Pregunta3_6 = 1 THEN 1
         WHEN Pregunta3_6 = 2 THEN 5
         WHEN Pregunta3_6 = 3 THEN 10
-        WHEN Pregunta3_6 = 4 THEN 0
+        WHEN Pregunta3_6 = 4 THEN 5
         ELSE 0
         END) AS '5',
         (
@@ -1579,44 +1580,56 @@ const tool_tips_data = async (req, res) => {
 }
 
 const enviar_conclusion = async (req, res) => {
+    try {
+        const data = await req.body
+        let tipo_encuesta = ""
+        numero = ""
+        let asunto = "Resultado encuesta Clientes de Best Place to Innovate para " + data.Sigla
+        let para = data.correo_contacto
+        let copia_oculta = ""
+        let de = process.env.CORREO_ADMIN
 
-    const data = await req.body
-    let tipo_encuesta = ""
-    numero = ""
-    if (data.tipo_encuesta === 2) {
-        tipo_encuesta = "Comite Ejecutivo - 90°"
-        numero = "90"
-    }
-    if (data.tipo_encuesta === 3) {
-        tipo_encuesta = "Colaboradores - 180°"
-        numero = "180"
-    }
-    if (data.tipo_encuesta === 4) {
-        tipo_encuesta = "Proveedores - 270°"
-        numero = "270"
-    }
-    if (data.tipo_encuesta === 5) {
-        tipo_encuesta = "Clientes - 360°"
-        numero = "360"
-    }
+        
+        console.log(data)
+        if (data.tipo_encuesta === 2) {
+            tipo_encuesta = "Comite Ejecutivo - 90°"
+            numero = "90"
+        }
+        if (data.tipo_encuesta === 3) {
+            tipo_encuesta = "Colaboradores - 180°"
+            numero = "180"
+        }
+        if (data.tipo_encuesta === 4) {
+            tipo_encuesta = "Proveedores - 270°"
+            numero = "270"
+        }
+        if (data.tipo_encuesta === 5) {
+            tipo_encuesta = "Clientes - 360°"
+            numero = "360"
+        }
 
-    const query = "UPDATE iam_empresa SET Conclusion" + numero + " = '" + data.conclusion_coach + "' , " + "Recomendacion" + numero + " = '" + data.recomendacion_coach + "' WHERE IdEmpresa = " + data.IdEmpresa
-    //CORREO
-    const html = `
+        copia_oculta = de + "," + data.correo_contacto
+
+
+        console.log(de + " - " + copia_oculta + " - " + para + " - " + asunto)
+
+        const query = "UPDATE iam_empresa SET Conclusion" + numero + " = '" + data.conclusion_coach + "' , " + "Recomendacion" + numero + " = '" + data.recomendacion_coach + "' WHERE IdEmpresa = " + data.IdEmpresa
+        //CORREO
+        const html = `
     <html>
-<head>
-    <title>Resultado encuesta de Clientes para ".$filaEmpresa[Sigla]."</title>
-</head>
+    <head>
+    <title>` + asunto + `</title>
+    </head>
 <body>
     <img src='https://www.bestplacetoinnovate.org/InnovAccionMeter/Image/Logo_bp2i.jpg' alt='Best Place to Innovate' />
     <h1 align=center>
-        <font color='#006600'>.: Best Place to Innovate:.</font>
+        <font color='#006600'>Best Place to Innovate</font>
     </h1>
     <h2 align=center>
         <font color='#ff0000'>`+ tipo_encuesta + `</font>
     </h2>
     <p><b><i>`+ data.Contacto + `</i></b>, de nuestra consideración:</p>
-    <p>Adjuntamos resultado de encuesta correspondiente a `+ tipo_encuesta + ` de .: Best Place to Innovate:. solicitada
+    <p>Adjuntamos resultado de encuesta correspondiente a `+ tipo_encuesta + ` de Best Place to Innovate solicitada
         por su empresa <b><i>`+ data.NombreEmpresa + `</i></b>.</p>
         <br>
         <br>
@@ -1645,14 +1658,122 @@ const enviar_conclusion = async (req, res) => {
 </html>
     `
 
-    await connection.query(query, (err, result, fields) => {
-        if (err) {
-            console.log(err.message)
-            res.status(400).json({ error: err.message })
-        } else {
-            res.status(200).json(result)
+        await connection.query(query, (err, result, fields) => {
+            if (err) {
+                console.log(err.message)
+                res.status(400).json({ error: err.message })
+            } else {
+                res.status(200).json(result)
+            }
+        });
+    } catch (e) {
+        console.log(e.message)
+        res.status(400).json({ error: e.message })
+    }
+}
+
+const correo_encuesta_finalizada = async (req, res) => {
+    try {
+        const data = await req.body
+
+        let asunto = ""
+        let para = ""
+        let copia_oculta = ""
+        let de = process.env.CORREO_ADMIN
+
+        let tabla = ""
+
+        if (data.tipo_encuesta === 2) {
+            tipo_encuesta = "Comite Ejecutivo - 90°"
+            asunto = "Resultado encuesta Comite Ejecutivo de Best Place to Innovate para "
+            tabla = "iam_encuesta90"
         }
-    });
+        if (data.tipo_encuesta === 3) {
+            tipo_encuesta = "Colaboradores - 180°"
+            asunto = "Resultado encuesta Colaboradores de Best Place to Innovate para "
+            tabla = "iam_encuesta180"
+        }
+        if (data.tipo_encuesta === 4) {
+            tipo_encuesta = "Proveedores - 270°"
+            asunto = "Resultado encuesta Proveedores de Best Place to Innovate para "
+            tabla = "iam_encuesta270"
+        }
+        if (data.tipo_encuesta === 5) {
+            tipo_encuesta = "Clientes - 360°"
+            asunto = "Resultado encuesta Clientes de Best Place to Innovate para "
+            tabla = "iam_encuesta360"
+        }
+
+
+        let query = "SELECT EncuestaEnviada FROM " + tabla + " WHERE EncuestaEnviada = 'N' AND IdUsuario = " + data.id_usuario
+        //CORREO
+
+
+        await connection.query(query, (err, result, fields) => {
+            if (err) {
+                console.log(err.message)
+                res.status(400).json({ error: err.message })
+            } else {
+                if (result.length > 0) {
+                    query = "SELECT A.Nombre, A.Correo, B.NombreEmpresa, B.Sigla, B.Correo FROM iam_usuarios A INNER JOIN iam_empresa B ON A.IdEmpresa = B.IdEmpresa WHERE A.Id = " + data.id_usuario
+                    connection.query(query, (err, result, fields) => {
+                        if (err) {
+                            console.log(err.message)
+                            res.status(400).json({ error: err.message })
+                        } else {
+                            if (result.length > 0) {
+                                asunto += result[0].Sigla
+                                copia_oculta = result[0].Correo + "," + process.env.CORREO_ADMIN                                
+                                const html = `
+                               <html>
+                               <head>
+                                   <title>`+ asunto + `</title>
+                               </head>
+                               <body>
+                                   <img src='https://www.bestplacetoinnovate.org/InnovAccionMeter/Image/Logo_bp2i.jpg' alt='Best Place to Innovate' />
+                                   <h1 align=center><font color='#006600'>Best Place to Innovate</font></h1>
+                                   <h2 align=center><font color='#ff0000'>`+ tipo_encuesta + `</font></h2>
+                                   <p><b><i>`+ result[0].Nombre + `</i></b>, de nuestra consideración:</p>
+                                   <p>Adjuntamos resultado de encuesta correspondiente a `+ tipo_encuesta + ` de Best Place to Innovate solicitada por <b><i>` + result[0].NombreEmpresa + `</i></b>.</p>
+                                   <br><br><br>
+                                   <table align='center'>
+                                       <tr>
+                                           <td>
+                                               <img src=`+ data.imagen + `></img>
+                                           </td>
+                                       </tr>
+                                   </table>
+                                   <br><br><br>
+                               </body>
+                               </html>
+                               `
+                                fs.writeFile('prueba.html', html, (err) => {
+                                    if (err) throw err;
+                                });
+
+                                query = "UPDATE " + tabla + " SET EncuestaEnviada = 'S' WHERE IdUsuario = " + data.id_usuario
+                                connection.query(query, (err, result, fields) => {
+                                    if (err) {
+                                        console.log(err.message)
+                                        res.status(400).json({ error: err.message })
+                                    } else {
+                                        res.status(200).json("OK")
+                                    }
+                                });
+
+                            }
+                        }
+                    });
+                } else {
+                    res.status(200).json("OK")
+                }
+            }
+        });
+    } catch (e) {
+        console.log(e.message)
+        res.status(400).json({ error: e.message })
+    }
+
 }
 
 module.exports = {
@@ -1676,6 +1797,7 @@ module.exports = {
     lista_reporte_empleado,
     total_encuestas_empresas,
     tool_tips_data,
-    enviar_conclusion
+    enviar_conclusion,
+    correo_encuesta_finalizada
 
 }

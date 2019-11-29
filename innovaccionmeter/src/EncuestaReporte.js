@@ -55,13 +55,14 @@ export default class EncuestaReporte extends Component {
                 let canvas_image = ""
                 await window.html2canvas(document.getElementById("tabla-final"), {
                     onrendered: function (canvas) {
-                        canvas_image = canvas.toDataURL()                        
+                        canvas_image = canvas.toDataURL()
                     }
-                });                
+                });
                 form_data["IdEmpresa"] = this.state.datos_empresa.IdEmpresa
                 form_data["NombreEmpresa"] = this.state.datos_empresa.NombreEmpresa
                 form_data["Contacto"] = this.state.datos_empresa.Contacto
                 form_data["correo_contacto"] = this.state.datos_empresa.correo_contacto
+                form_data["Sigla"] = this.state.datos_empresa.Sigla
                 form_data["tipo_encuesta"] = this.props.tipo_encuesta
                 form_data["imagen"] = canvas_image
 
@@ -78,18 +79,18 @@ export default class EncuestaReporte extends Component {
 
                 let data = await response.json()
 
-                if (response.status === 200) {                    
-                    window.ModalOk("Env&iacute;o de Conclusi&oacute;n", "Se env&iacute;o satisfactoriamente la conclusi&oacute;n y recomendacion a: " + data.Contacto)                    
-         
+                if (response.status === 200) {
+                    window.ModalOk("Env&iacute;o de Conclusi&oacute;n", "Se env&iacute;o satisfactoriamente la conclusi&oacute;n y recomendacion a: " + data.Contacto)
+
                 } else if (response.status === 400) {
-                    window.ModalError("Env&iacute;o de Conclusi&oacute;n", data.error)                    
+                    window.ModalError("Env&iacute;o de Conclusi&oacute;n", data.error)
                 } else {
-                    this.state.auth_false()                    
+                    this.state.auth_false()
                 }
             } catch (e) {
                 window.ModalError("Env&iacute;o de Conclusi&oacute;n", e.error)
                 document.getElementById(form_id).reset()
-            }            
+            }
         }
     }
 
@@ -476,7 +477,7 @@ export default class EncuestaReporte extends Component {
                 headers: headers,
             })
             let data = await response.json()
-            if (response.status === 200) {                
+            if (response.status === 200) {
                 this.setState({
                     datos_empresa: data
                 })
@@ -668,13 +669,54 @@ export default class EncuestaReporte extends Component {
             datos = await this.cultura_conectada(usuario, empresa, tipo)
             this.reporte_final(datos, 6)
 
-
             this.setState({
                 mostrar: true
             })
 
+            if (this.props.correo !== undefined) {
+                await this.correo_encuesta_finalizada(this.props)
+            }
+
         } catch (e) {
             window.ModalError("Reporte", e.error)
+        }
+    }
+
+    correo_encuesta_finalizada = async (usuario) => {        
+        try {
+            let form_data = {}
+            let canvas_image = ""
+            await window.html2canvas(document.getElementById("tabla-final"), {
+                onrendered: function (canvas) {
+                    canvas_image = canvas.toDataURL()
+                }
+            });
+            form_data["tipo_encuesta"] = usuario.tipo_encuesta
+            form_data["id_usuario"] = usuario.id_usuario
+            form_data["imagen"] = canvas_image
+            
+            let headers = new Headers()
+            headers.append("Content-Type", "application/json")
+            headers.append("x-access-token", sessionStorage.getItem('innovaccionmeter_session'))
+
+            const URL = "http://" + window.location.host.split(":")[0] + ":" + process.env.REACT_APP_PORT + "/correo_encuesta_finalizada"
+            let response = await fetch(URL, {
+                method: "POST",
+                headers: headers,
+                body: JSON.stringify(form_data)
+            })
+
+            let data = await response.json()
+
+            if (response.status === 200) {                
+
+            } else if (response.status === 400) {
+                window.ModalError("Env&iacute;o de Resultados de Encuesta", data.error)
+            } else {
+                this.state.auth_false()
+            }
+        } catch (e) {
+            window.ModalError("Env&iacute;o de Resultados de Encuesta", e.error)            
         }
     }
 
@@ -785,7 +827,7 @@ export default class EncuestaReporte extends Component {
                 <div className="d-flex justify-content-center py-5">
                     {pie_pagina}
                 </div>
-                <this.boton />                
+                <this.boton />
             </div>
         )
     }
