@@ -73,10 +73,10 @@ export default class EncuestasTotalEmpresa extends Component {
 
     reporte_empresa = (tipo, empresa) => {
         this.setState({
-             tipo,
-             empresa,
-             vista: 3
-         })        
+            tipo,
+            empresa,
+            vista: 3
+        })
     }
 
     reporte_empleado = (tipo, empresa) => {
@@ -84,7 +84,7 @@ export default class EncuestasTotalEmpresa extends Component {
             tipo,
             empresa,
             vista: 2
-        })        
+        })
     }
 
     link_reporte_empresa = (obj) => {
@@ -123,32 +123,44 @@ export default class EncuestasTotalEmpresa extends Component {
     pagina_principal = () => {
         const datos = this.state.datos
         const tipo = this.props.tipo
+        let titulo = ""
+        let subtitulo = ""
+        let contenido = ""
+        let division = ""
+
+        if (window.screen.width < 720) {
+            titulo = "row bg-primary text-white text-center d-none"
+            subtitulo = "col-md-6 bg-primary text-white"
+            contenido = "col-md-6"
+            division = "row text-center py-4"
+
+        } else {
+            titulo = "row bg-primary text-white text-center"
+            subtitulo = "bg-primary text-white d-none"
+            contenido = "col-md py-2"
+            division = "row text-center"
+        }
         return (
-            <div>
-                <div className="table-responsive p-4">
-                    <table className="table table-bordered">
-                    <caption className="d-md-none" style={{"captionSide": "top"}}>Deslice a la derecha</caption>
-                        <thead className="text-center">
-                            <tr className="bg-primary text-white h5">
-                                <th>Empresa</th>
-                                <th>Sigla</th>
-                                <th>Completas/Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {datos.map((obj, index) => {
-                                return (
-                                    <tr key={index} className="h5">
-                                        <td><this.link_reporte_empresa tipo={tipo} obj={obj} /></td>
-                                        <td>{obj.Sigla}</td>
-                                        <td><this.link_reporte_empleado tipo={tipo} obj={obj} /></td>
-                                    </tr>
-                                )
-                            })
-                            }
-                        </tbody>
-                    </table>
+            <div className="px-2">
+                <div className={titulo}>
+                    <div className="col-md py-2" style={{ "border": "1px solid #c9c9c9" }}>Empresa</div>
+                    <div className="col-md py-2" style={{ "border": "1px solid #c9c9c9" }}>Sigla</div>
+                    <div className="col-md py-2" style={{ "border": "1px solid #c9c9c9" }}>Completas/Total</div>
                 </div>
+                {
+                    datos.map((obj, index) => {
+                        return (
+                            <div className={division} key={index}>
+                                <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Empresa</div>
+                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}><this.link_reporte_empresa tipo={tipo} obj={obj} /></div>
+                                <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Sigla</div>
+                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{obj.Sigla}</div>
+                                <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Completas/Total</div>
+                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}><this.link_reporte_empleado tipo={tipo} obj={obj} /></div>
+                            </div>
+                        )
+                    })
+                }
             </div>
         )
 
@@ -163,7 +175,7 @@ export default class EncuestasTotalEmpresa extends Component {
                             <ListaReporteEmpleados usuario={this.state.state.usuario} tipo={this.state.tipo} empresa={this.state.empresa} funcion={this.regresar} />
                             : (this.state.vista === 3)
                                 ? <EncuestaReporte tipo_encuesta={this.state.tipo} id_usuario={0} id_empresa={this.state.empresa} funcion={this.regresar} />
-                                : ""
+                                : <div className="d-flex justify-content-center py-5"><div className="spinner-border text-success" role="status"><span className="sr-only">Espere...</span></div></div>
                 }
             </div>
         )

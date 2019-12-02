@@ -1589,7 +1589,7 @@ const enviar_conclusion = async (req, res) => {
         let copia_oculta = ""
         let de = process.env.CORREO_ADMIN
 
-        
+
         console.log(data)
         if (data.tipo_encuesta === 2) {
             tipo_encuesta = "Comite Ejecutivo - 90°"
@@ -1723,7 +1723,7 @@ const correo_encuesta_finalizada = async (req, res) => {
                         } else {
                             if (result.length > 0) {
                                 asunto += result[0].Sigla
-                                copia_oculta = result[0].Correo + "," + process.env.CORREO_ADMIN                                
+                                copia_oculta = result[0].Correo + "," + process.env.CORREO_ADMIN
                                 const html = `
                                <html>
                                <head>
@@ -1776,6 +1776,48 @@ const correo_encuesta_finalizada = async (req, res) => {
 
 }
 
+const mantencion_empresas = async (req, res) => {
+    try {
+
+        let query = `
+        SELECT A.IdEmpresa, A.NombreEmpresa, A.Sigla, A.Vigente, 
+        CASE 
+        WHEN Encuesta90 = 'S' THEN (SELECT CAST(COUNT(*) AS CHAR(3)) FROM iam_usuarios B WHERE B.IdEmpresa = A.IdEmpresa AND B.TipoUsuario = 2)
+        ELSE 'X'
+        END cuenta90, 
+        CASE
+        WHEN Encuesta180 = 'S' THEN (SELECT CAST(COUNT(*) AS CHAR(3)) FROM iam_usuarios B WHERE B.IdEmpresa = A.IdEmpresa AND B.TipoUsuario = 3)
+        ELSE 'X'
+        END cuenta180, 
+        CASE
+        WHEN Encuesta270 = 'S' THEN (SELECT CAST(COUNT(*) AS CHAR(3)) FROM iam_usuarios B WHERE B.IdEmpresa = A.IdEmpresa AND B.TipoUsuario = 4)
+        ELSE 'X'
+        END cuenta270, 
+        CASE
+        WHEN Encuesta360 = 'S' THEN (SELECT CAST(COUNT(*) AS CHAR(3)) FROM iam_usuarios B WHERE B.IdEmpresa = A.IdEmpresa AND B.TipoUsuario = 5)
+        ELSE 'X'
+        END cuenta360
+        FROM iam_empresa A        
+        ORDER BY A.NombreEmpresa
+        `
+        await connection.query(query, (err, result, fields) => {
+            if (err) {
+                console.log(err.message)
+                res.status(400).json({ error: err.message })
+            } else {
+                if (result.length > 0) {
+                    res.status(200).json(result)
+                } else {
+                    res.status(400).json({ error: "No hay datos." })
+                }
+            }
+        });
+    } catch (e) {
+        console.log(e.message)
+        res.status(400).json({ error: e.message })
+    }
+}
+
 module.exports = {
     pregunta_archivo,
     session,
@@ -1798,6 +1840,7 @@ module.exports = {
     total_encuestas_empresas,
     tool_tips_data,
     enviar_conclusion,
-    correo_encuesta_finalizada
+    correo_encuesta_finalizada,
+    mantencion_empresas
 
 }

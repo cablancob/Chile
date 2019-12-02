@@ -58,6 +58,8 @@ app.get('/lista_reporte_administrador', main.verifytoken, main.lista_reporte_adm
 app.get('/lista_reporte_empleado', main.verifytoken, main.lista_reporte_empleado)
 app.get('/total_encuestas_empresas', main.verifytoken, main.total_encuestas_empresas)
 app.get('/tool_tips_data', main.verifytoken, main.tool_tips_data)
+app.get('/mantencion_empresas', main.verifytoken, main.mantencion_empresas)
+
 
 
 app.listen(process.env.PORT || 3000, () => {

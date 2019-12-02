@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 
 import Menu from './Menu'
 import EncuestasTotalEmpresa from './EncuestasTotalEmpresa'
+import MantencionEmpresas from './MantencionEmpresas'
 
 export default class Coach extends Component {
     constructor(props) {
@@ -97,6 +98,7 @@ export default class Coach extends Component {
                                 <div className="container-fluid">
                                 {
                                 (submenu === 7) ? <EncuestasTotalEmpresa tipo={menu} />
+                                : (submenu === 8) ? <MantencionEmpresas tipo={menu} />
                                 : ""
                                 }
                                 </div>
