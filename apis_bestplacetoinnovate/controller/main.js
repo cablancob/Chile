@@ -1818,6 +1818,35 @@ const mantencion_empresas = async (req, res) => {
     }
 }
 
+const modificar_empresa = async (req, res) => {
+    try {
+        const data = req.body        
+        let query = "UPDATE iam_empresa SET "
+
+
+        for (let i in data.datos) {
+            query += i + " = '" + data.datos[i] + "', "
+        }
+
+        query = query.substring(0, query.length - 2)
+        query += " WHERE IdEmpresa = " + data.IdEmpresa                
+
+
+        await connection.query(query, (err, result, fields) => {
+             if (err) {
+                 console.log(err.message)
+                 res.status(400).json({ error: err.message })
+             } else {
+                 res.status(200).json("OK")
+             }
+         })
+        
+    } catch (e) {
+        console.log(e.message)
+        res.status(400).json({ error: e.message })
+    }
+}
+
 module.exports = {
     pregunta_archivo,
     session,
@@ -1841,6 +1870,7 @@ module.exports = {
     tool_tips_data,
     enviar_conclusion,
     correo_encuesta_finalizada,
-    mantencion_empresas
+    mantencion_empresas,
+    modificar_empresa
 
 }

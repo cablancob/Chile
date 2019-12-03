@@ -42,10 +42,7 @@ export default class MantencionEmpresas extends Component {
             if (response.status === 200) {
                 this.setState({
                     datos: data,
-                    vista: 2,
-                    IdEmpresa: 214,
-                    tipo: "m"
-
+                    vista: 1
                 })
             } else if (response.status === 400) {
                 window.ModalError("Mantenci&oacute;n Empresas", data.error)
@@ -64,9 +61,7 @@ export default class MantencionEmpresas extends Component {
             state,
             auth_false
         })
-        await this.datos()
-        console.log(this.state.datos)
-
+        await this.datos()        
     }
 
     modificar_empresa = async (obj) => {
