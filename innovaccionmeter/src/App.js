@@ -34,9 +34,9 @@ export default class App extends Component {
   }
 
 
-  tipo_warning = (warning, titulo, texto) => {
+  tipo_warning = (funcion_warning, titulo, texto) => {
     this.setState({
-      tipo_warning: warning
+      funcion_warning      
     })
     window.ModalWarning(titulo, texto)
   }
@@ -49,12 +49,12 @@ export default class App extends Component {
     }
   }
 
-  logout = () => {
-    sessionStorage.removeItem('innovaccionmeter_session')
+  unbind_usuario = () => {
     this.setState({
       usuario: undefined
     })
   }
+
 
   auth_false = () => {
     sessionStorage.removeItem('innovaccionmeter_session')
@@ -132,12 +132,13 @@ export default class App extends Component {
         state: this.state,
         idioma: this.state.idioma,
         tipo_warning: this.tipo_warning,
-        auth_false: this.auth_false
+        auth_false: this.auth_false,
+        unbind_usuario: this.unbind_usuario
       }}>
         <div className="container">
           <ModalError />
           <ModalOk />
-          <ModalWarning logout={this.logout} tipo={this.state.tipo_warning} />
+          <ModalWarning funcion={this.state.funcion_warning} />
           <this.pagina_inicial />
         </div>
       </AppContext.Provider>

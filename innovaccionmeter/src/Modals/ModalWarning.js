@@ -3,13 +3,8 @@ import React, { Component } from 'react'
 export default class ModalWarning extends Component {
 
 
-    funcion = () => {
-        const tipo = this.props.tipo
-
-        if (tipo === 1) {
-            this.props.logout()            
-        }
-
+    funcion = () => {   
+        this.props.funcion()        
         window.closemodal("Modal_Warning")
     }
 

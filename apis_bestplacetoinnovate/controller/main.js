@@ -1,6 +1,8 @@
 const jwt = require("jsonwebtoken")
 const nodeMailer = require('nodemailer')
 const mysql = require('mysql')
+const util = require('util')
+var crypto = require('crypto');
 
 const fs = require('fs');
 const connection = mysql.createConnection({
@@ -9,6 +11,8 @@ const connection = mysql.createConnection({
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE
 });
+
+const connect = util.promisify(connection.query).bind(connection);
 
 const csvFilePath = './controller/preguntas.csv'
 const csv = require('csvtojson')
@@ -1747,9 +1751,6 @@ const correo_encuesta_finalizada = async (req, res) => {
                                </body>
                                </html>
                                `
-                                fs.writeFile('prueba.html', html, (err) => {
-                                    if (err) throw err;
-                                });
 
                                 query = "UPDATE " + tabla + " SET EncuestaEnviada = 'S' WHERE IdUsuario = " + data.id_usuario
                                 connection.query(query, (err, result, fields) => {
@@ -1820,7 +1821,7 @@ const mantencion_empresas = async (req, res) => {
 
 const modificar_empresa = async (req, res) => {
     try {
-        const data = req.body        
+        const data = req.body
         let query = "UPDATE iam_empresa SET "
 
 
@@ -1829,23 +1830,148 @@ const modificar_empresa = async (req, res) => {
         }
 
         query = query.substring(0, query.length - 2)
-        query += " WHERE IdEmpresa = " + data.IdEmpresa                
+        query += " WHERE IdEmpresa = " + data.IdEmpresa
 
 
         await connection.query(query, (err, result, fields) => {
-             if (err) {
-                 console.log(err.message)
-                 res.status(400).json({ error: err.message })
-             } else {
-                 res.status(200).json("OK")
-             }
-         })
-        
+            if (err) {
+                console.log(err.message)
+                res.status(400).json({ error: err.message })
+            } else {
+                res.status(200).json("OK")
+            }
+        })
+
     } catch (e) {
         console.log(e.message)
         res.status(400).json({ error: e.message })
     }
 }
+
+const crear_empresa = async (req, res) => {
+    try {
+        const data = req.body
+        let html = ``
+
+        let campos = ["IdEmpresa", "NombreEmpresa", "Sigla", "Contacto", "Correo", "Vigente", "Encuesta90", "Encuesta180", "Encuesta270", "Encuesta360", "P0901", "P0902", "P0903", "P0904", "P0905", "P0906", "P1801", "P1802", "P1803", "P1804", "P1805", "P1806", "P2701", "P2702", "P2703", "P2704", "P2705", "P2706", "P3601", "P3602", "P3603", "P3604", "P3605", "P3606", "Fecha", "R090", "R180", "R270", "R360"]
+
+        let rows = await connect("SELECT max(IdEmpresa) + 1 as IdEmpresa FROM iam_empresa;")
+
+        const idempresa = parseInt(rows[0].IdEmpresa)
+
+        let query = "INSERT INTO iam_empresa ("
+
+        campos.map((obj) => query += obj + ", ")
+        query = query.substring(0, query.length - 2)
+
+        query += ") VALUES (" + idempresa + ", "
+
+        campos.filter((obj, index) => { return index > 0 }).map((obj) => query += "'" + data.datos[obj] + "', ")
+        query = query.substring(0, query.length - 2)
+        query += ")"
+
+        await connect(query)
+
+        const newpass = Math.random().toString(36).substr(2, 6)
+
+        const md5 = crypto.createHash("md5").update(newpass).digest("hex");
+
+        query = "INSERT INTO iam_usuarios (Nombre, TipoUsuario, Empresa, Correo, Clave, Activacion, IdEmpresa, Vigente , Version) VALUES ( "
+        query += "'" + data.datos["Contacto"] + "', '88', '" + data.datos["Sigla"] + "', '" + data.datos["Correo"] + "', '" + newpass + "', '" + md5 + "', '" + idempresa + "', 'S', '3')"
+
+        await connect(query)
+        
+        const asunto = "EncuestasBest Place to Innovate para " + data.datos.Sigla
+
+        let tipos_escuesta = ""
+        if (data.datos.Encuesta90 === "S") {
+            tipos_escuesta += "<li>Comite Ejecutivo - 90°</li>"
+        }
+        if (data.datos.Encuesta180 === "S") {
+            tipos_escuesta += "<li>Encuesta Colaboradores - 180°</li>"
+        }
+        if (data.datos.Encuesta270 === "S") {
+            tipos_escuesta += "<li>Encuesta Proveedores - 270°</li>"
+        }
+        if (data.datos.Encuesta360 === "S") {
+            tipos_escuesta += "<li>Encuesta Clientes - 360°</li>"
+        }
+        html = `
+        <html>
+        <head>
+            <title>` + asunto + `</title>
+        </head>
+        <body>
+            <h1 align=center>
+                <font color='#006600'>Best Place to Innovate</font>
+            </h1>
+            <p>
+                <b><i>` + data.datos.Contacto + `</i></b>, de nuestra consideración:
+            </p>
+            <p>Le informamos que usted tiene asignado el perfil de Administrador de las encuestas realizadas por Best Place to Innovate para los siguientes tipos de encuestas. </p>
+                <ol>` + tipos_escuesta + `</ol>
+                <br>
+                Para acceder debe ir al siguiente <a href='PAGINA ACCESO'><b> <font color='#ff0000'>LINK</font></b></a>
+                ingresando su correo y en clave <b>` + newpass + `</b>
+                <p>Atentamente equipo de Best Place to Innovate</p>
+        </body>
+        </html>
+        `
+
+        fs.writeFile('prueba.html', html, (err) => {
+            if (err) throw err;
+        });
+        //CORREO
+        /*
+
+      $correo_para = $fila2[Contacto]." <".$fila2[Correo].">";
+	      // Titulo del correo
+	      $correo_titulo = "Envio de Invitación a llenar encuesta ".$TituloEncuesta." de ".$_El_Titulo_." para ".$fila2[Sigla];
+	      // Cabecera que especifica que es un HMTL
+	      $correo_cabeceras  = "MIME-Version: 1.0\r\n";
+	      //$correo_cabeceras .= "Content-type: text/html; charset=iso-8859-1\r\n"; // utf-8
+	      $correo_cabeceras .= "Content-type: text/html; charset=utf-8\r\n"; // utf-8
+	      // Cabeceras adicionales
+	      $correo_cabeceras .= "From: ".$_El_Titulo_." <".$_mail_admin.">\r\n";
+	      $correo_cabeceras .= "Bcc: ".$_mail_admin."\r\n";
+	      //$cabeceras .= "Cc: archivotarifas@example.com\r\n";
+	      $correo_cabeceras .= "Bcc: webmaster@xpgconsultnet.com\r\n";
+
+	      //var_dump($correo_mensaje);
+	      @mail($correo_para, $correo_titulo, $correo_mensaje, $correo_cabeceras);
+        */
+        
+
+        res.status(200).json("OK")
+
+    } catch (e) {
+        console.log(e.message)
+        res.status(400).json({ error: e.message })
+    }
+}
+
+const eliminar_empresa = async (req, res) => {
+    try {
+        const data = req.body        
+
+
+        //let rows = await connect("SELECT max(IdEmpresa) + 1 as IdEmpresa FROM iam_empresa;")
+        await connect("DELETE FROM iam_empresa WHERE IdEmpresa = " + data.IdEmpresa)
+        await connect("DELETE FROM iam_usuarios WHERE IdEmpresa = " + data.IdEmpresa)
+        await connect("DELETE FROM iam_encuesta90 WHERE IdEmpresa = " + data.IdEmpresa)
+        await connect("DELETE FROM iam_encuesta180 WHERE IdEmpresa = " + data.IdEmpresa)
+        await connect("DELETE FROM iam_encuesta270 WHERE IdEmpresa = " + data.IdEmpresa)
+        await connect("DELETE FROM iam_encuesta360 WHERE IdEmpresa = " + data.IdEmpresa)
+        
+
+        res.status(200).json("OK")
+
+    } catch (e) {
+        console.log(e.message)
+        res.status(400).json({ error: e.message })
+    }
+}
+
 
 module.exports = {
     pregunta_archivo,
@@ -1871,6 +1997,8 @@ module.exports = {
     enviar_conclusion,
     correo_encuesta_finalizada,
     mantencion_empresas,
-    modificar_empresa
+    modificar_empresa,
+    crear_empresa,
+    eliminar_empresa
 
 }

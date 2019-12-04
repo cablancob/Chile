@@ -42,7 +42,7 @@ export default class MantencionEmpresas extends Component {
             if (response.status === 200) {
                 this.setState({
                     datos: data,
-                    vista: 1
+                    vista: 1                
                 })
             } else if (response.status === 400) {
                 window.ModalError("Mantenci&oacute;n Empresas", data.error)
@@ -61,13 +61,29 @@ export default class MantencionEmpresas extends Component {
             state,
             auth_false
         })
-        await this.datos()        
+        await this.datos()
     }
 
     modificar_empresa = async (obj) => {
         this.setState({
             IdEmpresa: obj.IdEmpresa,
             tipo: "m",
+            vista: 2
+        })
+    }
+
+    crear_empresa = async () => {
+        this.setState({
+            IdEmpresa: 0,
+            tipo: "n",
+            vista: 2
+        })
+    }
+
+    borrar_empresa = async (obj) => {        
+        this.setState({
+            IdEmpresa: obj.IdEmpresa,
+            tipo: "e",
             vista: 2
         })
     }
@@ -93,6 +109,14 @@ export default class MantencionEmpresas extends Component {
         }
         return (
             <div className="px-2">
+                <div className="row">
+                    <div className="col-md-6 py-3 text-center">
+                        <u><a className="text-dark" href="/#" onClick={() => { }}>--- Informe Resumen ---</a></u>
+                    </div>
+                    <div className="col-md-6 py-3 text-center">
+                        <u><a className="text-dark" href="/#" onClick={() => this.crear_empresa()}> --- Crea Empresa Nueva ---</a></u>
+                    </div>
+                </div>
                 <div className={titulo}>
                     <div className="col-md py-2" style={{ "border": "1px solid #c9c9c9" }}>#</div>
                     <div className="col-md py-2" style={{ "border": "1px solid #c9c9c9" }}>Acci&oacute;n</div>
@@ -111,7 +135,7 @@ export default class MantencionEmpresas extends Component {
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>#</div>
                                 <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{index + 1}</div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Acci&oacute;n</div>
-                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}><i className="far fa-trash-alt"></i></div>
+                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}><i className="far fa-trash-alt" onClick={() => this.borrar_empresa(obj)}></i></div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Empresa</div>
                                 <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}><u><a className="text-dark" href="/#" onClick={() => this.modificar_empresa(obj)}>{obj.NombreEmpresa.replace("/", " / ")}</a></u></div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Sigla</div>

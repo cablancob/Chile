@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
+import { AppContext } from './App'
 
 export default class Empresa extends Component {
     constructor(props) {
         super(props)
+
+        Empresa.contextType = AppContext
 
         this.state = {
             vista: 0
@@ -21,11 +24,36 @@ export default class Empresa extends Component {
         let form_data = {}
         let form_respuesta = {}
 
-        Array.from(document.getElementById(form_id).elements).filter(obj => { return obj.type === "text" || obj.type === "number" }).map(obj => show_validate(form_id, obj.id))
+        if (this.props.tipo === "m" || this.props.tipo === "n") {
+            Array.from(document.getElementById(form_id).elements)
+                .filter(obj => { return obj.type === "text" || obj.type === "number" })
+                .map(obj => {
+                    show_validate(form_id, obj.id)
+                    return true
+                })
 
-        function show_validate(form_id, id) {
-            if (document.getElementById(id).className.includes("Encuesta90") || document.getElementById(id).className.includes("Encuesta180") || document.getElementById(id).className.includes("Encuesta270") || document.getElementById(id).className.includes("Encuesta360")) {
-                if (document.getElementById(document.getElementById(id).className.split(" ")[1]).checked) {                    
+            function show_validate(form_id, id) {
+                if (document.getElementById(id).className.includes("Encuesta90") || document.getElementById(id).className.includes("Encuesta180") || document.getElementById(id).className.includes("Encuesta270") || document.getElementById(id).className.includes("Encuesta360")) {
+                    if (document.getElementById(document.getElementById(id).className.split(" ")[1]).checked) {
+                        form_respuesta[document.getElementById(id).className.split(" ")[1]] = 'S'
+                        if (document.getElementById(form_id).elements[id].value.trim() === "") {
+                            valid = false
+                            document.getElementById(form_id).elements[id].classList.remove("is-valid")
+                            document.getElementById(form_id).elements[id].classList.add("is-invalid")
+                            if (focus) {
+                                document.getElementById(form_id).elements[id].focus()
+                                focus = false
+                            }
+                        } else {
+                            document.getElementById(form_id).elements[id].classList.remove("is-invalid")
+                            document.getElementById(form_id).elements[id].classList.add("is-valid")
+                            form_respuesta[id] = document.getElementById(form_id).elements[id].value
+                        }
+                    } else {
+                        form_respuesta[document.getElementById(id).className.split(" ")[1]] = 'N'
+                        form_respuesta[id] = "0"
+                    }
+                } else {
                     if (document.getElementById(form_id).elements[id].value.trim() === "") {
                         valid = false
                         document.getElementById(form_id).elements[id].classList.remove("is-valid")
@@ -40,36 +68,44 @@ export default class Empresa extends Component {
                         form_respuesta[id] = document.getElementById(form_id).elements[id].value
                     }
                 }
-            } else {
-                if (document.getElementById(form_id).elements[id].value.trim() === "") {
-                    valid = false
-                    document.getElementById(form_id).elements[id].classList.remove("is-valid")
-                    document.getElementById(form_id).elements[id].classList.add("is-invalid")
-                    if (focus) {
-                        document.getElementById(form_id).elements[id].focus()
-                        focus = false
-                    }
-                } else {
-                    document.getElementById(form_id).elements[id].classList.remove("is-invalid")
-                    document.getElementById(form_id).elements[id].classList.add("is-valid")
-                    form_respuesta[id] = document.getElementById(form_id).elements[id].value
-                }
+
             }
-
-        }
-
+        }        
         if (valid) {
             try {
-                let fecha = form_respuesta["Fecha"].split("/")
-                form_data["IdEmpresa"] = this.state.datos_empresa.IdEmpresa
-                form_respuesta["Fecha"] = fecha[2] + "-" + fecha[1] + "-" + fecha[0]
-                form_data["datos"] = form_respuesta                
-                
+                if (this.props.tipo === "m" || this.props.tipo === "n") {
+                    let fecha = form_respuesta["Fecha"].split("/")
+                    if (this.props.tipo === "m") {
+                        form_data["IdEmpresa"] = this.state.datos_empresa.IdEmpresa
+                    }
+                    if (this.props.tipo === "n") {
+                        form_respuesta["Vigente"] = 'S'
+                    }
+                    form_respuesta["Fecha"] = fecha[2] + "-" + fecha[1] + "-" + fecha[0]
+                    form_data["datos"] = form_respuesta                    
+                }
+
+                if (this.props.tipo === "e") {
+                    form_data["IdEmpresa"] = this.state.datos_empresa.IdEmpresa
+                }                
+
+                let URL = ""
                 let headers = new Headers()
                 headers.append("Content-Type", "application/json")
-                headers.append("x-access-token", sessionStorage.getItem('innovaccionmeter_session'))
+                headers.append("x-access-token", sessionStorage.getItem('innovaccionmeter_session'))                
 
-                const URL = "http://" + window.location.host.split(":")[0] + ":" + process.env.REACT_APP_PORT + "/modificar_empresa"
+                if (this.props.tipo === "m") {
+                    URL = "http://" + window.location.host.split(":")[0] + ":" + process.env.REACT_APP_PORT + "/modificar_empresa"
+                }
+
+                if (this.props.tipo === "n") {
+                    URL = "http://" + window.location.host.split(":")[0] + ":" + process.env.REACT_APP_PORT + "/crear_empresa"
+                }
+
+                if (this.props.tipo === "e") {
+                    URL = "http://" + window.location.host.split(":")[0] + ":" + process.env.REACT_APP_PORT + "/eliminar_empresa"
+                }
+
                 let response = await fetch(URL, {
                     method: "POST",
                     headers: headers,
@@ -79,8 +115,18 @@ export default class Empresa extends Component {
                 let data = await response.json()
 
                 if (response.status === 200) {
-                    window.ModalOk(this.state.titulo_principal, "Los datos de la empresa fueron modificados con exito")                    
-                    await this.datos_empresa(this.props.IdEmpresa)
+                    if (this.props.tipo === "m") {
+                        window.ModalOk(this.state.titulo_principal, "Los datos de la empresa fueron modificados con exito")
+                        await this.datos_empresa(this.props.IdEmpresa)
+                    }
+                    if (this.props.tipo === "n") {
+                        window.ModalOk(this.state.titulo_principal, "La empresa fue creada con exito")
+                        document.getElementById(form_id).reset()
+                    }
+                    if (this.props.tipo === "e") {
+                        window.ModalOk(this.state.titulo_principal, "La empresa fue borrada con exito")
+                        this.props.funcion()
+                    }                    
                     window.RemoveClass()
 
                 } else if (response.status === 400) {
@@ -89,10 +135,26 @@ export default class Empresa extends Component {
                     this.state.auth_false()
                 }
             } catch (e) {
-                window.ModalError("Inicio de Sessi&oacute;n", e.error)
+                window.ModalError(this.state.titulo_principal, e.error)
                 document.getElementById(form_id).reset()
             }
         }
+    }
+
+    carga_datos_empresa_default = () => {
+
+        const datos = [17, 17, 17, 17, 16, 16, 25]
+
+        datos.map((obj, index) => {
+            let valor = obj
+            Array.from(document.getElementsByName(index)).map((obj) => {
+                document.getElementById(obj.id).value = valor
+                return true
+            })
+            window.datepicket("Fecha")
+            return true
+        })
+
     }
 
     carga_datos_empresa = () => {
@@ -119,6 +181,13 @@ export default class Empresa extends Component {
 
     funcion_inicial = async () => {
 
+        const { state, auth_false, tipo_warning } = await this.context
+        this.setState({
+            state,
+            auth_false,
+            tipo_warning
+        })
+
         if (this.props.tipo === "m") {
             this.setState({
                 titulo_principal: "Modifica Datos Empresa",
@@ -126,26 +195,43 @@ export default class Empresa extends Component {
             })
         }
 
+        if (this.props.tipo === "n") {
+            this.setState({
+                titulo_principal: "Crea registro de Empresa",
+                boton: "Crear Empresa"
+            })
+        }
+
+        if (this.props.tipo === "e") {
+            this.setState({
+                titulo_principal: "Borrar Empresa",
+                boton: "Borrar Empresa"
+            })
+        }
+
         if (this.props.tipo === "m" || this.props.tipo === "e") {
             await this.datos_empresa(this.props.IdEmpresa)
-        }
-        console.log(this.state.datos_empresa)
-        console.log(this.props)
+        }        
 
         this.setState({
-            vista: 1
+            vista: await 1
         })
 
         if (this.props.tipo === "m" || this.props.tipo === "e") {
             this.carga_datos_empresa()
+        } else if (this.props.tipo === "n") {
+            this.carga_datos_empresa_default()
         }
 
     }
 
     boton_accion = (e) => {
         e.preventDefault()
-        if (this.props.tipo === "m") {
+        if (this.props.tipo === "m" || this.props.tipo === "n") {
             this.validar_form(e)
+        }
+        if (this.props.tipo === "e") {
+            this.state.tipo_warning(() => this.validar_form(e), this.state.titulo_principal ,"¿Esta seguro que desea borrar la empresa?")            
         }
     }
 
@@ -254,43 +340,43 @@ export default class Empresa extends Component {
                             <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>ICC (Resultados Innovación)</div>
                             <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>
                                 <div className="form-group">
-                                    <input type="number" className="form-control Encuesta90" id="P0901" />
+                                    <input type="number" name="0" className="form-control Encuesta90" id="P0901" />
                                 </div>
                             </div>
                             <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Propósito, Objetivo, Estrategia</div>
                             <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>
                                 <div className="form-group">
-                                    <input type="number" className="form-control Encuesta90" id="P0902" />
+                                    <input type="number" name="1" className="form-control Encuesta90" id="P0902" />
                                 </div>
                             </div>
                             <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Liderazgo Inspirador</div>
                             <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>
                                 <div className="form-group">
-                                    <input type="number" className="form-control Encuesta90" id="P0903" />
+                                    <input type="number" name="2" className="form-control Encuesta90" id="P0903" />
                                 </div>
                             </div>
                             <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Estructuras Habilitadoras</div>
                             <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>
                                 <div className="form-group">
-                                    <input type="number" className="form-control Encuesta90" id="P0904" />
+                                    <input type="number" name="3" className="form-control Encuesta90" id="P0904" />
                                 </div>
                             </div>
                             <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Sistemas Consistentes & Confiables</div>
                             <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>
                                 <div className="form-group">
-                                    <input type="number" className="form-control Encuesta90" id="P0905" />
+                                    <input type="number" name="4" className="form-control Encuesta90" id="P0905" />
                                 </div>
                             </div>
                             <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Cultura Conectada</div>
                             <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>
                                 <div className="form-group">
-                                    <input type="number" className="form-control Encuesta90" id="P0906" />
+                                    <input type="number" name="5" className="form-control Encuesta90" id="P0906" />
                                 </div>
                             </div>
                             <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>RESUMEN</div>
                             <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>
                                 <div className="form-group">
-                                    <input type="number" className="form-control Encuesta90" id="R090" />
+                                    <input type="number" name="6" className="form-control Encuesta90" id="R090" />
                                 </div>
                             </div>
                         </div>
@@ -306,43 +392,43 @@ export default class Empresa extends Component {
                             <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>ICC (Resultados Innovación)</div>
                             <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>
                                 <div className="form-group">
-                                    <input type="number" className="form-control Encuesta180" id="P1801" />
+                                    <input type="number" name="0" className="form-control Encuesta180" id="P1801" />
                                 </div>
                             </div>
                             <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Propósito, Objetivo, Estrategia</div>
                             <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>
                                 <div className="form-group">
-                                    <input type="number" className="form-control Encuesta180" id="P1802" />
+                                    <input type="number" name="1" className="form-control Encuesta180" id="P1802" />
                                 </div>
                             </div>
                             <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Liderazgo Inspirador</div>
                             <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>
                                 <div className="form-group">
-                                    <input type="number" className="form-control Encuesta180" id="P1803" />
+                                    <input type="number" name="2" className="form-control Encuesta180" id="P1803" />
                                 </div>
                             </div>
                             <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Estructuras Habilitadoras</div>
                             <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>
                                 <div className="form-group">
-                                    <input type="number" className="form-control Encuesta180" id="P1804" />
+                                    <input type="number" name="3" className="form-control Encuesta180" id="P1804" />
                                 </div>
                             </div>
                             <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Sistemas Consistentes & Confiables</div>
                             <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>
                                 <div className="form-group">
-                                    <input type="number" className="form-control Encuesta180" id="P1805" />
+                                    <input type="number" name="4" className="form-control Encuesta180" id="P1805" />
                                 </div>
                             </div>
                             <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Cultura Conectada</div>
                             <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>
                                 <div className="form-group">
-                                    <input type="number" className="form-control Encuesta180" id="P1806" />
+                                    <input type="number" name="5" className="form-control Encuesta180" id="P1806" />
                                 </div>
                             </div>
                             <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>RESUMEN</div>
                             <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>
                                 <div className="form-group">
-                                    <input type="number" className="form-control Encuesta180" id="R180" />
+                                    <input type="number" name="6" className="form-control Encuesta180" id="R180" />
                                 </div>
                             </div>
                         </div>
@@ -358,43 +444,43 @@ export default class Empresa extends Component {
                             <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>ICC (Resultados Innovación)</div>
                             <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>
                                 <div className="form-group">
-                                    <input type="number" className="form-control Encuesta270" id="P2701" />
+                                    <input type="number" name="0" className="form-control Encuesta270" id="P2701" />
                                 </div>
                             </div>
                             <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Propósito, Objetivo, Estrategia</div>
                             <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>
                                 <div className="form-group">
-                                    <input type="number" className="form-control Encuesta270" id="P2702" />
+                                    <input type="number" name="1" className="form-control Encuesta270" id="P2702" />
                                 </div>
                             </div>
                             <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Liderazgo Inspirador</div>
                             <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>
                                 <div className="form-group">
-                                    <input type="number" className="form-control Encuesta270" id="P2703" />
+                                    <input type="number" name="2" className="form-control Encuesta270" id="P2703" />
                                 </div>
                             </div>
                             <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Estructuras Habilitadoras</div>
                             <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>
                                 <div className="form-group">
-                                    <input type="number" className="form-control Encuesta270" id="P2704" />
+                                    <input type="number" name="3" className="form-control Encuesta270" id="P2704" />
                                 </div>
                             </div>
                             <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Sistemas Consistentes & Confiables</div>
                             <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>
                                 <div className="form-group">
-                                    <input type="number" className="form-control Encuesta270" id="P2705" />
+                                    <input type="number" name="4" className="form-control Encuesta270" id="P2705" />
                                 </div>
                             </div>
                             <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Cultura Conectada</div>
                             <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>
                                 <div className="form-group">
-                                    <input type="number" className="form-control Encuesta270" id="P2706" />
+                                    <input type="number" name="5" className="form-control Encuesta270" id="P2706" />
                                 </div>
                             </div>
                             <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>RESUMEN</div>
                             <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>
                                 <div className="form-group">
-                                    <input type="number" className="form-control Encuesta270" id="R270" />
+                                    <input type="number" name="6" className="form-control Encuesta270" id="R270" />
                                 </div>
                             </div>
                         </div>
@@ -410,43 +496,43 @@ export default class Empresa extends Component {
                             <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>ICC (Resultados Innovación)</div>
                             <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>
                                 <div className="form-group">
-                                    <input type="number" className="form-control Encuesta360" id="P3601" />
+                                    <input type="number" name="0" className="form-control Encuesta360" id="P3601" />
                                 </div>
                             </div>
                             <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Propósito, Objetivo, Estrategia</div>
                             <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>
                                 <div className="form-group">
-                                    <input type="number" className="form-control Encuesta360" id="P3602" />
+                                    <input type="number" name="1" className="form-control Encuesta360" id="P3602" />
                                 </div>
                             </div>
                             <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Liderazgo Inspirador</div>
                             <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>
                                 <div className="form-group">
-                                    <input type="number" className="form-control Encuesta360" id="P3603" />
+                                    <input type="number" name="2" className="form-control Encuesta360" id="P3603" />
                                 </div>
                             </div>
                             <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Estructuras Habilitadoras</div>
                             <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>
                                 <div className="form-group">
-                                    <input type="number" className="form-control Encuesta360" id="P3604" />
+                                    <input type="number" name="3" className="form-control Encuesta360" id="P3604" />
                                 </div>
                             </div>
                             <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Sistemas Consistentes & Confiables</div>
                             <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>
                                 <div className="form-group">
-                                    <input type="number" className="form-control Encuesta360" id="P3605" />
+                                    <input type="number" name="4" className="form-control Encuesta360" id="P3605" />
                                 </div>
                             </div>
                             <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Cultura Conectada</div>
                             <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>
                                 <div className="form-group">
-                                    <input type="number" className="form-control Encuesta360" id="P3606" />
+                                    <input type="number" name="5" className="form-control Encuesta360" id="P3606" />
                                 </div>
                             </div>
                             <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>RESUMEN</div>
                             <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>
                                 <div className="form-group">
-                                    <input type="number" className="form-control Encuesta360" id="R360" />
+                                    <input type="number" name="6" className="form-control Encuesta360" id="R360" />
                                 </div>
                             </div>
                         </div>

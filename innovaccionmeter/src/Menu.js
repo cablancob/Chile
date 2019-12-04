@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
+import { AppContext } from './App'
 
 import Logo from './img/LogoIAM.jpg'
 
-import { AppContext } from './App'
+
 
 export default class Menu extends Component {
   constructor(props) {
@@ -11,8 +12,14 @@ export default class Menu extends Component {
     Menu.contextType = AppContext
   }
 
-  render() {
-    const { state, tipo_warning } = this.context        
+  logout = () => {
+    const { unbind_usuario} = this.context
+    sessionStorage.removeItem('innovaccionmeter_session')
+    unbind_usuario()
+  }
+
+  render() {            
+    const { state, tipo_warning } = this.context
     return (
       <nav className="navbar navbar-expand-lg navbar-light bg-white mb-4 static-top shadow">
         <a className="navbar-brand" href="/#">
@@ -36,7 +43,7 @@ export default class Menu extends Component {
               </div>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/#" onClick={() => tipo_warning(1, "Cerrar Sesión", "¿Esta seguro que desea cerrar sesión?")}>
+              <a className="nav-link" href="/#" onClick={() => tipo_warning(this.logout,"Cerrar Sesión", "¿Esta seguro que desea cerrar sesión?")}>
                 <i className="fas fa-sign-out-alt"></i>
                 Logout
                   </a>

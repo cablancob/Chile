@@ -44,6 +44,9 @@ app.post('/preguntas_encuesta', main.verifytoken, main.preguntas_encuesta)
 app.post('/enviar_conclusion', main.verifytoken, main.enviar_conclusion)
 app.post('/correo_encuesta_finalizada', main.verifytoken, main.correo_encuesta_finalizada)
 app.post('/modificar_empresa', main.verifytoken, main.modificar_empresa)
+app.post('/crear_empresa', main.verifytoken, main.crear_empresa)
+app.post('/eliminar_empresa', main.verifytoken, main.eliminar_empresa)
+
 
 
 app.get('/session', main.verifytoken, main.session)
