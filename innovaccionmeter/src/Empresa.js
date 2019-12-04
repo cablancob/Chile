@@ -289,7 +289,7 @@ export default class Empresa extends Component {
         }
         return (
             <div>
-                <h1 className="h3 mb-4 text-gray-800 text-center">{this.state.titulo_principal}</h1>
+                <h1 className="h3 my-4 text-gray-800 text-center">{this.state.titulo_principal}</h1>
                 <form id="EmpresaID">
                     <div className={class_principal}>
                         <div className="form-group">

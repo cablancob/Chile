@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { AppContext } from './App'
 
+
 import Empresa from './Empresa'
+import MantencionUsuario from './MantencionUsuario'
 
 export default class MantencionEmpresas extends Component {
 
@@ -42,7 +44,10 @@ export default class MantencionEmpresas extends Component {
             if (response.status === 200) {
                 this.setState({
                     datos: data,
-                    vista: 1                
+                    vista: 3,
+                    IdEmpresa: 214,
+                    NombreEmpresa: "AES Gener Chile",
+                    tipo_encuesta: 2
                 })
             } else if (response.status === 400) {
                 window.ModalError("Mantenci&oacute;n Empresas", data.error)
@@ -80,11 +85,20 @@ export default class MantencionEmpresas extends Component {
         })
     }
 
-    borrar_empresa = async (obj) => {        
+    borrar_empresa = async (obj) => {
         this.setState({
             IdEmpresa: obj.IdEmpresa,
             tipo: "e",
             vista: 2
+        })
+    }
+
+    consulta_usuarios = async (tipo_encuesta, obj) => {
+        this.setState({
+            tipo_encuesta,
+            IdEmpresa: obj.IdEmpresa,
+            NombreEmpresa: obj.NombreEmpresa,
+            vista: 3
         })
     }
 
@@ -141,13 +155,13 @@ export default class MantencionEmpresas extends Component {
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Sigla</div>
                                 <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{obj.Sigla.replace("/", " / ")}</div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>90°</div>
-                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{(obj.cuenta90 === "X") ? "-X-" : <u><a className="text-dark" href="/#">{obj.cuenta90}</a></u>}</div>
+                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{(obj.cuenta90 === "X") ? "-X-" : <u><a className="text-dark" href="/#" onClick={() => this.consulta_usuarios(2, obj)}>{obj.cuenta90}</a></u>}</div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>180°</div>
-                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{(obj.cuenta180 === "X") ? "-X-" : <u><a className="text-dark" href="/#">{obj.cuenta180}</a></u>}</div>
+                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{(obj.cuenta180 === "X") ? "-X-" : <u><a className="text-dark" href="/#" onClick={() => this.consulta_usuarios(3, obj)}>{obj.cuenta180}</a></u>}</div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>270°</div>
-                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{(obj.cuenta270 === "X") ? "-X-" : <u><a className="text-dark" href="/#">{obj.cuenta270}</a></u>}</div>
+                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{(obj.cuenta270 === "X") ? "-X-" : <u><a className="text-dark" href="/#" onClick={() => this.consulta_usuarios(4, obj)}>{obj.cuenta270}</a></u>}</div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>360°</div>
-                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{(obj.cuenta360 === "X") ? "-X-" : <u><a className="text-dark" href="/#">{obj.cuenta360}</a></u>}</div>
+                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{(obj.cuenta360 === "X") ? "-X-" : <u><a className="text-dark" href="/#" onClick={() => this.consulta_usuarios(5, obj)}>{obj.cuenta360}</a></u>}</div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Ressumen</div>
                                 <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}><u><a className="text-dark" href="/#">Resumen Encuesta</a></u></div>
                             </div>
@@ -164,7 +178,8 @@ export default class MantencionEmpresas extends Component {
                 {
                     (this.state.vista === 1) ? <this.pagina_principal />
                         : (this.state.vista === 2) ? <Empresa IdEmpresa={this.state.IdEmpresa} tipo={this.state.tipo} funcion={this.regresar} />
-                            : <div className="d-flex justify-content-center py-5"><div className="spinner-border text-success" role="status"><span className="sr-only">Espere...</span></div></div>
+                            : (this.state.vista === 3) ? <MantencionUsuario IdEmpresa={this.state.IdEmpresa} tipo_encuesta={this.state.tipo_encuesta} NombreEmpresa={this.state.NombreEmpresa} funcion={this.regresar} />
+                                : <div className="d-flex justify-content-center py-5"><div className="spinner-border text-success" role="status"><span className="sr-only">Espere...</span></div></div>
                 }
             </div>
         )

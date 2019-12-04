@@ -10,7 +10,7 @@ export default class Coach extends Component {
 
         this.state = {
             menu: 2,
-            submenu: 7
+            submenu: 8
         }
     }
 

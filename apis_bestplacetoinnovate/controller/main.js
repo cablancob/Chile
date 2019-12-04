@@ -1880,7 +1880,7 @@ const crear_empresa = async (req, res) => {
         query += "'" + data.datos["Contacto"] + "', '88', '" + data.datos["Sigla"] + "', '" + data.datos["Correo"] + "', '" + newpass + "', '" + md5 + "', '" + idempresa + "', 'S', '3')"
 
         await connect(query)
-        
+
         const asunto = "EncuestasBest Place to Innovate para " + data.datos.Sigla
 
         let tipos_escuesta = ""
@@ -1940,7 +1940,7 @@ const crear_empresa = async (req, res) => {
 	      //var_dump($correo_mensaje);
 	      @mail($correo_para, $correo_titulo, $correo_mensaje, $correo_cabeceras);
         */
-        
+
 
         res.status(200).json("OK")
 
@@ -1952,7 +1952,7 @@ const crear_empresa = async (req, res) => {
 
 const eliminar_empresa = async (req, res) => {
     try {
-        const data = req.body        
+        const data = req.body
 
 
         //let rows = await connect("SELECT max(IdEmpresa) + 1 as IdEmpresa FROM iam_empresa;")
@@ -1962,10 +1962,53 @@ const eliminar_empresa = async (req, res) => {
         await connect("DELETE FROM iam_encuesta180 WHERE IdEmpresa = " + data.IdEmpresa)
         await connect("DELETE FROM iam_encuesta270 WHERE IdEmpresa = " + data.IdEmpresa)
         await connect("DELETE FROM iam_encuesta360 WHERE IdEmpresa = " + data.IdEmpresa)
-        
+
 
         res.status(200).json("OK")
 
+    } catch (e) {
+        console.log(e.message)
+        res.status(400).json({ error: e.message })
+    }
+}
+
+
+const usuarios_empresa = async (req, res) => {
+    try {
+        const tipo_encuesta = req.query.tipo_encuesta
+        const IdEmpresa = req.query.IdEmpresa
+
+        let tabla = ""
+
+        if (tipo_encuesta == 2) {
+            tabla = "iam_encuesta90"
+        }
+        if (tipo_encuesta == 3) {
+            tabla = "iam_encuesta180"
+        }
+        if (tipo_encuesta == 4) {
+            tabla = "iam_encuesta270"
+        }
+        if (tipo_encuesta == 5) {
+            tabla = "iam_encuesta360"
+        }
+
+        query = `
+        SELECT *, 
+        CASE 
+        WHEN (SELECT COUNT(*) FROM `+ tabla + ` WHERE IdUsuario = A.id AND IdEmpresa = ` + IdEmpresa + `) = 0 THEN 'Encuesta sin Comenzar'
+        WHEN (SELECT COUNT(*) FROM `+ tabla + ` WHERE IdUsuario = A.id AND IdEmpresa = ` + IdEmpresa + ` AND Pregunta7 = 'N') = 1 THEN 'Encuesta Incompleta'
+        WHEN (SELECT COUNT(*) FROM `+ tabla + ` WHERE IdUsuario = A.id AND IdEmpresa = ` + IdEmpresa + ` AND Pregunta7 = 'S') = 1 THEN 'Encuesta Terminada'        
+        END as status 
+        FROM iam_usuarios A
+        WHERE A.IdEmpresa = `+ IdEmpresa + ` AND A.TipoUsuario = ` + tipo_encuesta + ` ORDER BY A.Nombre
+        `
+        const rows = await connect(query)
+
+        rows.map((obj, index) => {                              
+            delete rows[index].Clave
+        })                
+        res.status(200).json(rows)
     } catch (e) {
         console.log(e.message)
         res.status(400).json({ error: e.message })
@@ -1999,6 +2042,7 @@ module.exports = {
     mantencion_empresas,
     modificar_empresa,
     crear_empresa,
-    eliminar_empresa
+    eliminar_empresa,
+    usuarios_empresa
 
 }
