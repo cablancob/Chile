@@ -2040,6 +2040,64 @@ const modificar_usuario = async (req, res) => {
     }
 }
 
+const crear_usuario = async (req, res) => {
+    try {
+        const data = req.body
+        const usuario = data.datos
+        let query = "SELECT COUNT(*) as existe FROM iam_usuarios WHERE TipoUsuario = "+data.TipoUsuario+" AND Correo = '"+usuario.Correo+"' AND IdEmpresa = " + data.IdEmpresa
+
+        let rows = await connect(query)
+        
+
+        if (parseInt(rows[0].existe) == 0) {
+            const newpass = Math.random().toString(36).substr(2, 6)
+            const md5 = crypto.createHash("md5").update(newpass).digest("hex");
+            query = "INSERT INTO iam_usuarios (IdEmpresa, Empresa, TipoUsuario, Nombre, Fono, Correo, Version, Clave, Activacion, Vigente, EstadoEncuesta)"
+            query += " VALUES ("+data.IdEmpresa+", '"+data.Sigla+"', "+data.TipoUsuario+", '"+usuario.Nombre+"', '"+usuario.Fono+"', '"+usuario.Correo+"', '"+usuario.Version+"', '"+newpass+"', '"+md5+"', 'S', 0)"
+            await connect(query)
+        } else {
+            throw new Error('El usuario ya existe');
+        }
+        
+        res.status(200).json("OK")
+
+    } catch (e) {
+        console.log(e.message)
+        res.status(400).json({ error: e.message })
+    }
+}
+
+const borrar_usuario = async (req, res) => {
+    try {
+        const data = req.body        
+        let tabla = ""
+    
+        if (data.TipoUsuario == 2) {
+            tabla = "iam_encuesta90"
+        }
+        if (data.TipoUsuario == 3) {
+            tabla = "iam_encuesta180"
+        }
+        if (data.TipoUsuario == 4) {
+            tabla = "iam_encuesta270"
+        }
+        if (data.TipoUsuario == 5) {
+            tabla = "iam_encuesta360"
+        }
+        let query = "DELETE FROM " + tabla + "  WHERE IdUsuario = " + data.Id
+        await connect(query) 
+
+        query = "DELETE FROM iam_usuarios WHERE Id = " + data.Id
+        await connect(query)         
+        
+        res.status(200).json("OK")
+
+    } catch (e) {
+        console.log(e.message)
+        res.status(400).json({ error: e.message })
+    }
+}
+
 const crear_encuesta_vacia = async (req, res) => {
     try {
         const data = req.body
@@ -2106,6 +2164,8 @@ module.exports = {
     eliminar_empresa,
     usuarios_empresa,
     modificar_usuario,
-    crear_encuesta_vacia
+    crear_encuesta_vacia,
+    crear_usuario,
+    borrar_usuario
 
 }

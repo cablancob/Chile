@@ -69,17 +69,36 @@ export default class MantencionUsuario extends Component {
         this.setState({
             state,
             auth_false
-        })
+        })        
 
         await this.datos()
 
     }
 
-    modifcar_usuario(obj) {
-        console.log(obj)
+    modifcar_usuario(obj) {        
         this.setState({            
             usuario: obj,
             tipo: "m",
+            vista: 2
+        })
+    }
+
+    crear_usuario(IdEmpresa, tipo_encuesta, Sigla) {   
+        let obj = {}     
+        obj["IdEmpresa"] = IdEmpresa
+        obj["tipo_encuesta"] = tipo_encuesta
+        obj["Sigla"] = Sigla
+        this.setState({            
+            usuario: obj,
+            tipo: "n",
+            vista: 2
+        })
+    }
+
+    borrar_usuario(obj) {   
+        this.setState({            
+            usuario: obj,
+            tipo: "e",
             vista: 2
         })
     }
@@ -90,7 +109,7 @@ export default class MantencionUsuario extends Component {
         let subtitulo = ""
         let contenido = ""
         let division = ""
-        let contenido_2 = ""
+        let contenido_2 = ""        
 
         if (window.screen.width < 720) {
             titulo = "row bg-primary text-white text-center d-none"
@@ -112,7 +131,7 @@ export default class MantencionUsuario extends Component {
                 <h1 className="h3 my-4 text-gray-800 text-center"><i className="far fa-trash-alt"></i></h1>
                 <div className="row">
                     <div className="col-md-6 py-3 text-center">
-                        <u><a className="text-dark" href="/#" >--- Crea Nuevo Usuario ---</a></u>
+                        <u><a className="text-dark" href="/#" onClick={() => this.crear_usuario(this.props.IdEmpresa, this.props.tipo_encuesta, this.props.Sigla)}>--- Crea Nuevo Usuario ---</a></u>
                     </div>
                     <div className="col-md-6 py-3 text-center">
                         <u><a className="text-dark" href="/#" >---Envia Invitaciones ---</a></u>
@@ -135,7 +154,7 @@ export default class MantencionUsuario extends Component {
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>#</div>
                                 <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{index}</div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Acci&oacute;n</div>
-                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}><i className="far fa-trash-alt"></i></div>
+                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}><i className="far fa-trash-alt" onClick={() => this.borrar_usuario(obj)}></i></div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Nombre</div>
                                 <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}><u><a className="text-dark" href="/#" onClick={() => this.modifcar_usuario(obj)}>{obj.Nombre}</a></u></div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Fono</div>

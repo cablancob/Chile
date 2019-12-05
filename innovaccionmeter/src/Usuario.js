@@ -60,15 +60,17 @@ export default class Usuario extends Component {
             })
         }
 
-        await this.datos()
+        await this.datos()  
+        
+        console.log(this.state)
 
         this.setState({
             vista: 1
-        })
+        })        
 
-        console.log(this.props)
-
-        this.cargar_datos()
+        if (this.props.tipo === "e" || this.props.tipo === "m") {
+            this.cargar_datos()
+        }
 
     }
 
@@ -80,7 +82,9 @@ export default class Usuario extends Component {
         let form_data = {}
         let form_respuesta = {}
 
-        Array.from(document.getElementById(form_id).elements).filter(obj => { return obj.className.includes("requerido") === true }).map(obj => show_validate(form_id, obj.id))
+        if (this.props.tipo === "m" || this.props.tipo === "n") {
+            Array.from(document.getElementById(form_id).elements).filter(obj => { return obj.className.includes("requerido") === true }).map(obj => show_validate(form_id, obj.id))
+        }
 
         function show_validate(form_id, id) {
             if (document.getElementById(form_id).elements[id].value.trim() === "") {
@@ -98,13 +102,25 @@ export default class Usuario extends Component {
             }
         }
 
-        if (valid) {
-            try {
-                form_data["Id"] = this.state.datos.Id                
-                if (this.props.tipo === "m" || this.props.tipo === "n") {
+        if (valid) {            
+            try {                                
+                if (this.props.tipo === "m") {
+                    form_data["Id"] = this.state.datos.Id
                     form_data["datos"] = form_respuesta
                 }
-                console.log(form_data)
+
+                if (this.props.tipo === "n") {                    
+                    form_data["IdEmpresa"] = this.state.datos.IdEmpresa
+                    form_data["Sigla"] = this.state.datos.Sigla
+                    form_data["TipoUsuario"] = this.state.datos.tipo_encuesta
+                    form_data["datos"] = form_respuesta
+                }
+
+                if (this.props.tipo === "e") {
+                    form_data["Id"] = this.state.datos.Id
+                    form_data["TipoUsuario"] = this.state.datos.TipoUsuario                    
+                }
+                
                 let URL = ""
                 let headers = new Headers()
                 headers.append("Content-Type", "application/json")
@@ -112,6 +128,14 @@ export default class Usuario extends Component {
 
                 if (this.props.tipo === "m") {
                     URL = "http://" + window.location.host.split(":")[0] + ":" + process.env.REACT_APP_PORT + "/modificar_usuario"
+                }
+
+                if (this.props.tipo === "n") {
+                    URL = "http://" + window.location.host.split(":")[0] + ":" + process.env.REACT_APP_PORT + "/crear_usuario"
+                }
+
+                if (this.props.tipo === "e"){                    
+                    URL = "http://" + window.location.host.split(":")[0] + ":" + process.env.REACT_APP_PORT + "/borrar_usuario"
                 }
                 let response = await fetch(URL, {
                     method: "POST",
@@ -152,6 +176,9 @@ export default class Usuario extends Component {
         e.preventDefault()
         if (this.props.tipo === "m" || this.props.tipo === "n") {
             this.validar_form(e)
+        } 
+        if (this.props.tipo === "e") {
+            this.state.tipo_warning(() => this.validar_form(e), this.state.titulo_principal ,"¿Esta seguro que desea borrar el usuario?")
         }
 
 

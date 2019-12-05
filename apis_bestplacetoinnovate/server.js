@@ -48,7 +48,8 @@ app.post('/crear_empresa', main.verifytoken, main.crear_empresa)
 app.post('/eliminar_empresa', main.verifytoken, main.eliminar_empresa)
 app.post('/modificar_usuario', main.verifytoken, main.modificar_usuario)
 app.post('/crear_encuesta_vacia', main.verifytoken, main.crear_encuesta_vacia)
-
+app.post('/crear_usuario', main.verifytoken, main.crear_usuario)
+app.post('/borrar_usuario', main.verifytoken, main.borrar_usuario)
 
 app.get('/session', main.verifytoken, main.session)
 app.get('/encuesta', main.verifytoken, main.encuesta)
