@@ -1715,16 +1715,15 @@ const correo_encuesta_finalizada = async (req, res) => {
         }
 
 
-        let query = "SELECT EncuestaEnviada FROM " + tabla + " WHERE EncuestaEnviada = 'N' AND IdUsuario = " + data.id_usuario
+        let query = "SELECT COUNT(*) as A FROM " + tabla + " WHERE EncuestaEnviada = 'S' AND IdUsuario = " + data.id_usuario
         //CORREO
-
-
+        
         await connection.query(query, (err, result, fields) => {
             if (err) {
                 console.log(err.message)
                 res.status(400).json({ error: err.message })
-            } else {
-                if (result.length > 0) {
+            } else {                                
+                if (parseInt(result[0].A) == 0) {                                      
                     query = "SELECT A.Nombre, A.Correo, B.NombreEmpresa, B.Sigla, B.Correo FROM iam_usuarios A INNER JOIN iam_empresa B ON A.IdEmpresa = B.IdEmpresa WHERE A.Id = " + data.id_usuario
                     connection.query(query, (err, result, fields) => {
                         if (err) {
@@ -2041,6 +2040,42 @@ const modificar_usuario = async (req, res) => {
     }
 }
 
+const crear_encuesta_vacia = async (req, res) => {
+    try {
+        const data = req.body
+        let tabla = ""
+        
+        if (data.TipoUsuario == 2) {
+            tabla = "iam_encuesta90"
+        }
+        if (data.TipoUsuario == 3) {
+            tabla = "iam_encuesta180"
+        }
+        if (data.TipoUsuario == 4) {
+            tabla = "iam_encuesta270"
+        }
+        if (data.TipoUsuario == 5) {
+            tabla = "iam_encuesta360"
+        }
+
+        let query = "SELECT COUNT(*) as tiene FROM "+tabla+" WHERE IdUsuario = "+data.Id+"  AND IdEmpresa = " + data.IdEmpresa        
+
+        let rows = await connect(query)        
+
+        if (parseInt(rows[0].tiene) === 0) {
+            query = "INSERT INTO "+tabla+" (IdUsuario, IdEmpresa, Pregunta1, Pregunta2, Pregunta3, Pregunta4, Pregunta5, Pregunta6, Pregunta7) VALUES ("+data.Id+","+data.IdEmpresa+",'N','N','N','N','N','N','N')"
+            await connect(query)
+        }
+    
+        
+        res.status(200).json("OK")
+
+    } catch (e) {
+        console.log(e.message)
+        res.status(400).json({ error: e.message })
+    }
+}
+
 
 module.exports = {
     pregunta_archivo,
@@ -2070,6 +2105,7 @@ module.exports = {
     crear_empresa,
     eliminar_empresa,
     usuarios_empresa,
-    modificar_usuario
+    modificar_usuario,
+    crear_encuesta_vacia
 
 }

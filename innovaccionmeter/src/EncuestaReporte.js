@@ -683,7 +683,7 @@ export default class EncuestaReporte extends Component {
     }
 
     correo_encuesta_finalizada = async (usuario) => {        
-        try {
+        try {            
             let form_data = {}
             let canvas_image = ""
             await window.html2canvas(document.getElementById("tabla-final"), {

@@ -7,7 +7,7 @@ import EncuestaReporte from './EncuestaReporte'
 export default class Encuestas extends Component {
     constructor(props) {
         super(props)
-        Encuestas.contextType = AppContext  
+        Encuestas.contextType = AppContext
         this.state = {
             pagina: 1,
             cantidad_preguntas: undefined
@@ -131,8 +131,14 @@ export default class Encuestas extends Component {
                 method: "GET",
                 headers: headers,
             })
-            let data = await response.json()
-
+            let data = await response.json()            
+            for (let i in data) {
+                if (i !== "EncuestaEnviada") {
+                    if (data[i] === null) {
+                        data[i] = 0                        
+                    }
+                }
+            }
             if (response.status === 200) {
                 this.setState({
                     respuestas_bd: data
@@ -153,81 +159,118 @@ export default class Encuestas extends Component {
     }
 
     encuesta_data = async () => {
-        const { state, auth_false } = await this.context   
-        this.setState({
-            state,            
-            auth_false
-        })         
-        const usuario = this.state.state.usuario                
+        try {
+            const usuario = this.state.state.usuario
 
-        if (this.state.pagina !== 8) {
-            if (await this.respuestas_bd(usuario)) {
-                let form_data = {}
+            if (this.state.pagina !== 8) {
+                if (await this.respuestas_bd(usuario)) {
+                    let form_data = {}
 
-                form_data["idioma"] = this.state.state.idioma
-                form_data["TipoUsuario"] = usuario.TipoUsuario.toString()
-                form_data["pagina"] = this.state.pagina.toString()
+                    form_data["idioma"] = this.state.state.idioma
+                    form_data["TipoUsuario"] = usuario.TipoUsuario.toString()
+                    form_data["pagina"] = this.state.pagina.toString()
 
 
-                try {
-                    let headers = new Headers()
-                    headers.append("Content-Type", "application/json")
-                    headers.append("x-access-token", sessionStorage.getItem('innovaccionmeter_session'))
+                    try {
+                        let headers = new Headers()
+                        headers.append("Content-Type", "application/json")
+                        headers.append("x-access-token", sessionStorage.getItem('innovaccionmeter_session'))
 
-                    const URL = "http://" + window.location.host.split(":")[0] + ":" + process.env.REACT_APP_PORT + "/preguntas_encuesta"
-                    let response = await fetch(URL, {
-                        method: "POST",
-                        headers: headers,
-                        body: JSON.stringify(form_data)
-                    })
-
-                    let data = await response.json()
-
-                    if (response.status === 200) {
-
-                        let cantidad_preguntas = []
-                        data.map((obj) => {
-                            if (!cantidad_preguntas.includes(obj.id)) {
-                                cantidad_preguntas.push(obj.id)
-                            }
-                            return true
+                        const URL = "http://" + window.location.host.split(":")[0] + ":" + process.env.REACT_APP_PORT + "/preguntas_encuesta"
+                        let response = await fetch(URL, {
+                            method: "POST",
+                            headers: headers,
+                            body: JSON.stringify(form_data)
                         })
 
-                        this.setState({
-                            preguntas: data,
-                            cantidad_preguntas
-                        })
+                        let data = await response.json()
 
-                        //CARGA RESPUESTA
-                        this.state.cantidad_preguntas.map((numero) => {
-                            let preguntas_filtradas = this.state.preguntas.filter((obj) => obj.id.toString() === numero.toString())
-                            if (preguntas_filtradas[0].tipo === "radio" || preguntas_filtradas[0].tipo === "linea") {
-                                Array.from(document.getElementsByName(preguntas_filtradas[0].name)).map((obj) => obj.value === this.state.respuestas_bd[preguntas_filtradas[0].name].toString() ? obj.checked = true : obj.checked = false)
-                            }
-                            if (preguntas_filtradas[0].tipo === "check") {
-                                Array.from(document.getElementsByName(preguntas_filtradas[0].name)).map((obj) => (this.state.respuestas_bd[obj.id] === 1) ? obj.checked = true : obj.checked = false)
-                            }
+                        if (response.status === 200) {
+                            let cantidad_preguntas = []
+                            data.map((obj) => {
+                                if (!cantidad_preguntas.includes(obj.id)) {
+                                    cantidad_preguntas.push(obj.id)
+                                }
+                                return true
+                            })
+                            this.setState({
+                                preguntas: data,
+                                cantidad_preguntas
+                            })
 
-                            return true
-                        })
+                            //CARGA RESPUESTA
+                            this.state.cantidad_preguntas.map((numero) => {
+                                let preguntas_filtradas = this.state.preguntas.filter((obj) => obj.id.toString() === numero.toString())
+                                if (preguntas_filtradas[0].tipo === "radio" || preguntas_filtradas[0].tipo === "linea") {
+                                    Array.from(document.getElementsByName(preguntas_filtradas[0].name)).map((obj) => obj.value === this.state.respuestas_bd[preguntas_filtradas[0].name].toString() ? obj.checked = true : obj.checked = false)
+                                }
+                                if (preguntas_filtradas[0].tipo === "check") {
+                                    Array.from(document.getElementsByName(preguntas_filtradas[0].name)).map((obj) => (this.state.respuestas_bd[obj.id] === 1) ? obj.checked = true : obj.checked = false)
+                                }
+
+                                return true
+                            })
 
 
-                    } else if (response.status === 400) {
-                        window.ModalError("Encuesta", data.error)
-                    } else {
-                        this.state.auth_false()
+                        } else if (response.status === 400) {
+                            window.ModalError("Encuesta", data.error)
+                        } else {
+                            this.state.auth_false()
+                        }
+
+                    } catch (e) {
+                        window.ModalError("Encuesta", e.error)
                     }
 
-                } catch (e) {
-                    window.ModalError("Encuesta", e.error)
                 }
-
             }
+        } catch (e) {
+            window.ModalError("Encuesta", e.error)
+        }
+    }
+
+    crear_encuesta_vacia = async () => {
+        try {
+            const { state, auth_false } = await this.context
+            this.setState({
+                state,
+                auth_false
+            })
+            let form_data = {}
+            form_data["Id"] = this.state.state.usuario.Id
+            form_data["IdEmpresa"] = this.state.state.usuario.IdEmpresa
+            form_data["TipoUsuario"] = this.state.state.usuario.TipoUsuario
+
+            let headers = new Headers()
+            headers.append("Content-Type", "application/json")
+            headers.append("x-access-token", sessionStorage.getItem('innovaccionmeter_session'))
+
+
+            const URL = "http://" + window.location.host.split(":")[0] + ":" + process.env.REACT_APP_PORT + "/crear_encuesta_vacia"
+
+            let response = await fetch(URL, {
+                method: "POST",
+                headers: headers,
+                body: JSON.stringify(form_data)
+            })
+
+            let data = await response.json()
+
+            if (response.status === 200) {
+
+            } else if (response.status === 400) {
+                window.ModalError("Encuesta", data.error)
+            } else {
+                this.state.auth_false()
+            }
+        } catch (e) {
+            window.ModalError("Encuesta", e.error)
         }
     }
 
 
     componentDidMount = async () => {
+        await this.crear_encuesta_vacia()
         await this.encuesta_data()
     }
 
@@ -509,8 +552,8 @@ export default class Encuestas extends Component {
         )
     }
 
-    render() {                
-        return (            
+    render() {
+        return (
             <div className="">
                 <div id="wrapper" className="">
                     <div id="content-wrapper" className="d-flex flex-column">
