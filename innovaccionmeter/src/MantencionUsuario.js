@@ -1,6 +1,16 @@
 import React, { Component } from 'react'
 import { AppContext } from './App'
 
+import Usuario from './Usuario'
+
+function ultimatum(status) {    
+    if (status === "Encuesta Incompleta") {
+        return <u><a className="text-dark" href="/#">Envia Ultimatum</a></u>
+    } else {
+        return ""
+    }
+}
+
 export default class MantencionUsuario extends Component {
 
     constructor(props) {
@@ -13,6 +23,13 @@ export default class MantencionUsuario extends Component {
     }
 
     componentDidMount = async () => {
+        await this.funcion_inicial()
+    }
+
+    regresar = async () => {
+        this.setState({
+            vista: 0
+        })
         await this.funcion_inicial()
     }
 
@@ -56,6 +73,15 @@ export default class MantencionUsuario extends Component {
 
         await this.datos()
 
+    }
+
+    modifcar_usuario(obj) {
+        console.log(obj)
+        this.setState({            
+            usuario: obj,
+            tipo: "m",
+            vista: 2
+        })
     }
 
     pagina_principal = () => {
@@ -104,7 +130,6 @@ export default class MantencionUsuario extends Component {
                 </div>
                 {
                     datos.map((obj, index) => {
-                        console.log(obj)
                         return (
                             <div className={division} key={index}>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>#</div>
@@ -112,17 +137,17 @@ export default class MantencionUsuario extends Component {
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Acci&oacute;n</div>
                                 <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}><i className="far fa-trash-alt"></i></div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Nombre</div>
-                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}><u><a className="text-dark" href="/#">{obj.Nombre}</a></u></div>
+                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}><u><a className="text-dark" href="/#" onClick={() => this.modifcar_usuario(obj)}>{obj.Nombre}</a></u></div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Fono</div>
                                 <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{obj.Fono}</div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Correo</div>
                                 <div className={contenido_2} style={{ "border": "1px solid #c9c9c9" }}>{obj.Correo}</div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Ver.</div>
-                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{"V."+obj.Version}</div>
+                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{"V." + obj.Version}</div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Status</div>
                                 <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{obj.status}</div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Ultimatum</div>
-                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}><u><a className="text-dark" href="/#">Envia Ultimatum</a></u></div>
+                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{ultimatum(obj.status)}</div>
                             </div>
                         )
                     })
@@ -137,7 +162,8 @@ export default class MantencionUsuario extends Component {
             <div>
                 {
                     (this.state.vista === 1) ? <this.pagina_principal />
-                        : <div className="d-flex justify-content-center py-5"><div className="spinner-border text-success" role="status"><span className="sr-only">Espere...</span></div></div>
+                        : (this.state.vista === 2) ? <Usuario tipo={this.state.tipo} datos={this.state.usuario} funcion={this.regresar} />
+                            : <div className="d-flex justify-content-center py-5"><div className="spinner-border text-success" role="status"><span className="sr-only">Espere...</span></div></div>
                 }
             </div>
         )

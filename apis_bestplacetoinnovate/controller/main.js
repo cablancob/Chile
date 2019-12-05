@@ -12,6 +12,12 @@ const connection = mysql.createConnection({
     database: process.env.DATABASE
 });
 
+/*
+        fs.writeFile('prueba.html', html, (err) => {
+            if (err) throw err;
+        });
+*/
+
 const connect = util.promisify(connection.query).bind(connection);
 
 const csvFilePath = './controller/preguntas.csv'
@@ -1917,10 +1923,6 @@ const crear_empresa = async (req, res) => {
         </body>
         </html>
         `
-
-        fs.writeFile('prueba.html', html, (err) => {
-            if (err) throw err;
-        });
         //CORREO
         /*
 
@@ -2007,8 +2009,32 @@ const usuarios_empresa = async (req, res) => {
 
         rows.map((obj, index) => {                              
             delete rows[index].Clave
-        })                
+        })     
+
         res.status(200).json(rows)
+    } catch (e) {
+        console.log(e.message)
+        res.status(400).json({ error: e.message })
+    }
+}
+
+const modificar_usuario = async (req, res) => {
+    try {
+        const data = req.body
+        let query = "UPDATE iam_usuarios SET "
+
+
+        for (let i in data.datos) {
+            query += i + " = '" + data.datos[i] + "', "
+        }
+
+        query = query.substring(0, query.length - 2)
+        query += " WHERE Id = " + data.Id
+
+        await connect(query)
+        
+        res.status(200).json("OK")
+
     } catch (e) {
         console.log(e.message)
         res.status(400).json({ error: e.message })
@@ -2043,6 +2069,7 @@ module.exports = {
     modificar_empresa,
     crear_empresa,
     eliminar_empresa,
-    usuarios_empresa
+    usuarios_empresa,
+    modificar_usuario
 
 }

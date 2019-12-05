@@ -46,6 +46,8 @@ app.post('/correo_encuesta_finalizada', main.verifytoken, main.correo_encuesta_f
 app.post('/modificar_empresa', main.verifytoken, main.modificar_empresa)
 app.post('/crear_empresa', main.verifytoken, main.crear_empresa)
 app.post('/eliminar_empresa', main.verifytoken, main.eliminar_empresa)
+app.post('/modificar_usuario', main.verifytoken, main.modificar_usuario)
+
 
 
 

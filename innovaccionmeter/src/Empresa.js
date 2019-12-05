@@ -135,8 +135,7 @@ export default class Empresa extends Component {
                     this.state.auth_false()
                 }
             } catch (e) {
-                window.ModalError(this.state.titulo_principal, e.error)
-                document.getElementById(form_id).reset()
+                window.ModalError(this.state.titulo_principal, e.error)                
             }
         }
     }
@@ -289,7 +288,7 @@ export default class Empresa extends Component {
         }
         return (
             <div>
-                <h1 className="h3 my-4 text-gray-800 text-center">{this.state.titulo_principal}</h1>
+                <h1 className="h3 py-4 text-gray-800 text-center">{this.state.titulo_principal}</h1>
                 <form id="EmpresaID">
                     <div className={class_principal}>
                         <div className="form-group">
