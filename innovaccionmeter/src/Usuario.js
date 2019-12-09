@@ -60,9 +60,7 @@ export default class Usuario extends Component {
             })
         }
 
-        await this.datos()  
-        
-        console.log(this.state)
+        await this.datos()          
 
         this.setState({
             vista: 1

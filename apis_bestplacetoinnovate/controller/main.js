@@ -9,7 +9,8 @@ const connection = mysql.createConnection({
     host: process.env.DATABASE_ADDRESS,
     user: process.env.DATABASE_USER,
     password: process.env.DATABASE_PASSWORD,
-    database: process.env.DATABASE
+    database: process.env.DATABASE,
+    charset: 'latin1'    
 });
 
 /*
@@ -1717,13 +1718,13 @@ const correo_encuesta_finalizada = async (req, res) => {
 
         let query = "SELECT COUNT(*) as A FROM " + tabla + " WHERE EncuestaEnviada = 'S' AND IdUsuario = " + data.id_usuario
         //CORREO
-        
+
         await connection.query(query, (err, result, fields) => {
             if (err) {
                 console.log(err.message)
                 res.status(400).json({ error: err.message })
-            } else {                                
-                if (parseInt(result[0].A) == 0) {                                      
+            } else {
+                if (parseInt(result[0].A) == 0) {
                     query = "SELECT A.Nombre, A.Correo, B.NombreEmpresa, B.Sigla, B.Correo FROM iam_usuarios A INNER JOIN iam_empresa B ON A.IdEmpresa = B.IdEmpresa WHERE A.Id = " + data.id_usuario
                     connection.query(query, (err, result, fields) => {
                         if (err) {
@@ -1786,7 +1787,7 @@ const mantencion_empresas = async (req, res) => {
     try {
 
         let query = `
-        SELECT A.IdEmpresa, A.NombreEmpresa, A.Sigla, A.Vigente, 
+        SELECT A.IdEmpresa, A.NombreEmpresa, A.Sigla, A.Vigente, A.Contacto,  
         CASE 
         WHEN Encuesta90 = 'S' THEN (SELECT CAST(COUNT(*) AS CHAR(3)) FROM iam_usuarios B WHERE B.IdEmpresa = A.IdEmpresa AND B.TipoUsuario = 2)
         ELSE 'X'
@@ -2006,9 +2007,12 @@ const usuarios_empresa = async (req, res) => {
         `
         const rows = await connect(query)
 
-        rows.map((obj, index) => {                              
+        
+
+        rows.map((obj, index) => {
             delete rows[index].Clave
-        })     
+        })
+        
 
         res.status(200).json(rows)
     } catch (e) {
@@ -2031,7 +2035,7 @@ const modificar_usuario = async (req, res) => {
         query += " WHERE Id = " + data.Id
 
         await connect(query)
-        
+
         res.status(200).json("OK")
 
     } catch (e) {
@@ -2044,21 +2048,21 @@ const crear_usuario = async (req, res) => {
     try {
         const data = req.body
         const usuario = data.datos
-        let query = "SELECT COUNT(*) as existe FROM iam_usuarios WHERE TipoUsuario = "+data.TipoUsuario+" AND Correo = '"+usuario.Correo+"' AND IdEmpresa = " + data.IdEmpresa
+        let query = "SELECT COUNT(*) as existe FROM iam_usuarios WHERE TipoUsuario = " + data.TipoUsuario + " AND Correo = '" + usuario.Correo + "' AND IdEmpresa = " + data.IdEmpresa
 
         let rows = await connect(query)
-        
+
 
         if (parseInt(rows[0].existe) == 0) {
             const newpass = Math.random().toString(36).substr(2, 6)
             const md5 = crypto.createHash("md5").update(newpass).digest("hex");
             query = "INSERT INTO iam_usuarios (IdEmpresa, Empresa, TipoUsuario, Nombre, Fono, Correo, Version, Clave, Activacion, Vigente, EstadoEncuesta)"
-            query += " VALUES ("+data.IdEmpresa+", '"+data.Sigla+"', "+data.TipoUsuario+", '"+usuario.Nombre+"', '"+usuario.Fono+"', '"+usuario.Correo+"', '"+usuario.Version+"', '"+newpass+"', '"+md5+"', 'S', 0)"
+            query += " VALUES (" + data.IdEmpresa + ", '" + data.Sigla + "', " + data.TipoUsuario + ", '" + usuario.Nombre + "', '" + usuario.Fono + "', '" + usuario.Correo + "', '" + usuario.Version + "', '" + newpass + "', '" + md5 + "', 'S', 0)"
             await connect(query)
         } else {
             throw new Error('El usuario ya existe');
         }
-        
+
         res.status(200).json("OK")
 
     } catch (e) {
@@ -2069,9 +2073,9 @@ const crear_usuario = async (req, res) => {
 
 const borrar_usuario = async (req, res) => {
     try {
-        const data = req.body        
+        const data = req.body
         let tabla = ""
-    
+
         if (data.TipoUsuario == 2) {
             tabla = "iam_encuesta90"
         }
@@ -2085,11 +2089,11 @@ const borrar_usuario = async (req, res) => {
             tabla = "iam_encuesta360"
         }
         let query = "DELETE FROM " + tabla + "  WHERE IdUsuario = " + data.Id
-        await connect(query) 
+        await connect(query)
 
         query = "DELETE FROM iam_usuarios WHERE Id = " + data.Id
-        await connect(query)         
-        
+        await connect(query)
+
         res.status(200).json("OK")
 
     } catch (e) {
@@ -2102,7 +2106,7 @@ const crear_encuesta_vacia = async (req, res) => {
     try {
         const data = req.body
         let tabla = ""
-        
+
         if (data.TipoUsuario == 2) {
             tabla = "iam_encuesta90"
         }
@@ -2116,16 +2120,92 @@ const crear_encuesta_vacia = async (req, res) => {
             tabla = "iam_encuesta360"
         }
 
-        let query = "SELECT COUNT(*) as tiene FROM "+tabla+" WHERE IdUsuario = "+data.Id+"  AND IdEmpresa = " + data.IdEmpresa        
+        let query = "SELECT COUNT(*) as tiene FROM " + tabla + " WHERE IdUsuario = " + data.Id + "  AND IdEmpresa = " + data.IdEmpresa
 
-        let rows = await connect(query)        
+        let rows = await connect(query)
 
         if (parseInt(rows[0].tiene) === 0) {
-            query = "INSERT INTO "+tabla+" (IdUsuario, IdEmpresa, Pregunta1, Pregunta2, Pregunta3, Pregunta4, Pregunta5, Pregunta6, Pregunta7) VALUES ("+data.Id+","+data.IdEmpresa+",'N','N','N','N','N','N','N')"
+            query = "INSERT INTO " + tabla + " (IdUsuario, IdEmpresa, Pregunta1, Pregunta2, Pregunta3, Pregunta4, Pregunta5, Pregunta6, Pregunta7) VALUES (" + data.Id + "," + data.IdEmpresa + ",'N','N','N','N','N','N','N')"
             await connect(query)
         }
-    
-        
+
+
+        res.status(200).json("OK")
+
+    } catch (e) {
+        console.log(e.message)
+        res.status(400).json({ error: e.message })
+    }
+}
+
+const datos_eliminar_usuarios = async (req, res) => {
+    try {
+        const tipo_encuesta = req.query.tipo_encuesta
+        const IdEmpresa = req.query.IdEmpresa
+
+        let tabla = ""
+
+        if (tipo_encuesta == 2) {
+            tabla = "iam_encuesta90"
+        }
+        if (tipo_encuesta == 3) {
+            tabla = "iam_encuesta180"
+        }
+        if (tipo_encuesta == 4) {
+            tabla = "iam_encuesta270"
+        }
+        if (tipo_encuesta == 5) {
+            tabla = "iam_encuesta360"
+        }
+
+        query = `
+        SELECT COUNT(*) AS C
+        FROM iam_usuarios A LEFT JOIN `+tabla+` B
+        ON A.Id = B.IdUsuario
+        WHERE A.IdEmpresa = `+IdEmpresa+` AND A.TipoUsuario = `+tipo_encuesta+` AND B.Pregunta7 is null
+        UNION ALL
+        SELECT COUNT(*) AS C
+        FROM iam_usuarios A LEFT JOIN `+tabla+` B
+        ON A.Id = B.IdUsuario
+        WHERE A.IdEmpresa = `+IdEmpresa+` AND A.TipoUsuario = `+tipo_encuesta+` AND B.Pregunta7 = 'N'
+        UNION ALL
+        SELECT COUNT(*) AS C
+        FROM iam_usuarios A LEFT JOIN `+tabla+` B
+        ON A.Id = B.IdUsuario
+        WHERE A.IdEmpresa = `+IdEmpresa+` AND A.TipoUsuario = `+tipo_encuesta+` AND B.Pregunta7 = 'S'
+        `        
+        const rows = await connect(query)
+
+        res.status(200).json(rows)
+    } catch (e) {
+        console.log(e.message)
+        res.status(400).json({ error: e.message })
+    }
+}
+
+const eliminar_usuarios = async (req, res) => {
+    try {
+        const data = req.body
+        let tabla = ""
+
+        if (data.TipoUsuario == 2) {
+            tabla = "iam_encuesta90"
+        }
+        if (data.TipoUsuario == 3) {
+            tabla = "iam_encuesta180"
+        }
+        if (data.TipoUsuario == 4) {
+            tabla = "iam_encuesta270"
+        }
+        if (data.TipoUsuario == 5) {
+            tabla = "iam_encuesta360"
+        }
+        let query = "DELETE FROM " + tabla + "  WHERE IdEmpresa = " + data.IdEmpresa        
+        await connect(query)
+
+        query = "DELETE FROM iam_usuarios WHERE IdEmpresa = " + data.IdEmpresa + " AND TipoUsuario = " + data.TipoUsuario        
+        await connect(query)
+
         res.status(200).json("OK")
 
     } catch (e) {
@@ -2166,6 +2246,8 @@ module.exports = {
     modificar_usuario,
     crear_encuesta_vacia,
     crear_usuario,
-    borrar_usuario
+    borrar_usuario,
+    datos_eliminar_usuarios,
+    eliminar_usuarios
 
 }

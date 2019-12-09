@@ -44,11 +44,7 @@ export default class MantencionEmpresas extends Component {
             if (response.status === 200) {
                 this.setState({
                     datos: data,
-                    vista: 3,
-                    IdEmpresa: 214,
-                    NombreEmpresa: "AES Gener Chile",
-                    Sigla: "Prueba",
-                    tipo_encuesta: 2
+                    vista: 1
                 })
             } else if (response.status === 400) {
                 window.ModalError("Mantenci&oacute;n Empresas", data.error)
@@ -100,8 +96,9 @@ export default class MantencionEmpresas extends Component {
             IdEmpresa: obj.IdEmpresa,
             NombreEmpresa: obj.NombreEmpresa,
             Sigla: obj.Sigla,
+            Contacto: obj.Contacto,
             vista: 3
-        })
+        })        
     }
 
     pagina_principal = () => {
@@ -180,7 +177,7 @@ export default class MantencionEmpresas extends Component {
                 {
                     (this.state.vista === 1) ? <this.pagina_principal />
                         : (this.state.vista === 2) ? <Empresa IdEmpresa={this.state.IdEmpresa} tipo={this.state.tipo} funcion={this.regresar} />
-                            : (this.state.vista === 3) ? <MantencionUsuario IdEmpresa={this.state.IdEmpresa} tipo_encuesta={this.state.tipo_encuesta} NombreEmpresa={this.state.NombreEmpresa} Sigla={this.state.Sigla} funcion={this.regresar} />
+                            : (this.state.vista === 3) ? <MantencionUsuario IdEmpresa={this.state.IdEmpresa} tipo_encuesta={this.state.tipo_encuesta} NombreEmpresa={this.state.NombreEmpresa} Sigla={this.state.Sigla} Contacto={this.state.Contacto} funcion={this.regresar} />
                                 : <div className="d-flex justify-content-center py-5"><div className="spinner-border text-success" role="status"><span className="sr-only">Espere...</span></div></div>
                 }
             </div>

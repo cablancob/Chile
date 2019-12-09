@@ -50,6 +50,8 @@ app.post('/modificar_usuario', main.verifytoken, main.modificar_usuario)
 app.post('/crear_encuesta_vacia', main.verifytoken, main.crear_encuesta_vacia)
 app.post('/crear_usuario', main.verifytoken, main.crear_usuario)
 app.post('/borrar_usuario', main.verifytoken, main.borrar_usuario)
+app.post('/eliminar_usuarios', main.verifytoken, main.eliminar_usuarios)
+
 
 app.get('/session', main.verifytoken, main.session)
 app.get('/encuesta', main.verifytoken, main.encuesta)
@@ -67,6 +69,8 @@ app.get('/total_encuestas_empresas', main.verifytoken, main.total_encuestas_empr
 app.get('/tool_tips_data', main.verifytoken, main.tool_tips_data)
 app.get('/mantencion_empresas', main.verifytoken, main.mantencion_empresas)
 app.get('/usuarios_empresa', main.verifytoken, main.usuarios_empresa)
+app.get('/datos_eliminar_usuarios', main.verifytoken, main.datos_eliminar_usuarios)
+
 
 
 
