@@ -70,6 +70,8 @@ app.get('/tool_tips_data', main.verifytoken, main.tool_tips_data)
 app.get('/mantencion_empresas', main.verifytoken, main.mantencion_empresas)
 app.get('/usuarios_empresa', main.verifytoken, main.usuarios_empresa)
 app.get('/datos_eliminar_usuarios', main.verifytoken, main.datos_eliminar_usuarios)
+app.get('/informe_resumen', main.verifytoken, main.informe_resumen)
+
 
 
 

@@ -2183,7 +2183,7 @@ const datos_eliminar_usuarios = async (req, res) => {
     }
 }
 
-const eliminar_usuarios = async (req, res) => {
+const informe_resumen = async (req, res) => {
     try {
         const data = req.body
         let tabla = ""
@@ -2200,6 +2200,37 @@ const eliminar_usuarios = async (req, res) => {
         if (data.TipoUsuario == 5) {
             tabla = "iam_encuesta360"
         }
+        query = `
+        SELECT emp.IdEmpresa, emp.NombreEmpresa, emp.Contacto, Encuesta90, Encuesta180, Encuesta270, Encuesta360,
+        (SELECT COUNT(*) FROM iam_usuarios usu1 WHERE usu1.IdEmpresa=emp.IdEmpresa AND usu1.TipoUsuario=2) total90,
+        (SELECT COUNT(*) FROM iam_usuarios usu2 WHERE usu2.IdEmpresa=emp.IdEmpresa AND usu2.TipoUsuario=3) total180,
+        (SELECT COUNT(*) FROM iam_usuarios usu3 WHERE usu3.IdEmpresa=emp.IdEmpresa AND usu3.TipoUsuario=4) total270,
+        (SELECT COUNT(*) FROM iam_usuarios usu4 WHERE usu4.IdEmpresa=emp.IdEmpresa AND usu4.TipoUsuario=5) total360,
+        (SELECT COUNT(*) FROM iam_encuesta90 en90 WHERE en90.IdEmpresa=emp.IdEmpresa AND en90.Pregunta1='S' AND en90.Pregunta2='S' AND en90.Pregunta3='S' AND en90.Pregunta4='S' AND en90.Pregunta5='S' AND en90.Pregunta6='S' AND en90.Pregunta7='S') cuenta90, 
+        (SELECT COUNT(*) FROM iam_encuesta180 en180 WHERE en180.IdEmpresa=emp.IdEmpresa AND en180.Pregunta1='S' AND en180.Pregunta2='S' AND en180.Pregunta3='S' AND en180.Pregunta4='S' AND en180.Pregunta5='S' AND en180.Pregunta6='S' AND en180.Pregunta7='S') cuenta180, 
+        (SELECT COUNT(*) FROM iam_encuesta270 en270 WHERE en270.IdEmpresa=emp.IdEmpresa AND en270.Pregunta1='S' AND en270.Pregunta2='S' AND en270.Pregunta3='S' AND en270.Pregunta4='S' AND en270.Pregunta5='S' AND en270.Pregunta6='S' AND en270.Pregunta7='S') cuenta270, 
+        (SELECT COUNT(*) FROM iam_encuesta360 en360 WHERE en360.IdEmpresa=emp.IdEmpresa AND en360.Pregunta1='S' AND en360.Pregunta2='S' AND en360.Pregunta3='S' AND en360.Pregunta4='S' AND en360.Pregunta5='S' AND en360.Pregunta6='S' AND en360.Pregunta7='S') cuenta360, 
+        emp.Vigente, emp.Fecha
+        FROM iam_empresa emp
+        WHERE emp.IdEmpresa > 1
+        ORDER BY emp.NombreEmpresa
+        `
+        const rows = await connect(query)        
+        if (rows.length > 0) {
+            res.status(200).json(rows)
+        } else {
+            throw new Error('No hay datos');
+        }
+        
+
+    } catch (e) {
+        console.log(e.message)
+        res.status(400).json({ error: e.message })
+    }
+}
+
+const eliminar_usuarios = async (req, res) => {
+    try {
         let query = "DELETE FROM " + tabla + "  WHERE IdEmpresa = " + data.IdEmpresa        
         await connect(query)
 
@@ -2248,6 +2279,7 @@ module.exports = {
     crear_usuario,
     borrar_usuario,
     datos_eliminar_usuarios,
-    eliminar_usuarios
+    eliminar_usuarios,
+    informe_resumen
 
 }

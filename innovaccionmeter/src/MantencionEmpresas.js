@@ -4,6 +4,7 @@ import { AppContext } from './App'
 
 import Empresa from './Empresa'
 import MantencionUsuario from './MantencionUsuario'
+import InformeResumen from './InformeResumen'
 
 export default class MantencionEmpresas extends Component {
 
@@ -98,7 +99,13 @@ export default class MantencionEmpresas extends Component {
             Sigla: obj.Sigla,
             Contacto: obj.Contacto,
             vista: 3
-        })        
+        })
+    }
+
+    informe_resumen = async () => {
+        this.setState({            
+            vista: 4
+        })
     }
 
     pagina_principal = () => {
@@ -124,7 +131,7 @@ export default class MantencionEmpresas extends Component {
             <div className="px-2">
                 <div className="row">
                     <div className="col-md-6 py-3 text-center">
-                        <u><a className="text-dark" href="/#" onClick={() => { }}>--- Informe Resumen ---</a></u>
+                        <u><a className="text-dark" href="/#" onClick={() => this.informe_resumen()}>--- Informe Resumen ---</a></u>
                     </div>
                     <div className="col-md-6 py-3 text-center">
                         <u><a className="text-dark" href="/#" onClick={() => this.crear_empresa()}> --- Crea Empresa Nueva ---</a></u>
@@ -178,7 +185,8 @@ export default class MantencionEmpresas extends Component {
                     (this.state.vista === 1) ? <this.pagina_principal />
                         : (this.state.vista === 2) ? <Empresa IdEmpresa={this.state.IdEmpresa} tipo={this.state.tipo} funcion={this.regresar} />
                             : (this.state.vista === 3) ? <MantencionUsuario IdEmpresa={this.state.IdEmpresa} tipo_encuesta={this.state.tipo_encuesta} NombreEmpresa={this.state.NombreEmpresa} Sigla={this.state.Sigla} Contacto={this.state.Contacto} funcion={this.regresar} />
-                                : <div className="d-flex justify-content-center py-5"><div className="spinner-border text-success" role="status"><span className="sr-only">Espere...</span></div></div>
+                                : (this.state.vista === 4) ? <InformeResumen funcion={this.regresar} />
+                                    : <div className="d-flex justify-content-center py-5"><div className="spinner-border text-success" role="status"><span className="sr-only">Espere...</span></div></div>
                 }
             </div>
         )
