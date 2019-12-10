@@ -290,7 +290,7 @@ const resultados_innovacion = async (req, res) => {
         if (tipo === 5) {
             where = ` FROM cadomec_innovactionmeter.iam_encuesta360 as A `
         }
-        //CAMBIAR a 1 OPCION 4
+        //CAMBIAR a 5 OPCION 4
         query = `
             SELECT
             ROUND(SUM(C.0) / COUNT(*),1) AS '0',

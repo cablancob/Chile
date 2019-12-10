@@ -5,6 +5,7 @@ import { AppContext } from './App'
 import Empresa from './Empresa'
 import MantencionUsuario from './MantencionUsuario'
 import InformeResumen from './InformeResumen'
+import EncuestaReporteResumen from './EncuestaReporteResumen'
 
 export default class MantencionEmpresas extends Component {
 
@@ -103,8 +104,15 @@ export default class MantencionEmpresas extends Component {
     }
 
     informe_resumen = async () => {
-        this.setState({            
+        this.setState({
             vista: 4
+        })
+    }
+
+    reporte_encuesta_resumen = async (obj) => {    
+        this.setState({
+            vista: 5,
+            IdEmpresa: obj.IdEmpresa
         })
     }
 
@@ -169,7 +177,7 @@ export default class MantencionEmpresas extends Component {
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>360°</div>
                                 <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{(obj.cuenta360 === "X") ? "-X-" : <u><a className="text-dark" href="/#" onClick={() => this.consulta_usuarios(5, obj)}>{obj.cuenta360}</a></u>}</div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Ressumen</div>
-                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}><u><a className="text-dark" href="/#">Resumen Encuesta</a></u></div>
+                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}><u><a className="text-dark" href="/#" onClick={() => this.reporte_encuesta_resumen(obj)}>Resumen Encuesta</a></u></div>
                             </div>
                         )
                     })
@@ -186,7 +194,8 @@ export default class MantencionEmpresas extends Component {
                         : (this.state.vista === 2) ? <Empresa IdEmpresa={this.state.IdEmpresa} tipo={this.state.tipo} funcion={this.regresar} />
                             : (this.state.vista === 3) ? <MantencionUsuario IdEmpresa={this.state.IdEmpresa} tipo_encuesta={this.state.tipo_encuesta} NombreEmpresa={this.state.NombreEmpresa} Sigla={this.state.Sigla} Contacto={this.state.Contacto} funcion={this.regresar} />
                                 : (this.state.vista === 4) ? <InformeResumen funcion={this.regresar} />
-                                    : <div className="d-flex justify-content-center py-5"><div className="spinner-border text-success" role="status"><span className="sr-only">Espere...</span></div></div>
+                                    : (this.state.vista === 5) ? <EncuestaReporteResumen IdEmpresa={this.state.IdEmpresa} funcion={this.regresar} />
+                                        : <div className="d-flex justify-content-center py-5"><div className="spinner-border text-success" role="status"><span className="sr-only">Espere...</span></div></div>
                 }
             </div>
         )
