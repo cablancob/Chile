@@ -2248,7 +2248,20 @@ const eliminar_usuarios = async (req, res) => {
 const obtener_correo = async (req, res) => {
     try {
         let query = "SELECT * FROM iam_correodesde WHERE folio = 2"
-        const rows = await connect(query)        
+        const rows = await connect(query)
+
+        res.status(200).json(rows)
+
+    } catch (e) {
+        console.log(e.message)
+        res.status(400).json({ error: e.message })
+    }
+}
+
+const obtener_cuerpo_correo = async (req, res) => {
+    try {
+        let query = "SELECT * FROM iam_correo;"
+        const rows = await connect(query)
 
         res.status(200).json(rows)
 
@@ -2270,23 +2283,23 @@ const enviar_invitaciones = async (req, res) => {
         let tipo = ""
         let para = ""
         let de = data.Correo
-        let bcc = ""        
+        let bcc = ""
 
         query = "UPDATE iam_correodesde SET nombre = '" + data.Nombre + "', correo = '" + data.Correo + "' WHERE folio = 2;"
         await connect(query)
 
-        
-        datos.map((obj) => {            
+
+        datos.map((obj) => {
             where += obj.Id + ","
-        })        
-        
-        
+        })
+
+
         where = where.substring(0, where.length - 1) + ");"
-        query = "SELECT * FROM iam_usuarios WHERE Id IN " + where        
+        query = "SELECT * FROM iam_usuarios WHERE Id IN " + where
 
         let rows = await connect(query)
 
-        rows.map((obj) => {            
+        rows.map((obj) => {
 
             if (obj.TipoUsuario == "2") {
                 asunto = "Invitación a llenar Encuesta Comite Ejecutivo de Best Place to Innovate para " + empresa.NombreEmpresa
@@ -2294,7 +2307,7 @@ const enviar_invitaciones = async (req, res) => {
             }
             if (obj.TipoUsuario == "3") {
                 asunto = "Invitación a llenar Encuesta Colaboradores de Best Place to Innovate para " + empresa.NombreEmpresa
-                tipo = "Encuesta Colaboradores - 180°"                
+                tipo = "Encuesta Colaboradores - 180°"
             }
             if (obj.TipoUsuario == "4") {
                 asunto = "Invitación a llenar Encuesta Proveedores de Best Place to Innovate para " + empresa.NombreEmpresa
@@ -2304,15 +2317,15 @@ const enviar_invitaciones = async (req, res) => {
                 asunto = "Invitación a llenar Encuesta Clientes de Best Place to Innovate para " + empresa.NombreEmpresa
                 tipo = "Encuesta Clientes - 360°"
             }
-            
+
             para = obj.Correo
             bcc = empresa.correo_contacto + "," + de
-                        
+
             html = `
             <html>
 
             <head>
-                <title>`+asunto+`</title>
+                <title>`+ asunto + `</title>
             </head>
 
             <body>
@@ -2320,10 +2333,10 @@ const enviar_invitaciones = async (req, res) => {
                     <font color='#006600'>Best Place to Innovate</font>
                 </h1>
                 <h2 align=center>
-                    <font color='#ff0000'>`+tipo+`</font>
+                    <font color='#ff0000'>`+ tipo + `</font>
                 </h2>
-                <p><b>`+obj.Nombre+`.
-                        <p>Hay interés por parte de su empresa, <b><i>`+empresa.NombreEmpresa+`</i></b>, en entender cuál es su potencial
+                <p><b>`+ obj.Nombre + `.
+                        <p>Hay interés por parte de su empresa, <b><i>`+ empresa.NombreEmpresa + `</i></b>, en entender cuál es su potencial
                             innovador y en cómo gestionar la innovación para hacerla parte del ADN de la organización.</p>
                         <p>Es por ello que le agradeceríamos tomarse unos minutos para contestar esta encuesta. Sus respuestas
                             honestas y lo màs objetivas posibles nos ayudarán a medir donde está la empresa en el camino a la
@@ -2335,12 +2348,12 @@ const enviar_invitaciones = async (req, res) => {
                             <a
                                 href='LINK'><b>
                                     <font color='#ff0000'>AQUÍ</font>
-                                </b></a> para comenzar a contestar las preguntas. El usuario para acceder es su correo y la contraseña es: <font color='#ff0000'>`+obj.Clave+`</font> </p>                        
+                                </b></a> para comenzar a contestar las preguntas. El usuario para acceder es su correo y la contraseña es: <font color='#ff0000'>`+ obj.Clave + `</font> </p>                        
                         <p align=center><b>Muchas gracias por su cooperación.</b></p>
                         <p>
                             <p>
                                 <p>
-                                    <p>There is interest on the part of your company, <b><i>`+empresa.NombreEmpresa+`</i></b>, to understand
+                                    <p>There is interest on the part of your company, <b><i>`+ empresa.NombreEmpresa + `</i></b>, to understand
                                         what its innovation potential is and how to manage innovation to make it part of the DNA of
                                         the organization.</p>
                                     <p>That is why we would appreciate if you could take a few minutes to answer this survey. Your
@@ -2353,7 +2366,7 @@ const enviar_invitaciones = async (req, res) => {
                                         <a
                                             href='LINK'><b>
                                                 <font color='#ff0000'>HERE</font>
-                                            </b></a> to start answering the questions. The user is your email and the password is: <font color='#ff0000'>`+obj.Clave+`</font> </p>
+                                            </b></a> to start answering the questions. The user is your email and the password is: <font color='#ff0000'>`+ obj.Clave + `</font> </p>
                                     <p align=center><b>Thank you very much for your cooperation.</b></p>
             </body>
 
@@ -2362,8 +2375,8 @@ const enviar_invitaciones = async (req, res) => {
             //console.log(de + " - " + para + " - " + bcc + " - " + asunto)
 
         })
-        
-        
+
+
 
         res.status(200).json("OK")
 
@@ -2372,6 +2385,103 @@ const enviar_invitaciones = async (req, res) => {
         res.status(400).json({ error: e.message })
     }
 }
+
+
+const enviar_ultimatum = async (req, res) => {
+    try {
+        const data = req.body        
+        const usuario = data.usuario
+        const empresa = data.empresa
+        let query = ""
+        let html = ``
+        let asunto = ""
+        let tipo = ""
+        let para = ""
+        let de = ""
+        let bcc = ""
+
+        let cuerpo = ""      
+        
+        query = "SELECT * FROM iam_correodesde WHERE folio = 2;"
+
+        let rows = await connect(query)
+
+        de = rows[0].correo
+
+        query = "SELECT * FROM iam_usuarios WHERE Id = " + usuario
+
+        rows = await connect(query)
+
+        if (data.correo == 0) {
+            cuerpo = "Esperamos que este bien. Queríamos comentarle que estamos próximos a cerrar el diagnóstico de potencial innovador y capacidad de gestión de la innovación de la <b>" + empresa.NombreEmpresa + "</b>. Nos encantaría si antes de cerrarse el diagnóstico pudiésemos contar con su opinión la que seguramente será de mucho valor en el trabajo que se está haciendo."
+        } else {
+            cuerpo = data.contenido
+            query = "UPDATE iam_correo SET contenido = '"+data.contenido+"' WHERE id = " + data.correo
+            await connect(query)
+        }
+
+        if (rows.TipoUsuario == "2") {
+            asunto = "Asunto: Su opinión como Ejecutivo de " + empresa.NombreEmpresa
+            tipo = "Encuesta Comite Ejecutivo - 90°"
+        }
+        if (rows.TipoUsuario == "3") {
+            asunto = "Asunto: Su opinión como Colaborador de " + empresa.NombreEmpresa
+            tipo = "Encuesta Colaboradores - 180°"
+        }
+        if (rows.TipoUsuario == "4") {
+            asunto = "Asunto: Su opinión como Proveedores de " + empresa.NombreEmpresa
+            tipo = "Encuesta Proveedores - 270°"
+        }
+        if (rows.TipoUsuario == "5") {
+            asunto = "Asunto: Su opinión como Cliente de " + empresa.NombreEmpresa
+            tipo = "Encuesta Clientes - 360°"
+        }
+        para = rows[0].Correo
+        bcc = empresa.correo_contacto + "," + de
+
+        html = `
+        <html>
+
+        <head>
+            <title>`+ asunto + `</title>
+        </head>
+
+        <body>
+            <h1 align=center>
+                <font color='#006600'>Best Place to Innovate</font>
+            </h1>
+            <h2 align=center>
+                <font color='#ff0000'>`+ tipo + `</font>
+            </h2>
+            <p>Estimad@ <b>`+ rows[0].Nombre + `</b>:</p>
+            <p>`+ cuerpo + `</p>
+            <p>Completar la encuesta es muy sencillo y no le tomará más de unos pocos minutos. Solo tiene que hacer clic
+                <a href='LINK'><b>
+                        <font color='#ff0000'>AQUÍ</font>
+                    </b></a> y luego ingresar su correo como usuario y su clave: <b>`+ rows[0].Clave + `</b>. Para comenzar a contestar las preguntas.</p>    
+            <p align="center"><b>Muchas gracias por su cooperación</b></p>
+            <p align="center"><b>El Equipo de Best Place to Innovate</b></p>    
+            <p align="center"><img src='https://www.bestplacetoinnovate.org/InnovAccionMeter/Image/LogoMailSustainaly.jpg'
+                    alt='Best Place to Innovate'> </p>
+        </body>
+
+        </html>
+           `
+
+        //console.log(de + " - " + para + " - " + bcc + " - " + asunto)
+
+        fs.writeFile('prueba.html', html, (err) => {
+            if (err) throw err;
+        });
+
+        res.status(200).json("OK")
+
+    } catch (e) {
+        console.log(e.message)
+        res.status(400).json({ error: e.message })
+    }
+}
+
 
 
 
@@ -2412,6 +2522,8 @@ module.exports = {
     eliminar_usuarios,
     informe_resumen,
     enviar_invitaciones,
-    obtener_correo
+    obtener_correo,
+    enviar_ultimatum,
+    obtener_cuerpo_correo
 
 }

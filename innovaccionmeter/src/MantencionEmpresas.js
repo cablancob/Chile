@@ -46,12 +46,7 @@ export default class MantencionEmpresas extends Component {
             if (response.status === 200) {                
                 this.setState({
                     datos: data,
-                    vista: 3,
-                    Contacto: "Rocio Olavarria",
-                    IdEmpresa: 214,
-                    NombreEmpresa: "AES Gener Chile",
-                    Sigla: "AES Gener 2019",
-                    tipo_encuesta: 2
+                    vista: 1
                 })
             } else if (response.status === 400) {
                 window.ModalError("Mantenci&oacute;n Empresas", data.error)

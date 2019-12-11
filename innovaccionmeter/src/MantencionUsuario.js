@@ -4,14 +4,7 @@ import { AppContext } from './App'
 import Usuario from './Usuario'
 import EliminarUsuarios from './EliminarUsuarios'
 import EnviarInvitaciones from './EnviarInvitaciones'
-
-function ultimatum(status) {
-    if (status === "Encuesta Incompleta") {
-        return <u><a className="text-dark" href="/#">Envia Ultimatum</a></u>
-    } else {
-        return ""
-    }
-}
+import EnviarUltimatum from './EnviarUltimatum'
 
 export default class MantencionUsuario extends Component {
 
@@ -33,6 +26,15 @@ export default class MantencionUsuario extends Component {
             vista: 0
         })
         await this.funcion_inicial()
+    }
+
+    ultimatum(obj) {    
+        //enviar_ultimatum
+        if (obj.status === "1") {
+            return <u><a className="text-dark" href="/#" onClick={() => this.enviar_ultimatum(obj)}>Envia Ultimatum</a></u>
+        } else {
+            return ""
+        }
     }
 
     datos = async () => {
@@ -116,6 +118,16 @@ export default class MantencionUsuario extends Component {
         })
     }
 
+    enviar_ultimatum(usuario) {
+        let obj = {}
+        obj["IdEmpresa"] = this.props.IdEmpresa
+        obj["usuario"] = usuario        
+        this.setState({
+            usuario: obj,
+            vista: 5
+        })
+    }
+
     enviar_invitaciones() {
         let obj = {}                       
         obj["IdEmpresa"] = this.props.IdEmpresa        
@@ -193,7 +205,7 @@ export default class MantencionUsuario extends Component {
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Status</div>
                                 <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{(obj.status === "0") ? "Encuesta Sin Comenzar" : (obj.status === "1") ? "Encuesta Incompleta" : "Encuesta Finalizada"}</div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Ultimatum</div>
-                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{ultimatum(obj.status)}</div>
+                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{this.ultimatum(obj)}</div>
                             </div>
                         )
                     })
@@ -216,7 +228,8 @@ export default class MantencionUsuario extends Component {
                         : (this.state.vista === 2) ? <Usuario tipo={this.state.tipo} datos={this.state.usuario} funcion={this.regresar} />
                             : (this.state.vista === 3) ? <EliminarUsuarios datos={this.state.usuario} funcion={this.regresar} />
                                 : (this.state.vista === 4) ? <EnviarInvitaciones datos={this.state.usuario} funcion={this.regresar} />
-                                    : <div className="d-flex justify-content-center py-5"><div className="spinner-border text-success" role="status"><span className="sr-only">Espere...</span></div></div>
+                                    : (this.state.vista === 5) ? <EnviarUltimatum datos={this.state.usuario} funcion={this.regresar} />
+                                        : <div className="d-flex justify-content-center py-5"><div className="spinner-border text-success" role="status"><span className="sr-only">Espere...</span></div></div>
                 }
             </div>
         )
