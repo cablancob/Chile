@@ -43,10 +43,15 @@ export default class MantencionEmpresas extends Component {
                 headers: headers,
             })
             let data = await response.json()
-            if (response.status === 200) {
+            if (response.status === 200) {                
                 this.setState({
                     datos: data,
-                    vista: 1
+                    vista: 3,
+                    Contacto: "Rocio Olavarria",
+                    IdEmpresa: 214,
+                    NombreEmpresa: "AES Gener Chile",
+                    Sigla: "AES Gener 2019",
+                    tipo_encuesta: 2
                 })
             } else if (response.status === 400) {
                 window.ModalError("Mantenci&oacute;n Empresas", data.error)
@@ -109,7 +114,7 @@ export default class MantencionEmpresas extends Component {
         })
     }
 
-    reporte_encuesta_resumen = async (obj) => {    
+    reporte_encuesta_resumen = async (obj) => {
         this.setState({
             vista: 5,
             IdEmpresa: obj.IdEmpresa
@@ -157,7 +162,7 @@ export default class MantencionEmpresas extends Component {
                     <div className="col-md py-2" style={{ "border": "1px solid #c9c9c9" }}>Ressumen</div>
                 </div>
                 {
-                    datos.map((obj, index) => {
+                    datos.map((obj, index) => {                        
                         return (
                             <div className={division} key={index}>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>#</div>

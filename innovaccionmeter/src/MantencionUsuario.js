@@ -3,6 +3,7 @@ import { AppContext } from './App'
 
 import Usuario from './Usuario'
 import EliminarUsuarios from './EliminarUsuarios'
+import EnviarInvitaciones from './EnviarInvitaciones'
 
 function ultimatum(status) {
     if (status === "Encuesta Incompleta") {
@@ -71,7 +72,6 @@ export default class MantencionUsuario extends Component {
             state,
             auth_false
         })
-
         await this.datos()
 
     }
@@ -104,7 +104,7 @@ export default class MantencionUsuario extends Component {
         })
     }
 
-    eliminar_usuarios(IdEmpresa, tipo_encuesta, NombreEmpresa, Contacto) {        
+    eliminar_usuarios(IdEmpresa, tipo_encuesta, NombreEmpresa, Contacto) {
         let obj = {}
         obj["IdEmpresa"] = IdEmpresa
         obj["tipo_encuesta"] = tipo_encuesta
@@ -113,6 +113,16 @@ export default class MantencionUsuario extends Component {
         this.setState({
             usuario: obj,
             vista: 3
+        })
+    }
+
+    enviar_invitaciones() {
+        let obj = {}                       
+        obj["IdEmpresa"] = this.props.IdEmpresa        
+        obj["usuarios"] = this.state.datos.filter((obj) => {return obj.status === "0"})                    
+        this.setState({
+            usuario: obj,
+            vista: 4
         })
     }
 
@@ -144,14 +154,14 @@ export default class MantencionUsuario extends Component {
         }
         return (
             <div className="px-2">
-                <h1 className="h3 my-4 text-gray-800 text-center">{this.props.NombreEmpresa}</h1>
+                <h1 className="h3 my-4 text-gray-800 text-center">Usuarios: {this.props.NombreEmpresa}</h1>
                 <h1 className="h3 my-4 text-gray-800 text-center"><i className="far fa-trash-alt" onClick={() => this.eliminar_usuarios(this.props.IdEmpresa, this.props.tipo_encuesta, this.props.NombreEmpresa, this.props.Contacto)}></i></h1>
                 <div className="row">
                     <div className="col-md-6 py-3 text-center">
                         <u><a className="text-dark" href="/#" onClick={() => this.crear_usuario(this.props.IdEmpresa, this.props.tipo_encuesta, this.props.Sigla)}>--- Crea Nuevo Usuario ---</a></u>
                     </div>
                     <div className="col-md-6 py-3 text-center">
-                        <u><a className="text-dark" href="/#" >---Envia Invitaciones ---</a></u>
+                        <u><a className="text-dark" href="/#" onClick={async () => await this.enviar_invitaciones()} >---Envia Invitaciones ---</a></u>
                     </div>
                 </div>
                 <div className={titulo}>
@@ -165,7 +175,7 @@ export default class MantencionUsuario extends Component {
                     <div className="col py-2" style={{ "border": "1px solid #c9c9c9" }}>Ultimatum</div>
                 </div>
                 {
-                    datos.map((obj, index) => {                        
+                    datos.map((obj, index) => {
                         return (
                             <div className={division} key={index}>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>#</div>
@@ -181,14 +191,14 @@ export default class MantencionUsuario extends Component {
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Ver.</div>
                                 <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{"V." + obj.Version}</div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Status</div>
-                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{obj.status}</div>
+                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{(obj.status === "0") ? "Encuesta Sin Comenzar" : (obj.status === "1") ? "Encuesta Incompleta" : "Encuesta Finalizada"}</div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Ultimatum</div>
                                 <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{ultimatum(obj.status)}</div>
                             </div>
                         )
                     })
                 }
-                <div className="row py-5 text-center">                    
+                <div className="row py-5 text-center">
                     <div className="col-md-12 py-3">
                         <button type="button" className="btn btn-primary px-5" onClick={this.props.funcion}>{"<< Anterior"}</button>
                     </div>
@@ -205,7 +215,8 @@ export default class MantencionUsuario extends Component {
                     (this.state.vista === 1) ? <this.pagina_principal />
                         : (this.state.vista === 2) ? <Usuario tipo={this.state.tipo} datos={this.state.usuario} funcion={this.regresar} />
                             : (this.state.vista === 3) ? <EliminarUsuarios datos={this.state.usuario} funcion={this.regresar} />
-                                : <div className="d-flex justify-content-center py-5"><div className="spinner-border text-success" role="status"><span className="sr-only">Espere...</span></div></div>
+                                : (this.state.vista === 4) ? <EnviarInvitaciones datos={this.state.usuario} funcion={this.regresar} />
+                                    : <div className="d-flex justify-content-center py-5"><div className="spinner-border text-success" role="status"><span className="sr-only">Espere...</span></div></div>
                 }
             </div>
         )

@@ -51,6 +51,8 @@ app.post('/crear_encuesta_vacia', main.verifytoken, main.crear_encuesta_vacia)
 app.post('/crear_usuario', main.verifytoken, main.crear_usuario)
 app.post('/borrar_usuario', main.verifytoken, main.borrar_usuario)
 app.post('/eliminar_usuarios', main.verifytoken, main.eliminar_usuarios)
+app.post('/enviar_invitaciones', main.verifytoken, main.enviar_invitaciones)
+
 
 
 app.get('/session', main.verifytoken, main.session)
@@ -71,6 +73,8 @@ app.get('/mantencion_empresas', main.verifytoken, main.mantencion_empresas)
 app.get('/usuarios_empresa', main.verifytoken, main.usuarios_empresa)
 app.get('/datos_eliminar_usuarios', main.verifytoken, main.datos_eliminar_usuarios)
 app.get('/informe_resumen', main.verifytoken, main.informe_resumen)
+app.get('/obtener_correo', main.verifytoken, main.obtener_correo)
+
 
 
 

@@ -10,7 +10,7 @@ const connection = mysql.createConnection({
     user: process.env.DATABASE_USER,
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE,
-    charset: 'latin1'    
+    charset: 'latin1'
 });
 
 /*
@@ -1998,21 +1998,21 @@ const usuarios_empresa = async (req, res) => {
         query = `
         SELECT *, 
         CASE 
-        WHEN (SELECT COUNT(*) FROM `+ tabla + ` WHERE IdUsuario = A.id AND IdEmpresa = ` + IdEmpresa + `) = 0 THEN 'Encuesta sin Comenzar'
-        WHEN (SELECT COUNT(*) FROM `+ tabla + ` WHERE IdUsuario = A.id AND IdEmpresa = ` + IdEmpresa + ` AND Pregunta7 = 'N') = 1 THEN 'Encuesta Incompleta'
-        WHEN (SELECT COUNT(*) FROM `+ tabla + ` WHERE IdUsuario = A.id AND IdEmpresa = ` + IdEmpresa + ` AND Pregunta7 = 'S') = 1 THEN 'Encuesta Terminada'        
+        WHEN (SELECT COUNT(*) FROM `+ tabla + ` WHERE IdUsuario = A.id AND IdEmpresa = ` + IdEmpresa + `) = 0 THEN '0'
+        WHEN (SELECT COUNT(*) FROM `+ tabla + ` WHERE IdUsuario = A.id AND IdEmpresa = ` + IdEmpresa + ` AND Pregunta7 = 'N') = 1 THEN '1'
+        WHEN (SELECT COUNT(*) FROM `+ tabla + ` WHERE IdUsuario = A.id AND IdEmpresa = ` + IdEmpresa + ` AND Pregunta7 = 'S') = 1 THEN '2'        
         END as status 
         FROM iam_usuarios A
         WHERE A.IdEmpresa = `+ IdEmpresa + ` AND A.TipoUsuario = ` + tipo_encuesta + ` ORDER BY A.Nombre
         `
         const rows = await connect(query)
 
-        
+
 
         rows.map((obj, index) => {
             delete rows[index].Clave
         })
-        
+
 
         res.status(200).json(rows)
     } catch (e) {
@@ -2160,20 +2160,20 @@ const datos_eliminar_usuarios = async (req, res) => {
 
         query = `
         SELECT COUNT(*) AS C
-        FROM iam_usuarios A LEFT JOIN `+tabla+` B
+        FROM iam_usuarios A LEFT JOIN `+ tabla + ` B
         ON A.Id = B.IdUsuario
-        WHERE A.IdEmpresa = `+IdEmpresa+` AND A.TipoUsuario = `+tipo_encuesta+` AND B.Pregunta7 is null
+        WHERE A.IdEmpresa = `+ IdEmpresa + ` AND A.TipoUsuario = ` + tipo_encuesta + ` AND B.Pregunta7 is null
         UNION ALL
         SELECT COUNT(*) AS C
-        FROM iam_usuarios A LEFT JOIN `+tabla+` B
+        FROM iam_usuarios A LEFT JOIN `+ tabla + ` B
         ON A.Id = B.IdUsuario
-        WHERE A.IdEmpresa = `+IdEmpresa+` AND A.TipoUsuario = `+tipo_encuesta+` AND B.Pregunta7 = 'N'
+        WHERE A.IdEmpresa = `+ IdEmpresa + ` AND A.TipoUsuario = ` + tipo_encuesta + ` AND B.Pregunta7 = 'N'
         UNION ALL
         SELECT COUNT(*) AS C
-        FROM iam_usuarios A LEFT JOIN `+tabla+` B
+        FROM iam_usuarios A LEFT JOIN `+ tabla + ` B
         ON A.Id = B.IdUsuario
-        WHERE A.IdEmpresa = `+IdEmpresa+` AND A.TipoUsuario = `+tipo_encuesta+` AND B.Pregunta7 = 'S'
-        `        
+        WHERE A.IdEmpresa = `+ IdEmpresa + ` AND A.TipoUsuario = ` + tipo_encuesta + ` AND B.Pregunta7 = 'S'
+        `
         const rows = await connect(query)
 
         res.status(200).json(rows)
@@ -2215,13 +2215,13 @@ const informe_resumen = async (req, res) => {
         WHERE emp.IdEmpresa > 1
         ORDER BY emp.NombreEmpresa
         `
-        const rows = await connect(query)        
+        const rows = await connect(query)
         if (rows.length > 0) {
             res.status(200).json(rows)
         } else {
             throw new Error('No hay datos');
         }
-        
+
 
     } catch (e) {
         console.log(e.message)
@@ -2231,10 +2231,10 @@ const informe_resumen = async (req, res) => {
 
 const eliminar_usuarios = async (req, res) => {
     try {
-        let query = "DELETE FROM " + tabla + "  WHERE IdEmpresa = " + data.IdEmpresa        
+        let query = "DELETE FROM " + tabla + "  WHERE IdEmpresa = " + data.IdEmpresa
         await connect(query)
 
-        query = "DELETE FROM iam_usuarios WHERE IdEmpresa = " + data.IdEmpresa + " AND TipoUsuario = " + data.TipoUsuario        
+        query = "DELETE FROM iam_usuarios WHERE IdEmpresa = " + data.IdEmpresa + " AND TipoUsuario = " + data.TipoUsuario
         await connect(query)
 
         res.status(200).json("OK")
@@ -2244,6 +2244,135 @@ const eliminar_usuarios = async (req, res) => {
         res.status(400).json({ error: e.message })
     }
 }
+
+const obtener_correo = async (req, res) => {
+    try {
+        let query = "SELECT * FROM iam_correodesde WHERE folio = 2"
+        const rows = await connect(query)        
+
+        res.status(200).json(rows)
+
+    } catch (e) {
+        console.log(e.message)
+        res.status(400).json({ error: e.message })
+    }
+}
+
+const enviar_invitaciones = async (req, res) => {
+    try {
+        const data = req.body
+        const datos = data.datos
+        const empresa = data.empresa
+        let query = ""
+        let where = "("
+        let html = ``
+        let asunto = ""
+        let tipo = ""
+        let para = ""
+        let de = data.Correo
+        let bcc = ""
+
+        
+        datos.map((obj) => {
+            console.log(obj.Id)
+            where += obj.Id + ","
+        })        
+        
+        
+        where = where.substring(0, where.length - 1) + ");"
+        query = "SELECT * FROM iam_usuarios WHERE Id IN " + where        
+
+        let rows = await connect(query)
+
+        rows.map((obj, index) => {            
+
+            if (obj.TipoUsuario == "2") {
+                asunto = "Invitación a llenar Encuesta Comite Ejecutivo de Best Place to Innovate para " + empresa.NombreEmpresa
+                tipo = "Encuesta Comite Ejecutivo - 90°"
+            }
+            if (obj.TipoUsuario == "3") {
+                asunto = "Invitación a llenar Encuesta Colaboradores de Best Place to Innovate para " + empresa.NombreEmpresa
+                tipo = "Encuesta Colaboradores - 180°"                
+            }
+            if (obj.TipoUsuario == "4") {
+                asunto = "Invitación a llenar Encuesta Proveedores de Best Place to Innovate para " + empresa.NombreEmpresa
+                tipo = "Encuesta Proveedores - 270°"
+            }
+            if (obj.TipoUsuario == "5") {
+                asunto = "Invitación a llenar Encuesta Clientes de Best Place to Innovate para " + empresa.NombreEmpresa
+                tipo = "Encuesta Clientes - 360°"
+            }
+
+            de
+            para = obj.Correo
+            bcc = empresa.correo_contacto + "," + de
+                        
+            html = `
+            <html>
+
+            <head>
+                <title>`+asunto+`</title>
+            </head>
+
+            <body>
+                <h1 align=center>
+                    <font color='#006600'>Best Place to Innovate</font>
+                </h1>
+                <h2 align=center>
+                    <font color='#ff0000'>`+tipo+`</font>
+                </h2>
+                <p><b>`+obj.Nombre+`.
+                        <p>Hay interés por parte de su empresa, <b><i>`+empresa.NombreEmpresa+`</i></b>, en entender cuál es su potencial
+                            innovador y en cómo gestionar la innovación para hacerla parte del ADN de la organización.</p>
+                        <p>Es por ello que le agradeceríamos tomarse unos minutos para contestar esta encuesta. Sus respuestas
+                            honestas y lo màs objetivas posibles nos ayudarán a medir donde está la empresa en el camino a la
+                            <b>InnovAcción</b>. En tal sentido no hay respuesta incorrecta solo respuestas útiles. Esta encuesta es
+                            totalmente anónima y confidencial. Nuestro sistema automatizado de tabulación de resultados procesa las
+                            encuestas recibidas consolidándolas de manera tal de permitir una medición a 90° (equipo Gerencial),
+                            180° (Colaboradores), 270° (Proveedores) y 360° (Clientes). Completar la encuesta es muy sencillo y no
+                            le tomará más de unos pocos minutos. Solo tiene que hacer clic
+                            <a
+                                href='LINK'><b>
+                                    <font color='#ff0000'>AQUÍ</font>
+                                </b></a> para comenzar a contestar las preguntas. El usuario para acceder es su correo y la contraseña es: <font color='#ff0000'>`+obj.Clave+`</font> </p>                        
+                        <p align=center><b>Muchas gracias por su cooperación.</b></p>
+                        <p>
+                            <p>
+                                <p>
+                                    <p>There is interest on the part of your company, <b><i>`+empresa.NombreEmpresa+`</i></b>, to understand
+                                        what its innovation potential is and how to manage innovation to make it part of the DNA of
+                                        the organization.</p>
+                                    <p>That is why we would appreciate if you could take a few minutes to answer this survey. Your
+                                        honest and objective answers will help us to measure where the company is on the road to
+                                        InnovAction. Please note that there is no wrong answer, only useful ones. This survey is
+                                        anonymous and confidential. Our automated tabulation system processes the surveys received,
+                                        consolidating them in such a way as to allow a measurement at 90 ° (Management team), 180 °
+                                        (Collaborators), 270 ° (Suppliers) and 360 ° (Customers). Completing the survey is very
+                                        simple and will not take more than a few minutes. Just click
+                                        <a
+                                            href='LINK'><b>
+                                                <font color='#ff0000'>HERE</font>
+                                            </b></a> to start answering the questions. The user is your email and the password is: <font color='#ff0000'>`+obj.Clave+`</font> </p>
+                                    <p align=center><b>Thank you very much for your cooperation.</b></p>
+            </body>
+
+            </html>`
+
+            console.log(de + " - " + para + " - " + bcc + " - " + asunto)
+
+        })
+        
+        
+
+        res.status(200).json("OK")
+
+    } catch (e) {
+        console.log(e.message)
+        res.status(400).json({ error: e.message })
+    }
+}
+
+
 
 
 module.exports = {
@@ -2280,6 +2409,8 @@ module.exports = {
     borrar_usuario,
     datos_eliminar_usuarios,
     eliminar_usuarios,
-    informe_resumen
+    informe_resumen,
+    enviar_invitaciones,
+    obtener_correo
 
 }
