@@ -2270,11 +2270,13 @@ const enviar_invitaciones = async (req, res) => {
         let tipo = ""
         let para = ""
         let de = data.Correo
-        let bcc = ""
+        let bcc = ""        
+
+        query = "UPDATE iam_correodesde SET nombre = '" + data.Nombre + "', correo = '" + data.Correo + "' WHERE folio = 2;"
+        await connect(query)
 
         
-        datos.map((obj) => {
-            console.log(obj.Id)
+        datos.map((obj) => {            
             where += obj.Id + ","
         })        
         
@@ -2284,7 +2286,7 @@ const enviar_invitaciones = async (req, res) => {
 
         let rows = await connect(query)
 
-        rows.map((obj, index) => {            
+        rows.map((obj) => {            
 
             if (obj.TipoUsuario == "2") {
                 asunto = "Invitación a llenar Encuesta Comite Ejecutivo de Best Place to Innovate para " + empresa.NombreEmpresa
@@ -2302,8 +2304,7 @@ const enviar_invitaciones = async (req, res) => {
                 asunto = "Invitación a llenar Encuesta Clientes de Best Place to Innovate para " + empresa.NombreEmpresa
                 tipo = "Encuesta Clientes - 360°"
             }
-
-            de
+            
             para = obj.Correo
             bcc = empresa.correo_contacto + "," + de
                         
@@ -2358,7 +2359,7 @@ const enviar_invitaciones = async (req, res) => {
 
             </html>`
 
-            console.log(de + " - " + para + " - " + bcc + " - " + asunto)
+            //console.log(de + " - " + para + " - " + bcc + " - " + asunto)
 
         })
         

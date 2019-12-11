@@ -124,9 +124,7 @@ export default class EnviarInvitaciones extends Component {
                 form_data["datos"] = this.props.datos.usuarios
                 let headers = new Headers()
                 headers.append("Content-Type", "application/json")
-                headers.append("x-access-token", sessionStorage.getItem('innovaccionmeter_session'))
-
-                console.log(form_data)
+                headers.append("x-access-token", sessionStorage.getItem('innovaccionmeter_session'))                
 
                 let URL = "http://" + window.location.host.split(":")[0] + ":" + process.env.REACT_APP_PORT + "/enviar_invitaciones"
 
@@ -140,9 +138,8 @@ export default class EnviarInvitaciones extends Component {
 
                 if (response.status === 200) {
                     window.ModalOk(this.state.titulo_principal, "Las invitaciones fueron enviadas con exito")
-                    /*this.props.funcion()
-                    window.RemoveClass()*/
-
+                    window.RemoveClass()
+                    this.props.funcion()                    
                 } else if (response.status === 400) {
                     window.ModalError(this.state.titulo_principal, data.error)
                 } else {
