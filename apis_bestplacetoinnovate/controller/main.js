@@ -4,6 +4,34 @@ const mysql = require('mysql')
 const util = require('util')
 var crypto = require('crypto');
 
+const Buffer = require('buffer').Buffer;
+
+//CORREO_ADMIN=estudios@bp2i.org
+const transporter = nodeMailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD
+    }
+});
+let mailOptions = {
+    from: "'Prueba' <cablancob2901@gmail.com>",
+    to: "",
+    bcc: "",
+    cc: "",
+    subject: "Prueba",
+    html: "<b>NodeJS Email Tutorial</b>",
+    attachments: [{
+        filename: "",
+        path: "",
+        cid: ""
+    }]
+};
+/*
+const info = await transporter.sendMail(mailOptions)
+console.log('Message %s sent: %s', info.messageId, info.response)
+*/
+
 const fs = require('fs');
 const connection = mysql.createConnection({
     host: process.env.DATABASE_ADDRESS,
@@ -112,9 +140,14 @@ const login = async (req, res) => {
 
 const recuperar_clave = async (req, res) => {
     try {
-        const { recuperarform_usuario } = req.body
-        const query = "SELECT Correo, Vigente, Nombre, Clave FROM iam_usuarios WHERE Correo = '" + recuperarform_usuario + "'"
-        await connection.query(query, (err, result, fields) => {
+        const data = req.body
+        let html = ``
+        let asunto = ""
+        let para = ""
+        let de = "Best Place to Innovate" + process.env.CORREO_ADMIN
+
+        const query = "SELECT * FROM iam_usuarios WHERE Correo = '" + data.recuperarform_usuario + "' AND TipoUsuario = " + data.frmlogin_tipoEncuesta + " ORDER BY id DESC LIMIT 1;"
+        await connection.query(query, async (err, result, fields) => {
             if (err) {
                 console.log(err.message)
                 res.status(401).json({ error: err.message })
@@ -123,31 +156,38 @@ const recuperar_clave = async (req, res) => {
                     if (result[0].Vigente != "S") {
                         res.status(400).json({ error: "El usuario no se encuentra vigente." })
                     } else {
-
-                        res.status(200).json("OK")
+                        asunto = "Clave de acceso Best Place to Innovate"
+                        html = `
+                        <html>
+                        <head>
+                        <title>`+ asunto + `</title>
+                        </head>
+                        <body>
+                        <p>Sr(a) `+ result[0].Nombre + `.
+                        <br>Le recordamos que su clave de acceso a los sistemas de Best Place to Innovate es:
+                        <br>Usuario: <b>`+ result[0].Correo + `</b>
+                        <br>Clave: <b>`+ result[0].Clave + `</b>
+                        <br>
+                        <br>Con esta información puede acceder <a href="LINK"><font color='#ff0000'>AQUÍ</font></a>
+                        <br>
+                        <br>Gracias por preferirnos.
+                        <br><i>Equipo de Best Place to Innovate</i>
+                        </p>
+                        </body>
+                        </html>
+                        `
+                        //Best Place to Innovate               
                         //CORREO
-                        /*
-$para  = $fila['Correo'] ; 
-		// título
-		$titulo = "Clave de acceso a ".$_El_Titulo_;
-		// mensaje
-		$mensaje = '<title>Clave de acceso '.$_El_Titulo_.'</title>
-			</head>
-			<body>
-			  <p>Sr(a) '.$fila['Nombre'].'.
-			  <br>Le recordamos que su clave de acceso a los sistemas de '.$_El_Titulo_.' es:
-			  <br>Usuario: <b>'.$fila['Correo'].'</b>
-			  <br>Clave: <b>'.$fila['Clave'].'</b>
-			  <br>
-			  <br>Con esta información puede acceder <a href="'.$_pag_login.'" class="rojo">AQUÍ</a>
-			  <br>
-			  <br>Gracias por preferirnos.
-			  <br><i>Equipo de '.$_El_Titulo_.'</i>
-			  </p>
-			</body>
-			</html>
-			';
-                        */
+                        para = result[0].Nombre + " <" + result[0].Correo + ">"
+
+                        mailOptions.to = para
+                        mailOptions.from = de
+                        mailOptions.subject = asunto
+                        mailOptions.html = html
+
+                        const info = await transporter.sendMail(mailOptions)
+                        console.log('Message %s sent: %s', info.messageId, info.response)
+                        res.status(200).json("OK")
                     }
 
                 } else {
@@ -1596,12 +1636,13 @@ const enviar_conclusion = async (req, res) => {
         let tipo_encuesta = ""
         numero = ""
         let asunto = "Resultado encuesta Clientes de Best Place to Innovate para " + data.Sigla
-        let para = data.correo_contacto
-        let copia_oculta = ""
-        let de = process.env.CORREO_ADMIN
-
-
-        console.log(data)
+        let para = data.Contacto + " <" + data.correo_contacto + ">"        
+        let de = "Best Place to Innovate " + process.env.CORREO_ADMIN
+        let bcc = process.env.CORREO_ADMIN
+            
+        //CAMBIAR
+        //let bcc = data.Correo        
+        
         if (data.tipo_encuesta === 2) {
             tipo_encuesta = "Comite Ejecutivo - 90°"
             numero = "90"
@@ -1620,11 +1661,10 @@ const enviar_conclusion = async (req, res) => {
         }
 
         copia_oculta = de + "," + data.correo_contacto
-
-
-        console.log(de + " - " + copia_oculta + " - " + para + " - " + asunto)
+        
 
         const query = "UPDATE iam_empresa SET Conclusion" + numero + " = '" + data.conclusion_coach + "' , " + "Recomendacion" + numero + " = '" + data.recomendacion_coach + "' WHERE IdEmpresa = " + data.IdEmpresa
+        
         //CORREO
         const html = `
     <html>
@@ -1648,7 +1688,7 @@ const enviar_conclusion = async (req, res) => {
         <table align='center'>
         <tr>
         <td>
-        <img src=`+ data.imagen + `></img>
+        <img src="cid:unique@kreata.ee" alt='Best Place to Innovate'>        
         </td>
         </tr>
         </table>
@@ -1669,12 +1709,39 @@ const enviar_conclusion = async (req, res) => {
 </html>
     `
 
-        await connection.query(query, (err, result, fields) => {
+        await connection.query(query, async (err, result, fields) => {
             if (err) {
                 console.log(err.message)
                 res.status(400).json({ error: err.message })
             } else {
                 res.status(200).json(result)
+
+                let file = Math.floor(new Date() / 1000) + ".jpg"
+
+
+                //CORREO
+                fs.writeFile(file, Buffer.from(data.imagen.split("base64,")[1], 'base64'), (err) => {
+                    if (err) throw err;
+                });                
+                //console.log(de + " - " + para + " - " + bcc + " - " + asunto)
+
+
+                mailOptions.attachments[0].filename = "resultado.jpg"
+                mailOptions.attachments[0].path = file
+                mailOptions.attachments[0].cid = "unique@kreata.ee"
+                mailOptions.to = para
+                mailOptions.from = de
+                mailOptions.bcc = bcc
+                mailOptions.subject = asunto
+                mailOptions.html = html
+
+                const info = await transporter.sendMail(mailOptions)
+                console.log('Message %s sent: %s', info.messageId, info.response)
+
+
+                fs.unlink(file, (err) => {
+                    if (err) throw err;
+                });
             }
         });
     } catch (e) {
@@ -1689,8 +1756,10 @@ const correo_encuesta_finalizada = async (req, res) => {
 
         let asunto = ""
         let para = ""
-        let copia_oculta = ""
-        let de = process.env.CORREO_ADMIN
+        let de = "Best Place to Innovate " + process.env.CORREO_ADMIN
+        //CAMBIAR
+        //let bcc = data.Correo
+        let bcc = process.env.CORREO_ADMIN
 
         let tabla = ""
 
@@ -1719,25 +1788,24 @@ const correo_encuesta_finalizada = async (req, res) => {
         let query = "SELECT COUNT(*) as A FROM " + tabla + " WHERE EncuestaEnviada = 'S' AND IdUsuario = " + data.id_usuario
         //CORREO
 
-        await connection.query(query, (err, result, fields) => {
+        await connection.query(query, async (err, result, fields) => {
             if (err) {
                 console.log(err.message)
                 res.status(400).json({ error: err.message })
             } else {
                 if (parseInt(result[0].A) == 0) {
-                    query = "SELECT A.Nombre, A.Correo, B.NombreEmpresa, B.Sigla, B.Correo FROM iam_usuarios A INNER JOIN iam_empresa B ON A.IdEmpresa = B.IdEmpresa WHERE A.Id = " + data.id_usuario
-                    connection.query(query, (err, result, fields) => {
+                    query = "SELECT A.Nombre, A.Correo, B.NombreEmpresa, B.Sigla, B.Correo,(SELECT Correo FROM iam_usuarios WHERE IdEmpresa = A.IdEmpresa AND TipoUsuario = 88) as correo_contacto FROM iam_usuarios A INNER JOIN iam_empresa B ON A.IdEmpresa = B.IdEmpresa WHERE A.Id = " + data.id_usuario
+                    connection.query(query, async (err, result, fields) => {
                         if (err) {
                             console.log(err.message)
                             res.status(400).json({ error: err.message })
                         } else {
                             if (result.length > 0) {
                                 asunto += result[0].Sigla
-                                copia_oculta = result[0].Correo + "," + process.env.CORREO_ADMIN
-                                const html = `
+                                const html = `                                
                                <html>
                                <head>
-                                   <title>`+ asunto + `</title>
+                                   <title>`+ asunto + `</title>                                   
                                </head>
                                <body>
                                    <img src='https://www.bestplacetoinnovate.org/InnovAccionMeter/Image/Logo_bp2i.jpg' alt='Best Place to Innovate' />
@@ -1749,14 +1817,46 @@ const correo_encuesta_finalizada = async (req, res) => {
                                    <table align='center'>
                                        <tr>
                                            <td>
-                                               <img src=`+ data.imagen + `></img>
+                                               <img src="cid:unique@kreata.ee" alt='Best Place to Innovate'>
                                            </td>
                                        </tr>
-                                   </table>
+                                   </table>                                   
                                    <br><br><br>
                                </body>
                                </html>
                                `
+
+                                let file = Math.floor(new Date() / 1000) + ".jpg"
+
+
+                                //CORREO
+                                fs.writeFile(file, Buffer.from(data.imagen.split("base64,")[1], 'base64'), (err) => {
+                                    if (err) throw err;
+                                });
+                                para = result[0].Nombre + " <" + result[0].Correo + ">"
+                                bcc += "," + result[0].correo_contacto
+                                //console.log(de + " - " + para + " - " + bcc + " - " + asunto)
+
+
+                                mailOptions.attachments[0].filename = "resultado.jpg"
+                                mailOptions.attachments[0].path = file
+                                mailOptions.attachments[0].cid = "unique@kreata.ee"
+                                mailOptions.to = para
+                                mailOptions.from = de
+                                mailOptions.bcc = bcc
+                                mailOptions.subject = asunto
+                                mailOptions.html = html
+
+                                const info = await transporter.sendMail(mailOptions)
+                                console.log('Message %s sent: %s', info.messageId, info.response)
+
+
+                                fs.unlink(file, (err) => {
+                                    if (err) throw err;
+                                });
+
+
+
 
                                 query = "UPDATE " + tabla + " SET EncuestaEnviada = 'S' WHERE IdUsuario = " + data.id_usuario
                                 connection.query(query, (err, result, fields) => {
@@ -1887,7 +1987,7 @@ const crear_empresa = async (req, res) => {
 
         await connect(query)
 
-        const asunto = "EncuestasBest Place to Innovate para " + data.datos.Sigla
+        let asunto = "Encuestas Best Place to Innovate para " + data.datos.Sigla
 
         let tipos_escuesta = ""
         if (data.datos.Encuesta90 === "S") {
@@ -1917,31 +2017,25 @@ const crear_empresa = async (req, res) => {
             <p>Le informamos que usted tiene asignado el perfil de Administrador de las encuestas realizadas por Best Place to Innovate para los siguientes tipos de encuestas. </p>
                 <ol>` + tipos_escuesta + `</ol>
                 <br>
-                Para acceder debe ir al siguiente <a href='PAGINA ACCESO'><b> <font color='#ff0000'>LINK</font></b></a>
-                ingresando su correo y en clave <b>` + newpass + `</b>
+                Para acceder debe ir al siguiente <a href='LINK'><b> <font color='#ff0000'>LINK</font></b></a>
+                ingresando su correo y la clave <b>` + newpass + `</b>
                 <p>Atentamente equipo de Best Place to Innovate</p>
         </body>
         </html>
         `
+
+        asunto = "Envio de Invitación a llenar encuesta de Best Place to Innovate para " + data.datos.Sigla
+        let para = data.datos.Contacto + " <" + data.datos.Correo + ">"
+        let de = "Best Place to Innovate" + process.env.CORREO_ADMIN
+
+        mailOptions.to = para
+        mailOptions.from = de
+        mailOptions.subject = asunto
+        mailOptions.html = html
+
+        const info = await transporter.sendMail(mailOptions)
+        console.log('Message %s sent: %s', info.messageId, info.response)
         //CORREO
-        /*
-
-      $correo_para = $fila2[Contacto]." <".$fila2[Correo].">";
-	      // Titulo del correo
-	      $correo_titulo = "Envio de Invitación a llenar encuesta ".$TituloEncuesta." de ".$_El_Titulo_." para ".$fila2[Sigla];
-	      // Cabecera que especifica que es un HMTL
-	      $correo_cabeceras  = "MIME-Version: 1.0\r\n";
-	      //$correo_cabeceras .= "Content-type: text/html; charset=iso-8859-1\r\n"; // utf-8
-	      $correo_cabeceras .= "Content-type: text/html; charset=utf-8\r\n"; // utf-8
-	      // Cabeceras adicionales
-	      $correo_cabeceras .= "From: ".$_El_Titulo_." <".$_mail_admin.">\r\n";
-	      $correo_cabeceras .= "Bcc: ".$_mail_admin."\r\n";
-	      //$cabeceras .= "Cc: archivotarifas@example.com\r\n";
-	      $correo_cabeceras .= "Bcc: webmaster@xpgconsultnet.com\r\n";
-
-	      //var_dump($correo_mensaje);
-	      @mail($correo_para, $correo_titulo, $correo_mensaje, $correo_cabeceras);
-        */
 
 
         res.status(200).json("OK")
@@ -2156,7 +2250,7 @@ const datos_eliminar_usuarios = async (req, res) => {
         }
         if (tipo_encuesta == 5) {
             tabla = "iam_encuesta360"
-        }
+        }        
 
         query = `
         SELECT COUNT(*) AS C
@@ -2230,7 +2324,22 @@ const informe_resumen = async (req, res) => {
 }
 
 const eliminar_usuarios = async (req, res) => {
-    try {
+    try {        
+        const data = req.body
+        let tabla = ""
+        if (data.TipoUsuario == 2) {
+            tabla = "iam_encuesta90"
+        }
+        if (data.TipoUsuario == 3) {
+            tabla = "iam_encuesta180"
+        }
+        if (data.TipoUsuario == 4) {
+            tabla = "iam_encuesta270"
+        }
+        if (data.TipoUsuario == 5) {
+            tabla = "iam_encuesta360"
+        }  
+
         let query = "DELETE FROM " + tabla + "  WHERE IdEmpresa = " + data.IdEmpresa
         await connect(query)
 
@@ -2282,8 +2391,10 @@ const enviar_invitaciones = async (req, res) => {
         let asunto = ""
         let tipo = ""
         let para = ""
-        let de = data.Correo
-        let bcc = ""
+        let de = data.Nombre + " <" + data.Correo + ">"
+        //CAMBIAR
+        //let bcc = data.Correo
+        let bcc = process.env.CORREO_ADMIN
 
         query = "UPDATE iam_correodesde SET nombre = '" + data.Nombre + "', correo = '" + data.Correo + "' WHERE folio = 2;"
         await connect(query)
@@ -2299,7 +2410,7 @@ const enviar_invitaciones = async (req, res) => {
 
         let rows = await connect(query)
 
-        rows.map((obj) => {
+        rows.map(async (obj) => {
 
             if (obj.TipoUsuario == "2") {
                 asunto = "Invitación a llenar Encuesta Comite Ejecutivo de Best Place to Innovate para " + empresa.NombreEmpresa
@@ -2317,9 +2428,6 @@ const enviar_invitaciones = async (req, res) => {
                 asunto = "Invitación a llenar Encuesta Clientes de Best Place to Innovate para " + empresa.NombreEmpresa
                 tipo = "Encuesta Clientes - 360°"
             }
-
-            para = obj.Correo
-            bcc = empresa.correo_contacto + "," + de
 
             html = `
             <html>
@@ -2374,7 +2482,21 @@ const enviar_invitaciones = async (req, res) => {
 
             //console.log(de + " - " + para + " - " + bcc + " - " + asunto)
 
+            para = obj.Nombre + " <" + obj.Correo + ">"
+            bcc = empresa.correo_contacto + "," + bcc
+
+            mailOptions.to = para
+            mailOptions.bcc = bcc
+            mailOptions.from = de
+            mailOptions.subject = asunto
+            mailOptions.html = html
+
+            const info = await transporter.sendMail(mailOptions)
+            console.log('Message %s sent: %s', info.messageId, info.response)
+
         })
+
+
 
 
 
@@ -2389,7 +2511,7 @@ const enviar_invitaciones = async (req, res) => {
 
 const enviar_ultimatum = async (req, res) => {
     try {
-        const data = req.body        
+        const data = req.body
         const usuario = data.usuario
         const empresa = data.empresa
         let query = ""
@@ -2399,14 +2521,17 @@ const enviar_ultimatum = async (req, res) => {
         let para = ""
         let de = ""
         let bcc = ""
+        let correo_admin = ""
 
-        let cuerpo = ""      
-        
+        let cuerpo = ""
+
         query = "SELECT * FROM iam_correodesde WHERE folio = 2;"
 
         let rows = await connect(query)
 
-        de = rows[0].correo
+        de = rows[0].nombre + " <" + rows[0].correo + ">"
+
+        correo_admin = rows[0].correo
 
         query = "SELECT * FROM iam_usuarios WHERE Id = " + usuario
 
@@ -2416,28 +2541,26 @@ const enviar_ultimatum = async (req, res) => {
             cuerpo = "Esperamos que este bien. Queríamos comentarle que estamos próximos a cerrar el diagnóstico de potencial innovador y capacidad de gestión de la innovación de la <b>" + empresa.NombreEmpresa + "</b>. Nos encantaría si antes de cerrarse el diagnóstico pudiésemos contar con su opinión la que seguramente será de mucho valor en el trabajo que se está haciendo."
         } else {
             cuerpo = data.contenido
-            query = "UPDATE iam_correo SET contenido = '"+data.contenido+"' WHERE id = " + data.correo
+            query = "UPDATE iam_correo SET contenido = '" + data.contenido + "' WHERE id = " + data.correo
             await connect(query)
         }
 
-        if (rows.TipoUsuario == "2") {
+        if (rows[0].TipoUsuario == "2") {
             asunto = "Asunto: Su opinión como Ejecutivo de " + empresa.NombreEmpresa
             tipo = "Encuesta Comite Ejecutivo - 90°"
         }
-        if (rows.TipoUsuario == "3") {
+        if (rows[0].TipoUsuario == "3") {
             asunto = "Asunto: Su opinión como Colaborador de " + empresa.NombreEmpresa
             tipo = "Encuesta Colaboradores - 180°"
         }
-        if (rows.TipoUsuario == "4") {
+        if (rows[0].TipoUsuario == "4") {
             asunto = "Asunto: Su opinión como Proveedores de " + empresa.NombreEmpresa
             tipo = "Encuesta Proveedores - 270°"
         }
-        if (rows.TipoUsuario == "5") {
+        if (rows[0].TipoUsuario == "5") {
             asunto = "Asunto: Su opinión como Cliente de " + empresa.NombreEmpresa
             tipo = "Encuesta Clientes - 360°"
         }
-        para = rows[0].Correo
-        bcc = empresa.correo_contacto + "," + de
 
         html = `
         <html>
@@ -2468,11 +2591,22 @@ const enviar_ultimatum = async (req, res) => {
         </html>
            `
 
+
+        para = rows[0].Nombre + " <" + rows[0].Correo + ">"
+        bcc = empresa.correo_contacto + "," + correo_admin
+
+
         //console.log(de + " - " + para + " - " + bcc + " - " + asunto)
 
-        fs.writeFile('prueba.html', html, (err) => {
-            if (err) throw err;
-        });
+        mailOptions.to = para
+        mailOptions.from = de
+        mailOptions.bcc = bcc
+        mailOptions.subject = asunto
+        mailOptions.html = html
+
+        const info = await transporter.sendMail(mailOptions)
+        console.log('Message %s sent: %s', info.messageId, info.response)
+
 
         res.status(200).json("OK")
 

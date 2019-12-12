@@ -55,11 +55,13 @@ export default class Login extends Component {
 
                 let data = await response.json()
 
-                if (response.status === 200) {                    
+                if (response.status === 200) {
                     window.ModalOk("recuperaci&oacute;n de Clave", "Su clave fue enviada a su correo")
+                    window.RemoveClass()
+                    document.getElementById("recuperarform").reset()
                     this.setState({
                         vista: "login"
-                    })                    
+                    })
                 } else {
                     window.ModalError("recuperaci&oacute;n de Clave", data.error)
                     document.getElementById(form_id).reset()
@@ -117,6 +119,7 @@ export default class Login extends Component {
                 let data = await response.json()
 
                 if (response.status === 200) {
+                    window.RemoveClass()
                     sessionStorage.setItem('innovaccionmeter_session', data.token)
                     this.props.data_session()
                 } else {
@@ -210,11 +213,21 @@ export default class Login extends Component {
                                                 <hr />
                                                 <form className="user" id="recuperarform">
                                                     <div className="form-group">
+                                                        <label htmlFor="frmlogin_tipoEncuesta">Encuesta</label>
+                                                        <select className="form-control requerido" style={{ "borderRadius": "10rem" }} id="frmlogin_tipoEncuesta">
+                                                            <option value="">Seleccione</option>
+                                                            <option value="2">Equipo Gerencial (90&deg;)</option>
+                                                            <option value="3">Colaboradores (180&deg;)</option>
+                                                            <option value="4">Proveedores (270&deg;)</option>
+                                                            <option value="5">Clientes (360&deg;)</option>
+                                                            <option value="88">Administrador</option>
+                                                            <option value="99">Coach</option>
+                                                        </select>
+                                                    </div>
+                                                    <div className="form-group">
                                                         <label htmlFor="usuario">Correo Electronico</label>
                                                         <input type="email" className="form-control form-control-user requerido" id="recuperarform_usuario" aria-describedby="emailHelp" />
-                                                        <div className="invalid-feedback">
-                                                            Campo Obligatorio
-												</div>
+                                                        <div className="invalid-feedback">Campo Obligatorio</div>
                                                     </div>
                                                     <button type="button" className="btn btn-primary btn-user btn-block" id="recuperarform_enviar" onClick={this.recuperar_clave}>Recuperar Contraseña</button>
                                                     <hr />

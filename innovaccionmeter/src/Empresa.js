@@ -121,7 +121,8 @@ export default class Empresa extends Component {
                     }
                     if (this.props.tipo === "n") {
                         window.ModalOk(this.state.titulo_principal, "La empresa fue creada con exito")
-                        document.getElementById(form_id).reset()
+                        //document.getElementById(form_id).reset()
+                        this.props.funcion()
                     }
                     if (this.props.tipo === "e") {
                         window.ModalOk(this.state.titulo_principal, "La empresa fue borrada con exito")
@@ -540,7 +541,7 @@ export default class Empresa extends Component {
                     </div>
                 </form>
                 <div className="row py-5 text-center">
-                    <div className="col-md-6">
+                    <div className="col-md-6 py-3">
                         <button type="button" className="btn btn-primary px-5" onClick={this.boton_accion}>{this.state.boton}</button>
                     </div>
                     <div className="col-md-6 py-3">

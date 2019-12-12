@@ -693,7 +693,7 @@ export default class EncuestaReporte extends Component {
             let canvas_image = ""
             await window.html2canvas(document.getElementById("tabla-final"), {
                 onrendered: function (canvas) {
-                    canvas_image = canvas.toDataURL()
+                    canvas_image = canvas.toDataURL("image/jpeg")
                 }
             });
             form_data["tipo_encuesta"] = usuario.tipo_encuesta

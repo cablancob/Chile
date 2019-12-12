@@ -43,7 +43,7 @@ export default class MantencionEmpresas extends Component {
                 headers: headers,
             })
             let data = await response.json()
-            if (response.status === 200) {                
+            if (response.status === 200) {                             
                 this.setState({
                     datos: data,
                     vista: 1
