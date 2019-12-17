@@ -374,7 +374,6 @@ export default class EncuestaReporte extends Component {
             let data = await response.json()
             if (response.status === 200) {
                 let datos = data
-                console.log(datos)
                 return datos
             } else if (response.status === 400) {
                 window.ModalError("Reporte", data.error)

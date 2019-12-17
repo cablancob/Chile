@@ -16,34 +16,6 @@ export default class ModalWarning extends Component {
         await this.funcion_inicial()
     }
 
-    datos = async (id) => {
-        try {
-            let headers = new Headers()
-            headers.append("Content-Type", "application/json")
-            headers.append("x-access-token", sessionStorage.getItem('innovaccionmeter_session'))
-
-
-            let URL = "http://" + window.location.host.split(":")[0] + ":" + process.env.REACT_APP_PORT + "/xxxx?id=" + parseInt(id)
-            const response = await fetch(URL, {
-                method: "GET",
-                headers: headers,
-            })
-            let data = await response.json()
-            if (response.status === 200) {
-                this.setState({
-                    datos_empresa: data,
-                    vista: 1
-                })
-            } else if (response.status === 400) {
-                window.ModalError(this.state.titulo_principal, data.error)
-            } else {
-                this.state.auth_false()
-            }
-
-        } catch (e) {
-            window.ModalError(this.state.titulo_principal, e.error)
-        }
-    }
 
     obtener_cuerpo_correo = async (id) => {
         try {

@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import Menu from './Menu'
 import EncuestasTotalEmpresa from './EncuestasTotalEmpresa'
 import MantencionEmpresas from './MantencionEmpresas'
+import Estadisticas from './Estadisticas'
 
 export default class Coach extends Component {
     constructor(props) {
@@ -18,7 +19,11 @@ export default class Coach extends Component {
 
     }
 
-    cambiar_pagina = async (menu, submenu) => {
+    cambiar_pagina = async (menu, submenu) => {    
+        
+        this.setState({
+            submenu: await 0
+        })
         this.setState({
             menu,
             submenu
@@ -39,6 +44,7 @@ export default class Coach extends Component {
     pagina_principal = () => {
         return (
             <div className="container-fluid">
+                <hr></hr>
                 <div className="row form-group text-center">
                     <div className="col-md-3 form-group">
                         <u>
@@ -61,6 +67,7 @@ export default class Coach extends Component {
                         </u>
                     </div>
                 </div>
+                <hr></hr>
                 <div className="row form-group text-center px-5">
                     <div className="col-md-4 form-group">
                         <u>
@@ -77,7 +84,7 @@ export default class Coach extends Component {
                             <a className={this.style_menu(8)} href="/#" onClick={() => this.cambiar_pagina(this.state.menu, 8)}>Mantencion Empresas</a>
                         </u>
                     </div>
-                </div>
+                </div>                
             </div>
         )
 
@@ -96,11 +103,12 @@ export default class Coach extends Component {
                                 <Menu />
                                 <this.pagina_principal />
                                 <div className="container-fluid">
-                                {
-                                (submenu === 7) ? <EncuestasTotalEmpresa tipo={menu} />
-                                : (submenu === 8) ? <MantencionEmpresas tipo={menu} />
-                                : ""
-                                }
+                                    {
+                                        (submenu === 7) ? <EncuestasTotalEmpresa tipo={menu} />
+                                            : (submenu === 8) ? <MantencionEmpresas tipo={menu} />
+                                                : (submenu === 6) ? <Estadisticas tipo={menu} />
+                                                    : ""
+                                    }
                                 </div>
                             </div>
                             <footer className="sticky-footer bg-white">

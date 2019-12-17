@@ -1636,13 +1636,13 @@ const enviar_conclusion = async (req, res) => {
         let tipo_encuesta = ""
         numero = ""
         let asunto = "Resultado encuesta Clientes de Best Place to Innovate para " + data.Sigla
-        let para = data.Contacto + " <" + data.correo_contacto + ">"        
+        let para = data.Contacto + " <" + data.correo_contacto + ">"
         let de = "Best Place to Innovate " + process.env.CORREO_ADMIN
         let bcc = process.env.CORREO_ADMIN
-            
+
         //CAMBIAR
         //let bcc = data.Correo        
-        
+
         if (data.tipo_encuesta === 2) {
             tipo_encuesta = "Comite Ejecutivo - 90°"
             numero = "90"
@@ -1661,10 +1661,10 @@ const enviar_conclusion = async (req, res) => {
         }
 
         copia_oculta = de + "," + data.correo_contacto
-        
+
 
         const query = "UPDATE iam_empresa SET Conclusion" + numero + " = '" + data.conclusion_coach + "' , " + "Recomendacion" + numero + " = '" + data.recomendacion_coach + "' WHERE IdEmpresa = " + data.IdEmpresa
-        
+
         //CORREO
         const html = `
     <html>
@@ -1722,7 +1722,7 @@ const enviar_conclusion = async (req, res) => {
                 //CORREO
                 fs.writeFile(file, Buffer.from(data.imagen.split("base64,")[1], 'base64'), (err) => {
                     if (err) throw err;
-                });                
+                });
                 //console.log(de + " - " + para + " - " + bcc + " - " + asunto)
 
 
@@ -2250,7 +2250,7 @@ const datos_eliminar_usuarios = async (req, res) => {
         }
         if (tipo_encuesta == 5) {
             tabla = "iam_encuesta360"
-        }        
+        }
 
         query = `
         SELECT COUNT(*) AS C
@@ -2324,7 +2324,7 @@ const informe_resumen = async (req, res) => {
 }
 
 const eliminar_usuarios = async (req, res) => {
-    try {        
+    try {
         const data = req.body
         let tabla = ""
         if (data.TipoUsuario == 2) {
@@ -2338,7 +2338,7 @@ const eliminar_usuarios = async (req, res) => {
         }
         if (data.TipoUsuario == 5) {
             tabla = "iam_encuesta360"
-        }  
+        }
 
         let query = "DELETE FROM " + tabla + "  WHERE IdEmpresa = " + data.IdEmpresa
         await connect(query)
@@ -2616,7 +2616,326 @@ const enviar_ultimatum = async (req, res) => {
     }
 }
 
+const obtener_empresas = async (req, res) => {
+    try {
+        let query = "SELECT IdEmpresa, Sigla FROM iam_empresa WHERE IdEmpresa>1 ORDER BY Sigla;"
+        const rows = await connect(query)
 
+        res.status(200).json(rows)
+
+    } catch (e) {
+        console.log(e.message)
+        res.status(400).json({ error: e.message })
+    }
+}
+
+const graficos = async (req, res) => {
+    try {
+        const datos = req.query
+        let query = ""
+        let tabla = ""
+        let where = ""
+        let resultados = []
+        let bar_json = {
+            type: "bar",
+            options: {
+                title: {
+                    text: "",
+                    align: 'center',
+                },
+                xaxis: {
+                    categories: ["Total", "Inf.Gral.", "Resultados", "Impacto", "Liderando", "Organización", "Cultura", "Facilitadores"]
+                },
+                series: [{
+                    name: "",
+                    data: []
+                }],
+                responsive: [{
+                    breakpoint: 480,
+                    options: {
+                        chart: {
+                            width: "100%"
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }]
+            }
+        }
+
+
+        function pie(titulo, etiqueta, serie) {
+            let pie_json = {
+                type: "pie",
+                options: {
+                    labels: etiqueta,
+                    series: serie,
+                    title: {
+                        text: titulo,
+                        align: "center",
+                    },
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            chart: {
+                                width: "100%"
+                            },
+                            legend: {
+                                position: "bottom"
+                            }
+                        }
+                    }]
+                }
+            }
+            return pie_json
+        }
+
+        if (datos.TipoUsuario == 2) {
+            tabla = "iam_encuesta90"
+            bar_json.options.title.text = "Resumen Encuesta 90°"
+        }
+        if (datos.TipoUsuario == 3) {
+            tabla = "iam_encuesta180"
+            bar_json.options.title.text = "Resumen Encuesta 180°"
+        }
+        if (datos.TipoUsuario == 4) {
+            tabla = "iam_encuesta270"
+            bar_json.options.title.text = "Resumen Encuesta 270°"
+        }
+        if (datos.TipoUsuario == 5) {
+            tabla = "iam_encuesta360"
+            bar_json.options.title.text = "Resumen Encuesta 360°"
+        }        
+
+        if (datos.TipoUsuario == 2 || datos.TipoUsuario == 3) {
+
+            if (datos.tipografico == 2) {
+                where = " WHERE IdEmpresa = " + datos.select
+            }
+
+            if (datos.tipografico == 3) {
+                where = " WHERE Pregunta1_3 = " + datos.select
+            }
+
+            query = `
+        SELECT COUNT(*) AS TOT, 
+        SUM(IF(Pregunta1='S',1,0)) AS P1, 
+        SUM(IF(Pregunta2='S',1,0)) AS P2, 
+        SUM(IF(Pregunta3='S',1,0)) AS P3, 
+        SUM(IF(Pregunta4='S',1,0)) AS P4, 
+        SUM(IF(Pregunta5='S',1,0)) AS P5, 
+        SUM(IF(Pregunta6='S',1,0)) AS P6, 
+        SUM(IF(Pregunta7='S',1,0)) AS P7, 
+        SUM(IF(Pregunta1_1 = 1, 1, 0)) AS P1_1, 
+        SUM(IF(Pregunta1_1 = 2, 1, 0)) AS P1_2, 
+        SUM(IF(Pregunta1_1 = 3, 1, 0)) AS P1_3, 
+        SUM(IF(Pregunta1_2 = 1, 1, 0)) AS P2_1, 
+        SUM(IF(Pregunta1_2 = 2, 1, 0)) AS P2_2, 
+        SUM(IF(Pregunta1_2 = 3, 1, 0)) AS P2_3, 
+        SUM(IF(Pregunta1_2 = 4, 1, 0)) AS P2_4, 
+        SUM(IF(Pregunta1_2 = 5, 1, 0)) AS P2_5, 
+        SUM(IF(Pregunta1_2 = 6, 1, 0)) AS P2_6, 
+        SUM(IF(Pregunta1_2 = 7, 1, 0)) AS P2_7, 
+        SUM(IF(Pregunta1_2 = 8, 1, 0)) AS P2_8, 
+        SUM(IF(Pregunta1_3 = 1, 1, 0)) AS P3_1, 
+        SUM(IF(Pregunta1_3 = 2, 1, 0)) AS P3_2, 
+        SUM(IF(Pregunta1_3 = 3, 1, 0)) AS P3_3, 
+        SUM(IF(Pregunta1_3 = 4, 1, 0)) AS P3_4, 
+        SUM(IF(Pregunta1_3 = 5, 1, 0)) AS P3_5, 
+        SUM(IF(Pregunta1_3 = 6, 1, 0)) AS P3_6, 
+        SUM(IF(Pregunta1_3 = 7, 1, 0)) AS P3_7, 
+        SUM(IF(Pregunta1_3 = 8, 1, 0)) AS P3_8, 
+        SUM(IF(Pregunta1_3 = 9, 1, 0)) AS P3_9, 
+        SUM(IF(Pregunta1_3 = 10, 1, 0)) AS P3_10, 
+        SUM(IF(Pregunta1_3 = 11, 1, 0)) AS P3_11, 
+        SUM(IF(Pregunta1_3 = 12, 1, 0)) AS P3_12, 
+        SUM(IF(Pregunta1_4 = 1, 1, 0)) AS P4_1, 
+        SUM(IF(Pregunta1_4 = 2, 1, 0)) AS P4_2, 
+        SUM(IF(Pregunta1_4 = 3, 1, 0)) AS P4_3,
+        SUM(IF(Pregunta2_1_1 = 1, 1, 0)) AS P2_1,
+        SUM(IF(Pregunta2_1_2 = 1, 1, 0)) AS P2_2,
+        SUM(IF(Pregunta2_1_3 = 1, 1, 0)) AS P2_3,
+        SUM(IF(Pregunta2_1_4 = 1, 1, 0)) AS P2_4,
+        SUM(IF(Pregunta2_1_5 = 1, 1, 0)) AS P2_5,
+        SUM(IF(Pregunta2_1_6 = 1, 1, 0)) AS P2_6,
+        SUM(IF(Pregunta2_1_7 = 1, 1, 0)) AS P2_7,
+        SUM(IF(Pregunta2_1_8 = 1, 1, 0)) AS P2_8,
+        SUM(IF(Pregunta2_3 = 1, 1, 0)) AS P2_3_1,
+        SUM(IF(Pregunta2_3 = 2, 1, 0)) AS P2_3_2,
+        SUM(IF(Pregunta2_3 = 3, 1, 0)) AS P2_3_3,
+        SUM(IF(Pregunta2_3 = 4, 1, 0)) AS P2_3_4,
+        SUM(IF(Pregunta2_3 = 5, 1, 0)) AS P2_3_5,
+        SUM(IF(Pregunta2_3 = 6, 1, 0)) AS P2_3_6,
+        SUM(IF(Pregunta2_3 = 7, 1, 0)) AS P2_3_7,
+        SUM(IF(Pregunta2_3 = 8, 1, 0)) AS P2_3_8,
+        SUM(IF(Pregunta2_4 = 1, 1, 0)) AS P2_4_1,
+        SUM(IF(Pregunta2_4 = 2, 1, 0)) AS P2_4_2,
+        SUM(IF(Pregunta2_4 = 3, 1, 0)) AS P2_4_3
+        FROM ` + tabla
+                + where
+        }
+
+        if (datos.TipoUsuario == 4 || datos.TipoUsuario == 5) {
+
+            if (datos.tipografico == 2) {
+                where = " WHERE IdEmpresa = " + datos.select
+            }
+
+            if (datos.tipografico == 3) {
+                if (datos.select == 1) {
+                    where = " WHERE Pregunta1_3_1 = 1 "    
+                }
+                if (datos.select == 2) {
+                    where = " WHERE Pregunta1_3_2 = 1 "    
+                }
+                if (datos.select == 3) {
+                    where = " WHERE Pregunta1_3_3 = 1 "    
+                }
+                if (datos.select == 4) {
+                    where = " WHERE Pregunta1_3_4 = 1 "    
+                }
+                if (datos.select == 5) {
+                    where = " WHERE Pregunta1_3_5 = 1 "    
+                }
+                if (datos.select == 6) {
+                    where = " WHERE Pregunta1_3_6 = 1 "    
+                }
+                if (datos.select == 7) {
+                    where = " WHERE Pregunta1_3_7 = 1 "    
+                }
+                if (datos.select == 8) {
+                    where = " WHERE Pregunta1_3_8 = 1 "    
+                }
+                if (datos.select == 9) {
+                    where = " WHERE Pregunta1_3_9 = 1 "    
+                }
+                if (datos.select == 10) {
+                    where = " WHERE Pregunta1_3_10 = 1 "    
+                }
+                if (datos.select == 11) {
+                    where = " WHERE Pregunta1_3_11 = 1 "    
+                }
+                if (datos.select == 12) {
+                    where = " WHERE Pregunta1_3_12 = 1 "    
+                }
+                
+            }
+            query = `
+        SELECT COUNT(*) AS TOT, 
+        SUM(IF(Pregunta1='S',1,0)) AS P1, 
+        SUM(IF(Pregunta2='S',1,0)) AS P2, 
+        SUM(IF(Pregunta3='S',1,0)) AS P3, 
+        SUM(IF(Pregunta4='S',1,0)) AS P4, 
+        SUM(IF(Pregunta5='S',1,0)) AS P5, 
+        SUM(IF(Pregunta6='S',1,0)) AS P6, 
+        SUM(IF(Pregunta7='S',1,0)) AS P7, 
+        SUM(IF(Pregunta1_1 = 1, 1, 0)) AS P1_1, 
+        SUM(IF(Pregunta1_1 = 2, 1, 0)) AS P1_2, 
+        SUM(IF(Pregunta1_1 = 3, 1, 0)) AS P1_3, 
+        SUM(IF(Pregunta1_2 = 1, 1, 0)) AS P2_1, 
+        SUM(IF(Pregunta1_2 = 2, 1, 0)) AS P2_2, 
+        SUM(IF(Pregunta1_2 = 3, 1, 0)) AS P2_3, 
+        SUM(IF(Pregunta1_2 = 4, 1, 0)) AS P2_4, 
+        SUM(IF(Pregunta1_2 = 5, 1, 0)) AS P2_5, 
+        SUM(IF(Pregunta1_2 = 6, 1, 0)) AS P2_6, 
+        SUM(IF(Pregunta1_2 = 7, 1, 0)) AS P2_7, 
+        SUM(IF(Pregunta1_2 = 8, 1, 0)) AS P2_8, 
+        SUM(IF(Pregunta1_3_1 = 1, 1, 0)) AS P3_1, 
+        SUM(IF(Pregunta1_3_2 = 1, 1, 0)) AS P3_2, 
+        SUM(IF(Pregunta1_3_3 = 1, 1, 0)) AS P3_3, 
+        SUM(IF(Pregunta1_3_4 = 1, 1, 0)) AS P3_4, 
+        SUM(IF(Pregunta1_3_5 = 1, 1, 0)) AS P3_5, 
+        SUM(IF(Pregunta1_3_6 = 1, 1, 0)) AS P3_6, 
+        SUM(IF(Pregunta1_3_7 = 1, 1, 0)) AS P3_7, 
+        SUM(IF(Pregunta1_3_8 = 1, 1, 0)) AS P3_8, 
+        SUM(IF(Pregunta1_3_9 = 1, 1, 0)) AS P3_9, 
+        SUM(IF(Pregunta1_3_10 = 1, 1, 0)) AS P3_10, 
+        SUM(IF(Pregunta1_3_11 = 1, 1, 0)) AS P3_11, 
+        SUM(IF(Pregunta1_3_12 = 1, 1, 0)) AS P3_12, 
+        SUM(IF(Pregunta1_4 = 1, 1, 0)) AS P4_1, 
+        SUM(IF(Pregunta1_4 = 2, 1, 0)) AS P4_2, 
+        SUM(IF(Pregunta1_4 = 3, 1, 0)) AS P4_3,
+        SUM(IF(Pregunta2_1_1 = 1, 1, 0)) AS P2_1,
+        SUM(IF(Pregunta2_1_2 = 1, 1, 0)) AS P2_2,
+        SUM(IF(Pregunta2_1_3 = 1, 1, 0)) AS P2_3,
+        SUM(IF(Pregunta2_1_4 = 1, 1, 0)) AS P2_4,
+        SUM(IF(Pregunta2_1_5 = 1, 1, 0)) AS P2_5,
+        SUM(IF(Pregunta2_1_6 = 1, 1, 0)) AS P2_6,
+        SUM(IF(Pregunta2_1_7 = 1, 1, 0)) AS P2_7,
+        SUM(IF(Pregunta2_1_8 = 1, 1, 0)) AS P2_8,
+        SUM(IF(Pregunta2_3 = 1, 1, 0)) AS P2_3_1,
+        SUM(IF(Pregunta2_3 = 2, 1, 0)) AS P2_3_2,
+        SUM(IF(Pregunta2_3 = 3, 1, 0)) AS P2_3_3,
+        SUM(IF(Pregunta2_3 = 4, 1, 0)) AS P2_3_4,
+        SUM(IF(Pregunta2_3 = 5, 1, 0)) AS P2_3_5,
+        SUM(IF(Pregunta2_3 = 6, 1, 0)) AS P2_3_6,
+        SUM(IF(Pregunta2_3 = 7, 1, 0)) AS P2_3_7,
+        SUM(IF(Pregunta2_3 = 8, 1, 0)) AS P2_3_8,
+        SUM(IF(Pregunta2_4 = 1, 1, 0)) AS P2_4_1,
+        SUM(IF(Pregunta2_4 = 2, 1, 0)) AS P2_4_2,
+        SUM(IF(Pregunta2_4 = 3, 1, 0)) AS P2_4_3 
+        FROM ` + tabla
+                + where
+        }
+
+        let rows = await connect(query)
+
+        if (rows[0].P1 != null) {
+
+            bar_json.options.series[0].data.push(rows[0].TOT)
+            bar_json.options.series[0].data.push(rows[0].P1)
+            bar_json.options.series[0].data.push(rows[0].P2)
+            bar_json.options.series[0].data.push(rows[0].P3)
+            bar_json.options.series[0].data.push(rows[0].P4)
+            bar_json.options.series[0].data.push(rows[0].P5)
+            bar_json.options.series[0].data.push(rows[0].P6)
+            bar_json.options.series[0].data.push(rows[0].P7)
+            resultados.push(bar_json)
+
+
+            let etiquetas = ["Gerente General (" + rows[0].P1_1 + ")", "Gerente (" + rows[0].P1_2 + ")", "Otro (" + rows[0].P1_3 + ")"]
+            let serie = [rows[0].P1_1, rows[0].P1_2, rows[0].P1_3]
+            resultados.push(new pie("Rol en o para con la empresa", etiquetas, serie))
+
+
+            etiquetas = ["Ventas/Comercial (" + rows[0].P2_1 + ")", "Marketing (" + rows[0].P2_2 + ")", "Producción/Operaciones/Logística (" + rows[0].P2_3 + ")", "Sistemas (" + rows[0].P2_4 + ")", "Contabilidad/Finanzas (" + rows[0].P2_5 + ")", "RRHH (" + rows[0].P2_6 + ")", "Innovación/Desarrollo (" + rows[0].P2_7 + ")", "Dirección (" + rows[0].P2_8 + ")"]
+            serie = [rows[0].P2_1, rows[0].P2_2, rows[0].P2_3, rows[0].P2_4, rows[0].P2_5, rows[0].P2_6, rows[0].P2_7, rows[0].P2_8]
+            resultados.push(new pie("Área de trabajo de desempeño", etiquetas, serie))
+
+            etiquetas = ["Retail (" + rows[0].P3_1 + ")", "Consumo masivo (" + rows[0].P3_2 + ")", "Telecomunicaciones/Tecnologia (" + rows[0].P3_3 + ")", "Manufactura industrial (" + rows[0].P3_4 + ")", "Servicios financieros (" + rows[0].P3_5 + ")", "Servicios educacionales (" + rows[0].P3_6 + ")", "Servicios eléctricos, sanitarios (" + rows[0].P3_7 + ")", "Servicios públicos (" + rows[0].P3_8 + ")", "Agricultura (" + rows[0].P3_9 + ")", "Minería (" + rows[0].P3_10 + ")", "Automotriz (" + rows[0].P3_11 + ")", "Salud / Otro (" + rows[0].P3_12 + ")"]
+            serie = [rows[0].P3_1, rows[0].P3_2, rows[0].P3_3, rows[0].P3_4, rows[0].P3_5, rows[0].P3_6, rows[0].P3_7, rows[0].P3_8, rows[0].P3_9, rows[0].P3_10, rows[0].P3_11, rows[0].P3_12]
+            resultados.push(new pie("Industria de competencia", etiquetas, serie))
+
+            etiquetas = ["Menos de 2 años (" + rows[0].P4_1 + ")", "De 2 a 5 año (" + rows[0].P4_2 + ")", "Más de 5 años (" + rows[0].P4_3 + ")"]
+            serie = [rows[0].P4_1, rows[0].P4_2, rows[0].P4_3]
+            resultados.push(new pie("Antiguedad", etiquetas, serie))
+
+            etiquetas = ["Soluciones (Productos y Servicios) (" + rows[0].P2_1 + ")", "Canales de comercialización, atención clientes (" + rows[0].P2_2 + ")", "Proceso productivo / cadena de suministro (" + rows[0].P2_3 + ")", "Estructura y capacidad organizacional (" + rows[0].P2_4 + ")", "Nuevos mercados, segmentos objetivos, Marketing (" + rows[0].P2_5 + ")", "Utilización de nuevas Tecnologías (" + rows[0].P2_6 + ")", "Sostenibilidad (" + rows[0].P2_7 + ")", "Otro (" + rows[0].P2_8 + ")"]
+            serie = [rows[0].P2_1, rows[0].P2_2, rows[0].P2_3, rows[0].P2_4, rows[0].P2_5, rows[0].P2_6, rows[0].P2_7, rows[0].P2_8]
+            resultados.push(new pie("innovaciones realizada por la empresa en los últimos tres años", etiquetas, serie))
+
+            etiquetas = ["Director o equivalente (" + rows[0].P2_3_1 + ")", "Gerente General o equivalente (" + rows[0].P2_3_2 + ")", "Gerente Marketing, Comercial o equivalente (" + rows[0].P2_3_3 + ")", "Gerente Operaciones o equivalente (" + rows[0].P2_3_4 + ")", "Gerente Administración & Finanzas o equivalente (" + rows[0].P2_3_5 + ")", "Gerente Innovación o equivalente (" + rows[0].P2_3_6 + ")", "Gerente Sostenibilidad o equivalente (" + rows[0].P2_3_7 + ")", "Otro (" + rows[0].P2_3_8 + ")"]
+            serie = [rows[0].P2_3_1, rows[0].P2_3_2, rows[0].P2_3_3, rows[0].P2_3_4, rows[0].P2_3_5, rows[0].P2_3_6, rows[0].P2_3_7, rows[0].P2_3_8]
+            resultados.push(new pie("Persona que conduce con mayor fuerza la innovación", etiquetas, serie))
+
+            etiquetas = ["Prioridad uno(" + rows[0].P2_4_1 + ")", "Esta entre las prioridades principales (" + rows[0].P2_4_2 + ")", "Es medianamente o no es prioritaria (" + rows[0].P2_4_3 + ")"]
+            serie = [rows[0].P2_4_1, rows[0].P2_4_2, rows[0].P2_4_3]
+            resultados.push(new pie("Prioridad de la innovación", etiquetas, serie))
+
+            res.status(200).json(resultados)
+
+        } else {
+            res.status(400).json({ error: "No hay datos." })
+        }
+
+
+
+    } catch (e) {
+        console.log(e.message)
+        res.status(400).json({ error: e.message })
+    }
+}
 
 
 
@@ -2658,6 +2977,8 @@ module.exports = {
     enviar_invitaciones,
     obtener_correo,
     enviar_ultimatum,
-    obtener_cuerpo_correo
+    obtener_cuerpo_correo,
+    obtener_empresas,
+    graficos
 
 }

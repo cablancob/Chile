@@ -58,8 +58,6 @@ export default class EliminarUsuarios extends Component {
 
         await this.datos()
 
-        console.log(this.state)
-        console.log(this.props)
 
     }
 

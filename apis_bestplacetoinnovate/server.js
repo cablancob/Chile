@@ -75,12 +75,8 @@ app.get('/datos_eliminar_usuarios', main.verifytoken, main.datos_eliminar_usuari
 app.get('/informe_resumen', main.verifytoken, main.informe_resumen)
 app.get('/obtener_correo', main.verifytoken, main.obtener_correo)
 app.get('/obtener_cuerpo_correo', main.verifytoken, main.obtener_cuerpo_correo)
-
-
-
-
-
-
+app.get('/obtener_empresas', main.verifytoken, main.obtener_empresas)
+app.get('/graficos', main.verifytoken, main.graficos)
 
 
 app.listen(process.env.PORT || 3000, () => {

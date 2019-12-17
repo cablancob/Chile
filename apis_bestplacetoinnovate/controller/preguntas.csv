@@ -59,7 +59,7 @@ ESP,check,2,2,Pregunta2-2-7,3,2,Pregunta2-2,Cuidado medio ambiente,1
 ESP,check,2,2,Pregunta2-2-9,3,2,Pregunta2-2,Impacto en la sociedad,1
 ESP,check,2,2,Pregunta2-2-8,3,2,Pregunta2-2,Otro,1
 ESP,radio,2,2,,0,3,Pregunta2-3,3.- ¿Quién cree usted que es la persona que conduce con mayor fuerza la innovación en su empresa?,999
-ESP,radio,2,2,,0,3,Pregunta2-3, Directorio o equivalente,1
+ESP,radio,2,2,,0,3,Pregunta2-3, Director o equivalente,1
 ESP,radio,2,2,,0,3,Pregunta2-3, Gerente General o equivalente,2
 ESP,radio,2,2,,0,3,Pregunta2-3," Gerente Marketing, Comercial o equivalente",3
 ESP,radio,2,2,,0,3,Pregunta2-3, Gerente Operaciones o equivalente,4
@@ -238,7 +238,7 @@ ESP,check,3,2,Pregunta2-2-7,3,2,Pregunta2-2,Cuidado medio ambiente,1
 ESP,check,3,2,Pregunta2-2-9,3,2,Pregunta2-2,Impacto en la sociedad,1
 ESP,check,3,2,Pregunta2-2-8,3,2,Pregunta2-2,Otro,1
 ESP,radio,3,2,,0,3,Pregunta2-3,3.- ¿Quién cree usted que es la persona que conduce con mayor fuerza la innovación en su empresa?,999
-ESP,radio,3,2,,0,3,Pregunta2-3, Directorio o equivalente,1
+ESP,radio,3,2,,0,3,Pregunta2-3, Director o equivalente,1
 ESP,radio,3,2,,0,3,Pregunta2-3, Gerente General o equivalente,2
 ESP,radio,3,2,,0,3,Pregunta2-3," Gerente Marketing, Comercial o equivalente",3
 ESP,radio,3,2,,0,3,Pregunta2-3, Gerente Operaciones o equivalente,4
@@ -417,7 +417,7 @@ ESP,check,4,2,Pregunta2-2-7,3,2,Pregunta2-2,Cuidado medio ambiente,1
 ESP,check,4,2,Pregunta2-2-9,3,2,Pregunta2-2,Impacto en la sociedad,1
 ESP,check,4,2,Pregunta2-2-8,3,2,Pregunta2-2,Otro,1
 ESP,radio,4,2,,0,3,Pregunta2-3,3.- ¿Quién cree usted que es la persona que conduce con mayor fuerza la innovación <u> EN LA EMPRESA DE LA CUAL USTED ES PROVEEDOR </u>?,999
-ESP,radio,4,2,,0,3,Pregunta2-3, Directorio o equivalente,1
+ESP,radio,4,2,,0,3,Pregunta2-3, Director o equivalente,1
 ESP,radio,4,2,,0,3,Pregunta2-3, Gerente General o equivalente,2
 ESP,radio,4,2,,0,3,Pregunta2-3," Gerente Marketing, Comercial o equivalente",3
 ESP,radio,4,2,,0,3,Pregunta2-3, Gerente Operaciones o equivalente,4
@@ -594,7 +594,7 @@ ESP,check,5,2,Pregunta2-2-7,3,2,Pregunta2-2,Cuidado medio ambiente,1
 ESP,check,5,2,Pregunta2-2-9,3,2,Pregunta2-2,Impacto en la sociedad,1
 ESP,check,5,2,Pregunta2-2-8,3,2,Pregunta2-2,Otro,1
 ESP,radio,5,2,,0,3,Pregunta2-3,3.- ¿Quién cree usted que es la persona que conduce con mayor fuerza la innovación <u> EN LA EMPRESA DE LA CUAL USTED ES CLIENTE </u>?,999
-ESP,radio,5,2,,0,3,Pregunta2-3, Directorio o equivalente,1
+ESP,radio,5,2,,0,3,Pregunta2-3, Director o equivalente,1
 ESP,radio,5,2,,0,3,Pregunta2-3, Gerente General o equivalente,2
 ESP,radio,5,2,,0,3,Pregunta2-3," Gerente Marketing, Comercial o equivalente",3
 ESP,radio,5,2,,0,3,Pregunta2-3, Gerente Operaciones o equivalente,4
