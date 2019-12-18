@@ -48,22 +48,22 @@ export default class Coach extends Component {
                 <div className="row form-group text-center">
                     <div className="col-md-3 form-group">
                         <u>
-                            <a className={this.style_menu(2)} href="/#" onClick={() => this.cambiar_pagina(2, 6)}>Equipo Gerencial (90°)</a>
+                            <a className={this.style_menu(2)} href="/InnovAccionMeter/#" onClick={() => this.cambiar_pagina(2, 6)}>Equipo Gerencial (90°)</a>
                         </u>
                     </div>
                     <div className="col-md-3 form-group">
                         <u>
-                            <a className={this.style_menu(3)} href="/#" onClick={() => this.cambiar_pagina(3, 6)}>Colaboradores (180°)</a>
+                            <a className={this.style_menu(3)} href="/InnovAccionMeter/#" onClick={() => this.cambiar_pagina(3, 6)}>Colaboradores (180°)</a>
                         </u>
                     </div>
                     <div className="col-md-3 form-group">
                         <u>
-                            <a className={this.style_menu(4)} href="/#" onClick={() => this.cambiar_pagina(4, 6)}>Proveedores (270°)</a>
+                            <a className={this.style_menu(4)} href="/InnovAccionMeter/#" onClick={() => this.cambiar_pagina(4, 6)}>Proveedores (270°)</a>
                         </u>
                     </div>
                     <div className="col-md-3 form-group">
                         <u>
-                            <a className={this.style_menu(5)} href="/#" onClick={() => this.cambiar_pagina(5, 6)}>Clientes (360°)</a>
+                            <a className={this.style_menu(5)} href="/InnovAccionMeter/#" onClick={() => this.cambiar_pagina(5, 6)}>Clientes (360°)</a>
                         </u>
                     </div>
                 </div>
@@ -71,17 +71,17 @@ export default class Coach extends Component {
                 <div className="row form-group text-center px-5">
                     <div className="col-md-4 form-group">
                         <u>
-                            <a className={this.style_menu(6)} href="/#" onClick={() => this.cambiar_pagina(this.state.menu, 6)}>Estadisticas</a>
+                            <a className={this.style_menu(6)} href="/InnovAccionMeter/#" onClick={() => this.cambiar_pagina(this.state.menu, 6)}>Estadisticas</a>
                         </u>
                     </div>
                     <div className="col-md-4 form-group">
                         <u>
-                            <a className={this.style_menu(7)} href="/#" onClick={() => this.cambiar_pagina(this.state.menu, 7)}>Encuestas Terminadas</a>
+                            <a className={this.style_menu(7)} href="/InnovAccionMeter/#" onClick={() => this.cambiar_pagina(this.state.menu, 7)}>Encuestas Terminadas</a>
                         </u>
                     </div>
                     <div className="col-md-4 form-group">
                         <u>
-                            <a className={this.style_menu(8)} href="/#" onClick={() => this.cambiar_pagina(this.state.menu, 8)}>Mantencion Empresas</a>
+                            <a className={this.style_menu(8)} href="/InnovAccionMeter/#" onClick={() => this.cambiar_pagina(this.state.menu, 8)}>Mantencion Empresas</a>
                         </u>
                     </div>
                 </div>                

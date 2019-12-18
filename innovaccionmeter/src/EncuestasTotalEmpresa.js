@@ -91,13 +91,13 @@ export default class EncuestasTotalEmpresa extends Component {
         if (obj.obj.total_contestado > 0) {
             return (
                 <u>
-                    <a className="text-dark" onClick={() => { this.reporte_empresa(obj.tipo, obj.obj.IdEmpresa) }} href="/#">{obj.obj.NombreEmpresa}</a>
+                    <a className="text-dark" onClick={() => { this.reporte_empresa(obj.tipo, obj.obj.IdEmpresa) }} href="/InnovAccionMeter/#">{obj.obj.NombreEmpresa}</a>
                 </u>
             )
         } else {
             return (
                 <u>
-                    <a className="text-dark" onClick={() => window.ModalError("Reporte", "No hay datos")} href="/#">{obj.obj.NombreEmpresa}</a>
+                    <a className="text-dark" onClick={() => window.ModalError("Reporte", "No hay datos")} href="/InnovAccionMeter/#">{obj.obj.NombreEmpresa}</a>
                 </u>
             )
         }
@@ -108,13 +108,13 @@ export default class EncuestasTotalEmpresa extends Component {
         if (obj.obj.total_contestado > 0) {
             return (
                 <u>
-                    <a className="text-dark" onClick={() => { this.reporte_empleado(obj.tipo, obj.obj.IdEmpresa) }} href="/#">{obj.obj.total_contestado + " / " + obj.obj.total}</a>
+                    <a className="text-dark" onClick={() => { this.reporte_empleado(obj.tipo, obj.obj.IdEmpresa) }} href="/InnovAccionMeter/#">{obj.obj.total_contestado + " / " + obj.obj.total}</a>
                 </u>
             )
         } else {
             return (
                 <u>
-                    <a className="text-dark" onClick={() => window.ModalError("Reporte", "No hay datos")} href="/#">{obj.obj.total_contestado + " / " + obj.obj.total}</a>
+                    <a className="text-dark" onClick={() => window.ModalError("Reporte", "No hay datos")} href="/InnovAccionMeter/#">{obj.obj.total_contestado + " / " + obj.obj.total}</a>
                 </u>
             )
         }

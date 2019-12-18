@@ -139,10 +139,10 @@ export default class MantencionEmpresas extends Component {
             <div className="px-2">
                 <div className="row">
                     <div className="col-md-6 py-3 text-center">
-                        <u><a className="text-dark" href="/#" onClick={() => this.informe_resumen()}>--- Informe Resumen ---</a></u>
+                        <u><a className="text-dark" href="/InnovAccionMeter/#" onClick={() => this.informe_resumen()}>--- Informe Resumen ---</a></u>
                     </div>
                     <div className="col-md-6 py-3 text-center">
-                        <u><a className="text-dark" href="/#" onClick={() => this.crear_empresa()}> --- Crea Empresa Nueva ---</a></u>
+                        <u><a className="text-dark" href="/InnovAccionMeter/#" onClick={() => this.crear_empresa()}> --- Crea Empresa Nueva ---</a></u>
                     </div>
                 </div>
                 <div className={titulo}>
@@ -165,19 +165,19 @@ export default class MantencionEmpresas extends Component {
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Acci&oacute;n</div>
                                 <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}><i className="far fa-trash-alt" onClick={() => this.borrar_empresa(obj)}></i></div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Empresa</div>
-                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}><u><a className="text-dark" href="/#" onClick={() => this.modificar_empresa(obj)}>{obj.NombreEmpresa.replace("/", " / ")}</a></u></div>
+                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}><u><a className="text-dark" href="/InnovAccionMeter/#" onClick={() => this.modificar_empresa(obj)}>{obj.NombreEmpresa.replace("/", " / ")}</a></u></div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Sigla</div>
                                 <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{obj.Sigla.replace("/", " / ")}</div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>90°</div>
-                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{(obj.cuenta90 === "X") ? "-X-" : <u><a className="text-dark" href="/#" onClick={() => this.consulta_usuarios(2, obj)}>{obj.cuenta90}</a></u>}</div>
+                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{(obj.cuenta90 === "X") ? "-X-" : <u><a className="text-dark" href="/InnovAccionMeter/#" onClick={() => this.consulta_usuarios(2, obj)}>{obj.cuenta90}</a></u>}</div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>180°</div>
-                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{(obj.cuenta180 === "X") ? "-X-" : <u><a className="text-dark" href="/#" onClick={() => this.consulta_usuarios(3, obj)}>{obj.cuenta180}</a></u>}</div>
+                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{(obj.cuenta180 === "X") ? "-X-" : <u><a className="text-dark" href="/InnovAccionMeter/#" onClick={() => this.consulta_usuarios(3, obj)}>{obj.cuenta180}</a></u>}</div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>270°</div>
-                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{(obj.cuenta270 === "X") ? "-X-" : <u><a className="text-dark" href="/#" onClick={() => this.consulta_usuarios(4, obj)}>{obj.cuenta270}</a></u>}</div>
+                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{(obj.cuenta270 === "X") ? "-X-" : <u><a className="text-dark" href="/InnovAccionMeter/#" onClick={() => this.consulta_usuarios(4, obj)}>{obj.cuenta270}</a></u>}</div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>360°</div>
-                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{(obj.cuenta360 === "X") ? "-X-" : <u><a className="text-dark" href="/#" onClick={() => this.consulta_usuarios(5, obj)}>{obj.cuenta360}</a></u>}</div>
+                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{(obj.cuenta360 === "X") ? "-X-" : <u><a className="text-dark" href="/InnovAccionMeter/#" onClick={() => this.consulta_usuarios(5, obj)}>{obj.cuenta360}</a></u>}</div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Ressumen</div>
-                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}><u><a className="text-dark" href="/#" onClick={() => this.reporte_encuesta_resumen(obj)}>Resumen Encuesta</a></u></div>
+                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}><u><a className="text-dark" href="/InnovAccionMeter/#" onClick={() => this.reporte_encuesta_resumen(obj)}>Resumen Encuesta</a></u></div>
                             </div>
                         )
                     })
