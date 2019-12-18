@@ -168,7 +168,7 @@ const recuperar_clave = async (req, res) => {
                         <br>Usuario: <b>`+ result[0].Correo + `</b>
                         <br>Clave: <b>`+ result[0].Clave + `</b>
                         <br>
-                        <br>Con esta información puede acceder <a href="LINK"><font color='#ff0000'>AQUÍ</font></a>
+                        <br>Con esta información puede acceder <a href="`+process.env.LINK+`"><font color='#ff0000'>AQUÍ</font></a>
                         <br>
                         <br>Gracias por preferirnos.
                         <br><i>Equipo de Best Place to Innovate</i>
@@ -2017,7 +2017,7 @@ const crear_empresa = async (req, res) => {
             <p>Le informamos que usted tiene asignado el perfil de Administrador de las encuestas realizadas por Best Place to Innovate para los siguientes tipos de encuestas. </p>
                 <ol>` + tipos_escuesta + `</ol>
                 <br>
-                Para acceder debe ir al siguiente <a href='LINK'><b> <font color='#ff0000'>LINK</font></b></a>
+                Para acceder debe ir al siguiente <a href='`+process.env.LINK+`'><b> <font color='#ff0000'>LINK</font></b></a>
                 ingresando su correo y la clave <b>` + newpass + `</b>
                 <p>Atentamente equipo de Best Place to Innovate</p>
         </body>
@@ -2454,7 +2454,7 @@ const enviar_invitaciones = async (req, res) => {
                             180° (Colaboradores), 270° (Proveedores) y 360° (Clientes). Completar la encuesta es muy sencillo y no
                             le tomará más de unos pocos minutos. Solo tiene que hacer clic
                             <a
-                                href='LINK'><b>
+                                href='`+process.env.LINK+`'><b>
                                     <font color='#ff0000'>AQUÍ</font>
                                 </b></a> para comenzar a contestar las preguntas. El usuario para acceder es su correo y la contraseña es: <font color='#ff0000'>`+ obj.Clave + `</font> </p>                        
                         <p align=center><b>Muchas gracias por su cooperación.</b></p>
@@ -2472,7 +2472,7 @@ const enviar_invitaciones = async (req, res) => {
                                         (Collaborators), 270 ° (Suppliers) and 360 ° (Customers). Completing the survey is very
                                         simple and will not take more than a few minutes. Just click
                                         <a
-                                            href='LINK'><b>
+                                            href='`+process.env.LINK+`'><b>
                                                 <font color='#ff0000'>HERE</font>
                                             </b></a> to start answering the questions. The user is your email and the password is: <font color='#ff0000'>`+ obj.Clave + `</font> </p>
                                     <p align=center><b>Thank you very much for your cooperation.</b></p>
@@ -2579,7 +2579,7 @@ const enviar_ultimatum = async (req, res) => {
             <p>Estimad@ <b>`+ rows[0].Nombre + `</b>:</p>
             <p>`+ cuerpo + `</p>
             <p>Completar la encuesta es muy sencillo y no le tomará más de unos pocos minutos. Solo tiene que hacer clic
-                <a href='LINK'><b>
+                <a href='`+process.env.LINK+`'><b>
                         <font color='#ff0000'>AQUÍ</font>
                     </b></a> y luego ingresar su correo como usuario y su clave: <b>`+ rows[0].Clave + `</b>. Para comenzar a contestar las preguntas.</p>    
             <p align="center"><b>Muchas gracias por su cooperación</b></p>
