@@ -186,7 +186,7 @@ export default class Login extends Component {
                                                     <hr />
                                                 </form>
                                                 <div className="text-center">
-                                                    <a className="small" href="/InnovAccionMeter/#" onClick={this.cambiar_vista}>Olvide mi Contraseña</a>
+                                                    <a className="small" href="/InnovAccionMeter2020/#" onClick={this.cambiar_vista}>Olvide mi Contraseña</a>
                                                 </div>
                                             </div>
                                         </div>

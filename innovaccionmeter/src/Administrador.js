@@ -97,13 +97,13 @@ export default class Administrador extends Component {
         if (obj.obj.total_contestado > 0) {
             return (
                 <u>
-                    <a className="text-dark" onClick={() => this.reporte_empresa(obj.obj.Tipo, obj.obj.IdEmpresa)} href="/InnovAccionMeter/#">{obj.obj.titulo}</a>
+                    <a className="text-dark" onClick={() => this.reporte_empresa(obj.obj.Tipo, obj.obj.IdEmpresa)} href="/InnovAccionMeter2020/#">{obj.obj.titulo}</a>
                 </u>
             )
         } else {            
             return (
                 <u>
-                    <a className="text-dark" onClick={() => window.ModalError("Reporte","No hay datos")} href="/InnovAccionMeter/#">{obj.obj.titulo}</a>
+                    <a className="text-dark" onClick={() => window.ModalError("Reporte","No hay datos")} href="/InnovAccionMeter2020/#">{obj.obj.titulo}</a>
                 </u>
             )
         }
@@ -131,7 +131,7 @@ export default class Administrador extends Component {
                                 <div className="col-6 bg-primary text-white" style={{ "border": "1px solid #c9c9c9" }}>Accion</div>
                                 <div className="col-6" style={{ "border": "1px solid #c9c9c9" }}>
                                     <u>
-                                        <a className="text-dark" href="/InnovAccionMeter/#" onClick={() => this.lista_empleados(obj.Tipo, this.state.empresa)}>Ver encuestas</a>
+                                        <a className="text-dark" href="/InnovAccionMeter2020/#" onClick={() => this.lista_empleados(obj.Tipo, this.state.empresa)}>Ver encuestas</a>
                                     </u>
                                 </div>
                             </div>
@@ -166,7 +166,7 @@ export default class Administrador extends Component {
                                                 <td>{obj.total_contestado}</td>
                                                 <td className="text-center">
                                                     <u>
-                                                        <a className="text-dark" href="/InnovAccionMeter/#" onClick={() => this.lista_empleados(obj.Tipo, this.state.empresa)}>Ver encuestas</a>
+                                                        <a className="text-dark" href="/InnovAccionMeter2020/#" onClick={() => this.lista_empleados(obj.Tipo, this.state.empresa)}>Ver encuestas</a>
                                                     </u>
                                                 </td>
                                             </tr>

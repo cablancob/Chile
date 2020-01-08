@@ -878,7 +878,9 @@ export default class EncuestaReporte extends Component {
     render() {
         return (
             <div className="">
-                {(this.state.mostrar) ? <this.Reporte /> : ""}
+                {(this.state.mostrar) ? <this.Reporte />
+                    : <div className="d-flex justify-content-center py-5"><div className="spinner-border text-success" role="status"><span className="sr-only">Espere...</span></div></div>
+                }
             </div>
         )
     }

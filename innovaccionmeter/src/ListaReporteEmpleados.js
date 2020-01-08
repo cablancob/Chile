@@ -68,7 +68,7 @@ export default class ListaReporteEmpleados extends Component {
         const empresa = this.props.empresa
 
         await this.datos(tipo, empresa)
-    
+
     }
 
     pagina_principal = () => {
@@ -88,7 +88,7 @@ export default class ListaReporteEmpleados extends Component {
                                     <tr key={index}>
                                         <td className="text-center">
                                             <u>
-                                                <a className="text-dark h5" href="/InnovAccionMeter/#" onClick={() => this.reporte_individual(obj)}>{obj.Nombre}</a>
+                                                <a className="text-dark h5" href="/InnovAccionMeter2020/#" onClick={() => this.reporte_individual(obj)}>{obj.Nombre}</a>
                                             </u>
                                         </td>
                                     </tr>
@@ -101,7 +101,7 @@ export default class ListaReporteEmpleados extends Component {
         )
     }
 
-    reporte_individual = (obj) => {        
+    reporte_individual = (obj) => {
         this.setState({
             TipoUsuario: obj.TipoUsuario,
             Id: obj.Id,
@@ -137,7 +137,7 @@ export default class ListaReporteEmpleados extends Component {
                     ? <this.pagina_principal />
                     : (this.state.vista === 2)
                         ? <EncuestaReporte tipo_encuesta={this.state.TipoUsuario} id_usuario={this.state.Id} id_empresa={0} funcion={this.regresar} />
-                        : ""
+                        : <div className="d-flex justify-content-center py-5"><div className="spinner-border text-success" role="status"><span className="sr-only">Espere...</span></div></div>
                 }
                 <div className="row my-5">
                     <div className="col-12 text-center">

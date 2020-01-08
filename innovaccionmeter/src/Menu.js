@@ -22,7 +22,7 @@ export default class Menu extends Component {
     const { state, tipo_warning } = this.context
     return (
       <nav className="navbar navbar-expand-lg navbar-light bg-white mb-4 static-top shadow">
-        <a className="navbar-brand" href="/InnovAccionMeter/#">
+        <a className="navbar-brand" href="/InnovAccionMeter2020/#">
           <img src={Logo} className="img-fluid" alt="Logo" />
         </a>
         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
@@ -32,24 +32,24 @@ export default class Menu extends Component {
         <div className="collapse navbar-collapse" id="navbarNavDropdown">
           <ul className="navbar-nav ml-auto">
             <li className="nav-item dropdown">
-              <a className="nav-link dropdown-toggle" href="/InnovAccionMeter/#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+              <a className="nav-link dropdown-toggle" href="/InnovAccionMeter2020/#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
                 <i className="fas fa-globe"></i>
                 Idioma / Language
                   </a>
               <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <a className="dropdown-item" href="/InnovAccionMeter/#">Español</a>
-                <a className="dropdown-item" href="/InnovAccionMeter/#">English</a>
+                <a className="dropdown-item" href="/InnovAccionMeter2020/#">Español</a>
+                <a className="dropdown-item" href="/InnovAccionMeter2020/#">English</a>
               </div>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/InnovAccionMeter/#" onClick={() => tipo_warning(this.logout,"Cerrar Sesión", "¿Esta seguro que desea cerrar sesión?")}>
+              <a className="nav-link" href="/InnovAccionMeter2020/#" onClick={() => tipo_warning(this.logout,"Cerrar Sesión", "¿Esta seguro que desea cerrar sesión?")}>
                 <i className="fas fa-sign-out-alt"></i>
                 Logout
                   </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/InnovAccionMeter/#">
+              <a className="nav-link" href="/InnovAccionMeter2020/#">
                 <i className="far fa-user"></i>
                 {" " + state.usuario.Nombre}
               </a>

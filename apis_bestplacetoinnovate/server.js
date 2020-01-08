@@ -25,6 +25,8 @@ const corsOptions = {
     }
 };
 
+
+
 const cargar_archivo = async () => {
     await main.pregunta_archivo()
 }
@@ -78,7 +80,17 @@ app.get('/obtener_cuerpo_correo', main.verifytoken, main.obtener_cuerpo_correo)
 app.get('/obtener_empresas', main.verifytoken, main.obtener_empresas)
 app.get('/graficos', main.verifytoken, main.graficos)
 
-
-app.listen(process.env.PORT || 3000, () => {
+//PRODUCCION
+const fs = require('fs');
+const https = require('https');
+const privateKey  = fs.readFileSync('/home/cadomec/ssl/keys/bc2a6_f3445_9bd94ca3ece01f7e1392195a33fa1e1d.key', 'utf8');
+const certificate = fs.readFileSync('/home/cadomec/ssl/certs/bestplacetoinnovate_org_bc2a6_f3445_1583020799_c382f60b7043afa92a286a8412dd59e8.crt', 'utf8');
+const credentials = {key: privateKey, cert: certificate};
+const httpsServer = https.createServer(credentials, app);
+httpsServer.listen(process.env.PORT || 3000, () => {
     console.log(`app is running on port ${process.env.PORT || 3000}`);
 });
+
+/*app.listen(process.env.PORT || 3000, () => {
+    console.log(`app is running on port ${process.env.PORT || 3000}`);
+});*/

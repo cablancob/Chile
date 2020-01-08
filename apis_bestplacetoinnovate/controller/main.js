@@ -8,14 +8,16 @@ const Buffer = require('buffer').Buffer;
 
 //CORREO_ADMIN=estudios@bp2i.org
 const transporter = nodeMailer.createTransport({
-    service: "gmail",
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    secure: true,     
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD
     }
 });
 let mailOptions = {
-    from: "'Prueba' <cablancob2901@gmail.com>",
+    from: "'Prueba' <estudios@bp2i.org>",
     to: "",
     bcc: "",
     cc: "",
