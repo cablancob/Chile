@@ -51,6 +51,10 @@ const connection = mysql.createConnection({
 
 const connect = util.promisify(connection.query).bind(connection);
 
+setInterval(function () {
+    connection.query('SELECT 1');
+}, 5000);
+
 const csvFilePath = './controller/preguntas.csv'
 const csv = require('csvtojson')
 
