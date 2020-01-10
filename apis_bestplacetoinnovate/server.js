@@ -14,7 +14,7 @@ const main = require("./controller/main");
 const app = express();
 
 // App Middleware
-const whitelist = ["http://localhost:3001"];
+const whitelist = ["https://www.bestplacetoinnovate.org"];
 const corsOptions = {
     origin: function (origin, callback) {
         if (whitelist.indexOf(origin) !== -1 || !origin) {
@@ -34,7 +34,7 @@ const cargar_archivo = async () => {
 cargar_archivo()
 
 app.use(helmet());
-//app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 app.use(cors());
 //app.use(bodyParser.json());
 app.use(bodyParser.json({limit: '1mb', extended: true}))
