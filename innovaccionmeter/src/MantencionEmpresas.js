@@ -154,7 +154,7 @@ export default class MantencionEmpresas extends Component {
                     <div className="col-md py-2" style={{ "border": "1px solid #c9c9c9" }}>180°</div>
                     <div className="col-md py-2" style={{ "border": "1px solid #c9c9c9" }}>270°</div>
                     <div className="col-md py-2" style={{ "border": "1px solid #c9c9c9" }}>360°</div>
-                    <div className="col-md py-2" style={{ "border": "1px solid #c9c9c9" }}>Ressumen</div>
+                    <div className="col-md py-2" style={{ "border": "1px solid #c9c9c9" }}>Resumen</div>
                 </div>
                 {
                     datos.map((obj, index) => {                        
@@ -176,7 +176,7 @@ export default class MantencionEmpresas extends Component {
                                 <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{(obj.cuenta270 === "X") ? "-X-" : <u><a className="text-dark" href="/InnovAccionMeter2020/#" onClick={() => this.consulta_usuarios(4, obj)}>{obj.cuenta270}</a></u>}</div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>360°</div>
                                 <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{(obj.cuenta360 === "X") ? "-X-" : <u><a className="text-dark" href="/InnovAccionMeter2020/#" onClick={() => this.consulta_usuarios(5, obj)}>{obj.cuenta360}</a></u>}</div>
-                                <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Ressumen</div>
+                                <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Resumen</div>
                                 <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}><u><a className="text-dark" href="/InnovAccionMeter2020/#" onClick={() => this.reporte_encuesta_resumen(obj)}>Resumen Encuesta</a></u></div>
                             </div>
                         )

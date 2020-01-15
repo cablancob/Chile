@@ -77,6 +77,14 @@ export default class InformeResumen extends Component {
     }
 
     pagina_principal = () => {
+        let firstcolumn = ""
+        let secondcolumn = ""
+        let thridcolumn = ""
+        if (window.screen.width >= 720) {
+            firstcolumn = "first-column"
+            secondcolumn = "second-column"
+            thridcolumn = "third-column"
+        } 
 
         return (
             <div>
@@ -86,9 +94,9 @@ export default class InformeResumen extends Component {
                         <caption style={{ "captionSide": "top" }}>Deslice a la Derecha</caption>
                         <thead>
                             <tr className="text-center text-dark">
-                                <th scope="col">Empresa</th>
-                                <th scope="col">Contacto</th>
-                                <th scope="col">Seguimiento</th>
+                                <th scope="col" className={firstcolumn}>Empresa</th>
+                                <th scope="col" className={secondcolumn}>Contacto</th>
+                                <th scope="col" className={thridcolumn}>Seguimiento</th>
                                 <th scope="col">
                                     <div className="row" style={{ "width": "200px" }}>
                                         <div className="col-12">90°</div>
@@ -182,9 +190,9 @@ export default class InformeResumen extends Component {
 
                                     return (
                                         <tr key={index}>
-                                            <td>{obj.NombreEmpresa}</td>
-                                            <td>{obj.Contacto}</td>
-                                            <td>{obj.Fecha.split("T")[0].split("-")[2] + "/" + obj.Fecha.split("T")[0].split("-")[1] + "/" + obj.Fecha.split("T")[0].split("-")[0]}</td>
+                                            <td className={firstcolumn}>{obj.NombreEmpresa}</td>
+                                            <td className={secondcolumn}>{obj.Contacto}</td>
+                                            <td className={thridcolumn}>{obj.Fecha.split("T")[0].split("-")[2] + "/" + obj.Fecha.split("T")[0].split("-")[1] + "/" + obj.Fecha.split("T")[0].split("-")[0]}</td>
                                             <td className={color(t90)}>
                                                 <div className="row" style={{ "width": "200px" }}>
                                                     <div className="col-4">{obj.cuenta90}</div>

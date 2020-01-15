@@ -23,6 +23,7 @@ export default class Usuario extends Component {
     }
 
     cargar_datos = async () => {
+        console.log(this.state.datos)
         for (let i in this.state.datos) {
             if (document.getElementById(i) !== null) {
                 document.getElementById(i).value = this.state.datos[i]
@@ -99,6 +100,8 @@ export default class Usuario extends Component {
                 form_respuesta[id] = document.getElementById(form_id).elements[id].value
             }
         }
+        form_respuesta["Fono"] = document.getElementById(form_id).elements["Fono"].value
+        
 
         if (valid) {            
             try {                                
@@ -202,8 +205,7 @@ export default class Usuario extends Component {
 
                     <div className="form-group">
                         <label htmlFor="Fono">Fono:</label>
-                        <input type="text" className="form-control requerido" id="Fono" />
-                        <div className="invalid-feedback">Campo Obligatorio</div>
+                        <input type="text" className="form-control" id="Fono" />                        
                     </div>
 
                     <div className="form-group">

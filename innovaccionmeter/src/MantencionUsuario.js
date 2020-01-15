@@ -28,7 +28,7 @@ export default class MantencionUsuario extends Component {
         await this.funcion_inicial()
     }
 
-    ultimatum(obj) {    
+    ultimatum(obj) {
         //enviar_ultimatum
         if (obj.status === "1") {
             return <u><a className="text-dark" href="/InnovAccionMeter2020/#" onClick={() => this.enviar_ultimatum(obj)}>Envia Ultimatum</a></u>
@@ -121,7 +121,7 @@ export default class MantencionUsuario extends Component {
     enviar_ultimatum(usuario) {
         let obj = {}
         obj["IdEmpresa"] = this.props.IdEmpresa
-        obj["usuario"] = usuario        
+        obj["usuario"] = usuario
         this.setState({
             usuario: obj,
             vista: 5
@@ -129,9 +129,9 @@ export default class MantencionUsuario extends Component {
     }
 
     enviar_invitaciones() {
-        let obj = {}                       
-        obj["IdEmpresa"] = this.props.IdEmpresa        
-        obj["usuarios"] = this.state.datos.filter((obj) => {return obj.status === "0"})                    
+        let obj = {}
+        obj["IdEmpresa"] = this.props.IdEmpresa
+        obj["usuarios"] = this.state.datos.filter((obj) => { return obj.status === "0" })
         this.setState({
             usuario: obj,
             vista: 4
@@ -145,27 +145,27 @@ export default class MantencionUsuario extends Component {
         let subtitulo = ""
         let contenido = ""
         let division = ""
-        let contenido_2 = ""
-        let contenido_3 = ""
+        let contenido_2 = ""        
 
         if (window.screen.width < 720) {
             titulo = "row bg-primary text-white text-center d-none"
             subtitulo = "col-md-6 bg-primary text-white"
             contenido = "col-md-6"
-            contenido_2 = "col-md-6"
-            contenido_3 = "col-md-6"
+            contenido_2 = "col-md-6"            
             division = "row text-center py-4"
 
         } else {
             titulo = "row bg-primary text-white text-center"
             subtitulo = "bg-primary text-white d-none"
-            contenido = "col py-2"
-            contenido_2 = "col-2 py-2"
-            contenido_3 = "col-3 py-2"
+            contenido = "col-1 py-2"
+            contenido_2 = "col-3 py-2"            
             division = "row text-center"
         }
         return (
             <div className="px-2">
+                <div className="d-flex justify-content-center py-3">
+                    <button type="button" className="btn btn-primary px-5" onClick={this.props.funcion}>{"<< Anterior"}</button>
+                </div>
                 <h1 className="h3 my-4 text-gray-800 text-center">Usuarios: {this.props.NombreEmpresa}</h1>
                 <h1 className="h3 my-4 text-gray-800 text-center"><i className="far fa-trash-alt" onClick={() => this.eliminar_usuarios(this.props.IdEmpresa, this.props.tipo_encuesta, this.props.NombreEmpresa, this.props.Contacto)}></i></h1>
                 <div className="row">
@@ -177,14 +177,14 @@ export default class MantencionUsuario extends Component {
                     </div>
                 </div>
                 <div className={titulo}>
-                    <div className="col py-2" style={{ "border": "1px solid #c9c9c9" }}>#</div>
-                    <div className="col py-2" style={{ "border": "1px solid #c9c9c9" }}>Acci&oacute;n</div>
-                    <div className="col-2 py-2" style={{ "border": "1px solid #c9c9c9" }}>Nombre</div>
-                    <div className="col py-2" style={{ "border": "1px solid #c9c9c9" }}>Fono</div>
+                    <div className="col-1 py-2" style={{ "border": "1px solid #c9c9c9" }}>#</div>
+                    <div className="col-1 py-2" style={{ "border": "1px solid #c9c9c9" }}>Acci&oacute;n</div>
+                    <div className="col-3 py-2" style={{ "border": "1px solid #c9c9c9" }}>Nombre</div>
+                    <div className="col-1 py-2" style={{ "border": "1px solid #c9c9c9" }}>Fono</div>
                     <div className="col-3 py-2" style={{ "border": "1px solid #c9c9c9" }}>Correo</div>
-                    <div className="col py-2" style={{ "border": "1px solid #c9c9c9" }}>Ver.</div>
-                    <div className="col py-2" style={{ "border": "1px solid #c9c9c9" }}>Status</div>
-                    <div className="col py-2" style={{ "border": "1px solid #c9c9c9" }}>Ultimatum</div>
+                    <div className="col-1 py-2" style={{ "border": "1px solid #c9c9c9" }}>Ver.</div>
+                    <div className="col-1 py-2" style={{ "border": "1px solid #c9c9c9" }}>Status</div>
+                    <div className="col-1 py-2" style={{ "border": "1px solid #c9c9c9" }}>Ultimatum</div>
                 </div>
                 {
                     datos.map((obj, index) => {
@@ -199,13 +199,13 @@ export default class MantencionUsuario extends Component {
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Fono</div>
                                 <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{obj.Fono}</div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Correo</div>
-                                <div className={contenido_3} style={{ "border": "1px solid #c9c9c9" }}>{obj.Correo}</div>
+                                <div className={contenido_2} style={{ "border": "1px solid #c9c9c9" }}>{obj.Correo}</div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Ver.</div>
                                 <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{"V." + obj.Version}</div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Status</div>
-                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{(obj.status === "0") ? "Encuesta Sin Comenzar" : (obj.status === "1") ? "Encuesta Incompleta" : "Encuesta Finalizada"}</div>
+                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}><font size="2">{(obj.status === "0") ? "Encuesta Sin Comenzar" : (obj.status === "1") ? "Encuesta Incompleta" : "Encuesta Finalizada"}</font></div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Ultimatum</div>
-                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{this.ultimatum(obj)}</div>
+                                <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}><font size="2">{this.ultimatum(obj)}</font></div>
                             </div>
                         )
                     })

@@ -1,4 +1,5 @@
 const express = require("express");
+const ip = require('ip');
 
 // use process.env variables to keep private variables,
 require("dotenv").config();
@@ -34,10 +35,12 @@ const cargar_archivo = async () => {
 cargar_archivo()
 
 app.use(helmet());
-app.use(cors(corsOptions));
+if (ip.address() != "192.168.1.140") {
+    app.use(cors(corsOptions));
+}
 app.use(cors());
 //app.use(bodyParser.json());
-app.use(bodyParser.json({limit: '1mb', extended: true}))
+app.use(bodyParser.json({ limit: '1mb', extended: true }))
 
 app.post('/login', main.login)
 app.post('/recuperar_clave', main.recuperar_clave)
@@ -80,17 +83,21 @@ app.get('/obtener_cuerpo_correo', main.verifytoken, main.obtener_cuerpo_correo)
 app.get('/obtener_empresas', main.verifytoken, main.obtener_empresas)
 app.get('/graficos', main.verifytoken, main.graficos)
 
-//PRODUCCION
-const fs = require('fs');
-const https = require('https');
-const privateKey  = fs.readFileSync('/home/cadomec/ssl/keys/bc2a6_f3445_9bd94ca3ece01f7e1392195a33fa1e1d.key', 'utf8');
-const certificate = fs.readFileSync('/home/cadomec/ssl/certs/bestplacetoinnovate_org_bc2a6_f3445_1583020799_c382f60b7043afa92a286a8412dd59e8.crt', 'utf8');
-const credentials = {key: privateKey, cert: certificate};
-const httpsServer = https.createServer(credentials, app);
-httpsServer.listen(process.env.PORT || 3000, () => {
-    console.log(`app is running on port ${process.env.PORT || 3000}`);
-});
 
-/*app.listen(process.env.PORT || 3000, () => {
-    console.log(`app is running on port ${process.env.PORT || 3000}`);
-});*/
+if (ip.address() == "192.168.1.140") {
+    app.listen(process.env.PORT || 3000, () => {
+        console.log(`app is running on port ${process.env.PORT || 3000}`);
+    });
+} else {
+    //PRODUCCION
+    const fs = require('fs');
+    const https = require('https');
+    const privateKey  = fs.readFileSync('/home/cadomec/ssl/keys/bc2a6_f3445_9bd94ca3ece01f7e1392195a33fa1e1d.key', 'utf8');
+    const certificate = fs.readFileSync('/home/cadomec/ssl/certs/bestplacetoinnovate_org_bc2a6_f3445_1583020799_c382f60b7043afa92a286a8412dd59e8.crt', 'utf8');
+    const credentials = {key: privateKey, cert: certificate};
+    const httpsServer = https.createServer(credentials, app);
+    httpsServer.listen(process.env.PORT || 3000, () => {
+        console.log(`app is running on port ${process.env.PORT || 3000}`);
+    });
+}
+

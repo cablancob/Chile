@@ -753,7 +753,10 @@ export default class EncuestaReporte extends Component {
             <div className="container-fluid">
                 <h1 className="h3 mb-4 text-gray-800 text-center">{titulo}</h1>
                 <h1 className="h4 mb-4 text-gray-800 text-center px-2">{subtitulo}</h1>
-                <div className="card form-group" id="tabla-final">
+                <div className="py-5 text-center">
+                    <button type="button" className="btn btn-primary px-5" onClick={this.props.funcion}>{"<< Anterior"}</button>
+                </div>
+                <div className="card" id="tabla-final">
                     <div className="h5 card-header bg-white text-dark text-center">
                         <div className="row">
                             <div className="col-md-4 py-2">
@@ -772,15 +775,15 @@ export default class EncuestaReporte extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="card-body form-group">
+                    <div className="card-body" style={{ paddingTop: "0px", paddingBottom: "0px" }}>
                         <div className="row">
                             {
                                 this.state.reporte_final.map((obj, index) => {
                                     let index_superior = index
                                     return (
-                                        <div className="col-md-4 py-2" key={index}>
-                                            <div className="card form-group h-100">
-                                                <div className="card-header bg-white text-dark text-center" style={{ "height": "145px" }}>
+                                        <div className="col-md-4" key={index} style={{ paddingTop: "0px", paddingBottom: "0px" }}>
+                                            <div className="card h-100">
+                                                <div className="card-header bg-white text-dark text-center" style={{ "height": "110px" }}>
                                                     <div className="row">
                                                         <div className="h6 col-md-9 py-3">{obj.titulo}</div>
                                                         <div className="col-md-3 py-2"> <span className={this.Style(obj.promedio)}>{obj.promedio}</span></div>
@@ -789,7 +792,7 @@ export default class EncuestaReporte extends Component {
                                                         <div className="col-md-12 h6 pl-5">{obj.peso}</div>
                                                     </div>
                                                 </div>
-                                                <div className="card-body form-group">
+                                                <div className="card-body">
                                                     {
                                                         obj.resultados.map((obj, index) => {
                                                             let resultados = JSON.parse(obj)
@@ -838,7 +841,7 @@ export default class EncuestaReporte extends Component {
 
     conclusion = () => {
         return (
-            <form className="form-group" id="form_con_coach">
+            <form className="form-group py-5" id="form_con_coach">
                 <div className="form-group">
                     <label htmlFor="comment">Conclusión</label>
                     <textarea className="form-control" rows="3" id="conclusion_coach" readOnly={(this.state.state.usuario.TipoUsuario === 88) ? true : false} defaultValue={this.state.conclusion} />

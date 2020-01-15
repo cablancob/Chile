@@ -476,7 +476,10 @@ export default class EncuestaReporteResumen extends Component {
         return (
             <div className="container-fluid">
                 <h1 className="h3 mb-4 text-gray-800 text-center">{titulo}</h1>
-                <div className="card form-group" id="tabla-final">
+                <div className="d-flex justify-content-center py-4">
+                    <button type="button" className="btn btn-primary px-5 my-2" onClick={this.props.funcion}>{"<< Anterior"}</button>
+                </div>
+                <div className="card" id="tabla-final">
                     <div className="h5 card-header bg-white text-dark text-center">
                         <div className="row">
                             <div className="col-md-4 py-2">
@@ -495,21 +498,21 @@ export default class EncuestaReporteResumen extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="card-body form-group">
+                    <div className="card-body" style={{ paddingTop: "0px", paddingBottom: "0px" }}>
                         <div className="row">
                             {
                                 this.state.reporte_final.map((obj, index) => {
                                     let index_superior = index
                                     return (
-                                        <div className="col-md-4 py-2" key={index}>
-                                            <div className="card form-group h-100">
+                                        <div className="col-md-4" key={index} style={{ paddingTop: "0px", paddingBottom: "0px" }}>
+                                            <div className="card h-100">
                                                 <div className="card-header bg-white text-dark text-center" style={{ "height": "145px" }}>
                                                     <div className="row">
                                                         <div className="h6 col-md-9 py-3">{obj.titulo}</div>
                                                         <div className="col-md-3 py-2"> <span className={this.Style(obj.promedio)}>{obj.promedio}</span></div>
                                                     </div>
                                                 </div>
-                                                <div className="card-body form-group">
+                                                <div className="card-body">
                                                     {
                                                         obj.resultados.map((obj, index) => {
                                                             let resultados = JSON.parse(obj)
@@ -547,7 +550,7 @@ export default class EncuestaReporteResumen extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="d-flex justify-content-center py-1">
+                <div className="d-flex justify-content-center py-4">
                     <button type="button" className="btn btn-primary px-5 my-2" onClick={this.props.funcion}>{"<< Anterior"}</button>
                 </div>
             </div>

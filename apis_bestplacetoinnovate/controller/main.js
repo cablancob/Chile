@@ -10,7 +10,7 @@ const Buffer = require('buffer').Buffer;
 const transporter = nodeMailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,
-    secure: true,     
+    secure: true,
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD
@@ -174,7 +174,7 @@ const recuperar_clave = async (req, res) => {
                         <br>Usuario: <b>`+ result[0].Correo + `</b>
                         <br>Clave: <b>`+ result[0].Clave + `</b>
                         <br>
-                        <br>Con esta información puede acceder <a href="`+process.env.LINK+`"><font color='#ff0000'>AQUÍ</font></a>
+                        <br>Con esta información puede acceder <a href="`+ process.env.LINK + `"><font color='#ff0000'>AQUÍ</font></a>
                         <br>
                         <br>Gracias por preferirnos.
                         <br><i>Equipo de Best Place to Innovate</i>
@@ -2023,7 +2023,7 @@ const crear_empresa = async (req, res) => {
             <p>Le informamos que usted tiene asignado el perfil de Administrador de las encuestas realizadas por Best Place to Innovate para los siguientes tipos de encuestas. </p>
                 <ol>` + tipos_escuesta + `</ol>
                 <br>
-                Para acceder debe ir al siguiente <a href='`+process.env.LINK+`'><b> <font color='#ff0000'>LINK</font></b></a>
+                Para acceder debe ir al siguiente <a href='`+ process.env.LINK + `'><b> <font color='#ff0000'>LINK</font></b></a>
                 ingresando su correo y la clave <b>` + newpass + `</b>
                 <p>Atentamente equipo de Best Place to Innovate</p>
         </body>
@@ -2460,7 +2460,7 @@ const enviar_invitaciones = async (req, res) => {
                             180° (Colaboradores), 270° (Proveedores) y 360° (Clientes). Completar la encuesta es muy sencillo y no
                             le tomará más de unos pocos minutos. Solo tiene que hacer clic
                             <a
-                                href='`+process.env.LINK+`'><b>
+                                href='`+ process.env.LINK + `'><b>
                                     <font color='#ff0000'>AQUÍ</font>
                                 </b></a> para comenzar a contestar las preguntas. El usuario para acceder es su correo y la contraseña es: <font color='#ff0000'>`+ obj.Clave + `</font> </p>                        
                         <p align=center><b>Muchas gracias por su cooperación.</b></p>
@@ -2478,7 +2478,7 @@ const enviar_invitaciones = async (req, res) => {
                                         (Collaborators), 270 ° (Suppliers) and 360 ° (Customers). Completing the survey is very
                                         simple and will not take more than a few minutes. Just click
                                         <a
-                                            href='`+process.env.LINK+`'><b>
+                                            href='`+ process.env.LINK + `'><b>
                                                 <font color='#ff0000'>HERE</font>
                                             </b></a> to start answering the questions. The user is your email and the password is: <font color='#ff0000'>`+ obj.Clave + `</font> </p>
                                     <p align=center><b>Thank you very much for your cooperation.</b></p>
@@ -2585,7 +2585,7 @@ const enviar_ultimatum = async (req, res) => {
             <p>Estimad@ <b>`+ rows[0].Nombre + `</b>:</p>
             <p>`+ cuerpo + `</p>
             <p>Completar la encuesta es muy sencillo y no le tomará más de unos pocos minutos. Solo tiene que hacer clic
-                <a href='`+process.env.LINK+`'><b>
+                <a href='`+ process.env.LINK + `'><b>
                         <font color='#ff0000'>AQUÍ</font>
                     </b></a> y luego ingresar su correo como usuario y su clave: <b>`+ rows[0].Clave + `</b>. Para comenzar a contestar las preguntas.</p>    
             <p align="center"><b>Muchas gracias por su cooperación</b></p>
@@ -2640,7 +2640,7 @@ const graficos = async (req, res) => {
         const datos = req.query
         let query = ""
         let tabla = ""
-        let where = ""
+        let where = " WHERE EncuestaEnviada = 'S'"
         let resultados = []
         let bar_json = {
             type: "bar",
@@ -2655,17 +2655,6 @@ const graficos = async (req, res) => {
                 series: [{
                     name: "",
                     data: []
-                }],
-                responsive: [{
-                    breakpoint: 480,
-                    options: {
-                        chart: {
-                            width: "100%"
-                        },
-                        legend: {
-                            position: 'bottom'
-                        }
-                    }
                 }]
             }
         }
@@ -2679,19 +2668,25 @@ const graficos = async (req, res) => {
                     series: serie,
                     title: {
                         text: titulo,
-                        align: "center",
+                        align: "center"                        
                     },
-                    responsive: [{
-                        breakpoint: 480,
-                        options: {
-                            chart: {
-                                width: "100%"
-                            },
-                            legend: {
-                                position: "bottom"
-                            }
+                    legend: {
+                        position: "right",
+                        offsetY: 50
+                    },
+                    dataLabels: {
+                        enabled: true,                        
+                        style: {
+                            fontSize: '14px',
+                            fontFamily: 'Helvetica, Arial, sans-serif',
+                            fontWeight: 'bold'                            
+                        }                                 
+                    },
+                    plotOptions: {
+                        pie: {
+                          customScale: 1.0
                         }
-                    }]
+                      }
                 }
             }
             return pie_json
@@ -2712,16 +2707,16 @@ const graficos = async (req, res) => {
         if (datos.TipoUsuario == 5) {
             tabla = "iam_encuesta360"
             bar_json.options.title.text = "Resumen Encuesta 360°"
-        }        
+        }
 
         if (datos.TipoUsuario == 2 || datos.TipoUsuario == 3) {
 
             if (datos.tipografico == 2) {
-                where = " WHERE IdEmpresa = " + datos.select
+                where += " AND IdEmpresa = " + datos.select
             }
 
             if (datos.tipografico == 3) {
-                where = " WHERE Pregunta1_3 = " + datos.select
+                where += " AND Pregunta1_3 = " + datos.select
             }
 
             query = `
@@ -2785,47 +2780,47 @@ const graficos = async (req, res) => {
         if (datos.TipoUsuario == 4 || datos.TipoUsuario == 5) {
 
             if (datos.tipografico == 2) {
-                where = " WHERE IdEmpresa = " + datos.select
+                where += " AND IdEmpresa = " + datos.select
             }
 
             if (datos.tipografico == 3) {
                 if (datos.select == 1) {
-                    where = " WHERE Pregunta1_3_1 = 1 "    
+                    where += " AND Pregunta1_3_1 = 1 "
                 }
                 if (datos.select == 2) {
-                    where = " WHERE Pregunta1_3_2 = 1 "    
+                    where += " AND Pregunta1_3_2 = 1 "
                 }
                 if (datos.select == 3) {
-                    where = " WHERE Pregunta1_3_3 = 1 "    
+                    where += " AND Pregunta1_3_3 = 1 "
                 }
                 if (datos.select == 4) {
-                    where = " WHERE Pregunta1_3_4 = 1 "    
+                    where += " AND Pregunta1_3_4 = 1 "
                 }
                 if (datos.select == 5) {
-                    where = " WHERE Pregunta1_3_5 = 1 "    
+                    where += " AND Pregunta1_3_5 = 1 "
                 }
                 if (datos.select == 6) {
-                    where = " WHERE Pregunta1_3_6 = 1 "    
+                    where += " AND Pregunta1_3_6 = 1 "
                 }
                 if (datos.select == 7) {
-                    where = " WHERE Pregunta1_3_7 = 1 "    
+                    where += " AND Pregunta1_3_7 = 1 "
                 }
                 if (datos.select == 8) {
-                    where = " WHERE Pregunta1_3_8 = 1 "    
+                    where += " AND Pregunta1_3_8 = 1 "
                 }
                 if (datos.select == 9) {
-                    where = " WHERE Pregunta1_3_9 = 1 "    
+                    where += " AND Pregunta1_3_9 = 1 "
                 }
                 if (datos.select == 10) {
-                    where = " WHERE Pregunta1_3_10 = 1 "    
+                    where += " AND Pregunta1_3_10 = 1 "
                 }
                 if (datos.select == 11) {
-                    where = " WHERE Pregunta1_3_11 = 1 "    
+                    where += " AND Pregunta1_3_11 = 1 "
                 }
                 if (datos.select == 12) {
-                    where = " WHERE Pregunta1_3_12 = 1 "    
+                    where += " AND Pregunta1_3_12 = 1 "
                 }
-                
+
             }
             query = `
         SELECT COUNT(*) AS TOT, 
@@ -2919,7 +2914,7 @@ const graficos = async (req, res) => {
 
             etiquetas = ["Soluciones (Productos y Servicios) (" + rows[0].P2_1 + ")", "Canales de comercialización, atención clientes (" + rows[0].P2_2 + ")", "Proceso productivo / cadena de suministro (" + rows[0].P2_3 + ")", "Estructura y capacidad organizacional (" + rows[0].P2_4 + ")", "Nuevos mercados, segmentos objetivos, Marketing (" + rows[0].P2_5 + ")", "Utilización de nuevas Tecnologías (" + rows[0].P2_6 + ")", "Sostenibilidad (" + rows[0].P2_7 + ")", "Otro (" + rows[0].P2_8 + ")"]
             serie = [rows[0].P2_1, rows[0].P2_2, rows[0].P2_3, rows[0].P2_4, rows[0].P2_5, rows[0].P2_6, rows[0].P2_7, rows[0].P2_8]
-            resultados.push(new pie("innovaciones realizada por la empresa en los últimos tres años", etiquetas, serie))
+            resultados.push(new pie("Innovaciones realizada por la empresa en los últimos tres años", etiquetas, serie))
 
             etiquetas = ["Director o equivalente (" + rows[0].P2_3_1 + ")", "Gerente General o equivalente (" + rows[0].P2_3_2 + ")", "Gerente Marketing, Comercial o equivalente (" + rows[0].P2_3_3 + ")", "Gerente Operaciones o equivalente (" + rows[0].P2_3_4 + ")", "Gerente Administración & Finanzas o equivalente (" + rows[0].P2_3_5 + ")", "Gerente Innovación o equivalente (" + rows[0].P2_3_6 + ")", "Gerente Sostenibilidad o equivalente (" + rows[0].P2_3_7 + ")", "Otro (" + rows[0].P2_3_8 + ")"]
             serie = [rows[0].P2_3_1, rows[0].P2_3_2, rows[0].P2_3_3, rows[0].P2_3_4, rows[0].P2_3_5, rows[0].P2_3_6, rows[0].P2_3_7, rows[0].P2_3_8]

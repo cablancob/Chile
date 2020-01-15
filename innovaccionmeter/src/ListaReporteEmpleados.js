@@ -73,8 +73,14 @@ export default class ListaReporteEmpleados extends Component {
 
     pagina_principal = () => {
         const datos = this.state.datos
+        const empresa = this.props.empresa
         return (
             <div className="table-responsive p-4">
+                <div className="row my-5">
+                    <div className="col-12 text-center">
+                        <button type="button" className="btn btn-primary px-5 my-2" style={{ display: this.state.vista === 2 ? "none" : "inline" }} onClick={() => { this.props.funcion(empresa) }}>{"<< Anterior"}</button>
+                    </div>
+                </div>
                 <table className="table table-bordered">
                     <thead className="text-center">
                         <tr className="bg-primary text-white">

@@ -290,6 +290,9 @@ export default class Empresa extends Component {
         return (
             <div>
                 <h1 className="h3 py-4 text-gray-800 text-center">{this.state.titulo_principal}</h1>
+                <div className="d-flex justify-content-center py-5">
+                        <button type="button" className="btn btn-primary px-5" onClick={this.props.funcion}>{"<< Anterior"}</button>
+                    </div>
                 <form id="EmpresaID">
                     <div className={class_principal}>
                         <div className="form-group">

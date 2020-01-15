@@ -87,8 +87,8 @@ export default class Graficos extends Component {
                 {
                     this.state.datos_graficos.map((obj, index) => {                        
                         return (
-                            <div className="d-flex justify-content-center py-5" key={index}>
-                                <Chart options={obj.options} series={obj.options.series} type={obj.type} width={700} height={400} />
+                            <div className="d-flex justify-content-center container_grafico py-5" key={index}>
+                                <Chart options={obj.options} series={obj.options.series} type={obj.type} width={700} height={300} />
                             </div>
                         )
                     })
