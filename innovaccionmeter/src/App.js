@@ -10,6 +10,7 @@ import Login from './Login'
 import Encuestas from './Encuestas'
 import Administrador from './Administrador'
 import Coach from './Coach'
+const queryString = require('query-string');
 
 require('dotenv').config()
 
@@ -29,14 +30,15 @@ export default class App extends Component {
 
     this.state = {
       idioma: "ESP",
-      tipo_warning: 0
+      tipo_warning: 0,
+      show: false
     }
   }
 
 
   tipo_warning = (funcion_warning, titulo, texto) => {
     this.setState({
-      funcion_warning      
+      funcion_warning
     })
     window.ModalWarning(titulo, texto)
   }
@@ -53,6 +55,52 @@ export default class App extends Component {
     this.setState({
       usuario: undefined
     })
+  }
+
+  accessbytoken = async (token) => {
+
+    try {
+      let headers = new Headers()
+      headers.append("Content-Type", "application/json")
+      console.log(token)
+
+      let URL = "http://" + window.location.host.split(":")[0] + ":" + process.env.REACT_APP_PORT + "/accessbytoken?token=" + token
+      let response = await fetch(URL, {
+        method: "GET",
+        headers: headers,
+      })
+      let data = await response.json()
+      if (response.status === 200) {
+        let form_data = {}
+        form_data["frmlogin_tipoEncuesta"] = data[0].TipoUsuario
+        form_data["frmlogin_usuario"] = data[0].Correo
+        form_data["frmlogin_password"] = data[0].Clave
+
+        URL = "http://" + window.location.host.split(":")[0] + ":" + process.env.REACT_APP_PORT + "/login"
+        response = await fetch(URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(form_data)
+        })
+
+        data = await response.json()
+
+        if (response.status === 200) {
+          sessionStorage.setItem('innovaccionmeter_session', data.token)
+          this.data_session()
+          window.location.href = process.env.REACT_APP_LINK
+        } else {
+          window.location.href = process.env.REACT_APP_LINK
+        }
+
+      } else {
+        window.location.href = process.env.REACT_APP_LINK
+      }
+    } catch (e) {
+      window.location.href = process.env.REACT_APP_LINK
+    }
   }
 
 
@@ -74,9 +122,16 @@ export default class App extends Component {
 
       )
     } else {
-      return (
-        <Login data_session={this.data_session} />
-      )
+      const parsed = queryString.parse(window.location.search)
+      if (Object.keys(parsed).length === 1 && parsed.tokenaccess.trim() !== "") {        
+        this.accessbytoken(parsed.tokenaccess)
+        return ("")
+
+      } else {
+        return (
+          <Login data_session={this.data_session} />
+        )
+      }
     }
   }
 
@@ -126,23 +181,23 @@ export default class App extends Component {
 
 
 
-  render() {
-    return (
-      <AppContext.Provider value={{
-        state: this.state,
-        idioma: this.state.idioma,
-        tipo_warning: this.tipo_warning,
-        auth_false: this.auth_false,
-        unbind_usuario: this.unbind_usuario
-      }}>
-        <div className="container">
-          <ModalError />
-          <ModalOk />
-          <ModalWarning funcion={this.state.funcion_warning} />
-          <this.pagina_inicial />
-        </div>
-      </AppContext.Provider>
-    )
+  render() {    
+      return (
+        <AppContext.Provider value={{
+          state: this.state,
+          idioma: this.state.idioma,
+          tipo_warning: this.tipo_warning,
+          auth_false: this.auth_false,
+          unbind_usuario: this.unbind_usuario
+        }}>
+          <div className="container">
+            <ModalError />
+            <ModalOk />
+            <ModalWarning funcion={this.state.funcion_warning} />
+            <this.pagina_inicial />
+          </div>
+        </AppContext.Provider>
+      )    
   }
 }
 

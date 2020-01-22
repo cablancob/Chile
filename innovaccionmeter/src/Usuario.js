@@ -22,8 +22,7 @@ export default class Usuario extends Component {
 
     }
 
-    cargar_datos = async () => {
-        console.log(this.state.datos)
+    cargar_datos = async () => {        
         for (let i in this.state.datos) {
             if (document.getElementById(i) !== null) {
                 document.getElementById(i).value = this.state.datos[i]
@@ -216,7 +215,7 @@ export default class Usuario extends Component {
 
                     <div className="form-group">
                         <label htmlFor="Version">Versión:</label>
-                        <select className="form-control requerido" id="Version">
+                        <select className="form-control requerido" id="Version" defaultValue="3">
                             <option>1</option>
                             <option>2</option>
                             <option>3</option>

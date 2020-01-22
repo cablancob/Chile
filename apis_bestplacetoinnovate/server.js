@@ -15,7 +15,7 @@ const main = require("./controller/main");
 const app = express();
 
 // App Middleware
-const whitelist = ["https://www.bestplacetoinnovate.org"];
+const whitelist = ["https://www.bestplacetoinnovate.org", "https://bestplacetoinnovate.org/InnovAccionMeter2020/"];
 const corsOptions = {
     origin: function (origin, callback) {
         if (whitelist.indexOf(origin) !== -1 || !origin) {
@@ -36,9 +36,10 @@ cargar_archivo()
 
 app.use(helmet());
 if (ip.address() != "192.168.1.140") {
-    app.use(cors(corsOptions));
+    //app.use(cors(corsOptions));
 }
 app.use(cors());
+
 //app.use(bodyParser.json());
 app.use(bodyParser.json({ limit: '1mb', extended: true }))
 
@@ -58,6 +59,7 @@ app.post('/borrar_usuario', main.verifytoken, main.borrar_usuario)
 app.post('/eliminar_usuarios', main.verifytoken, main.eliminar_usuarios)
 app.post('/enviar_invitaciones', main.verifytoken, main.enviar_invitaciones)
 app.post('/enviar_ultimatum', main.verifytoken, main.enviar_ultimatum)
+app.post('/email_coach', main.verifytoken, main.email_coach)
 
 
 app.get('/session', main.verifytoken, main.session)
@@ -82,6 +84,11 @@ app.get('/obtener_correo', main.verifytoken, main.obtener_correo)
 app.get('/obtener_cuerpo_correo', main.verifytoken, main.obtener_cuerpo_correo)
 app.get('/obtener_empresas', main.verifytoken, main.obtener_empresas)
 app.get('/graficos', main.verifytoken, main.graficos)
+app.get('/accessbytoken', main.accessbytoken)
+app.get('/email_coach', main.verifytoken, main.email_coach)
+
+
+
 
 
 if (ip.address() == "192.168.1.140") {
@@ -92,9 +99,9 @@ if (ip.address() == "192.168.1.140") {
     //PRODUCCION
     const fs = require('fs');
     const https = require('https');
-    const privateKey  = fs.readFileSync('/home/cadomec/ssl/keys/bc2a6_f3445_9bd94ca3ece01f7e1392195a33fa1e1d.key', 'utf8');
+    const privateKey = fs.readFileSync('/home/cadomec/ssl/keys/bc2a6_f3445_9bd94ca3ece01f7e1392195a33fa1e1d.key', 'utf8');
     const certificate = fs.readFileSync('/home/cadomec/ssl/certs/bestplacetoinnovate_org_bc2a6_f3445_1583020799_c382f60b7043afa92a286a8412dd59e8.crt', 'utf8');
-    const credentials = {key: privateKey, cert: certificate};
+    const credentials = { key: privateKey, cert: certificate };
     const httpsServer = https.createServer(credentials, app);
     httpsServer.listen(process.env.PORT || 3000, () => {
         console.log(`app is running on port ${process.env.PORT || 3000}`);

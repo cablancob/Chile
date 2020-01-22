@@ -23,6 +23,7 @@ export default class Empresa extends Component {
         const form_id = "EmpresaID"
         let form_data = {}
         let form_respuesta = {}
+        let peso = 0
 
         if (this.props.tipo === "m" || this.props.tipo === "n") {
             Array.from(document.getElementById(form_id).elements)
@@ -34,7 +35,10 @@ export default class Empresa extends Component {
 
             function show_validate(form_id, id) {
                 if (document.getElementById(id).className.includes("Encuesta90") || document.getElementById(id).className.includes("Encuesta180") || document.getElementById(id).className.includes("Encuesta270") || document.getElementById(id).className.includes("Encuesta360")) {
-                    if (document.getElementById(document.getElementById(id).className.split(" ")[1]).checked) {
+                    if (document.getElementById(document.getElementById(id).className.split(" ")[1]).checked) {                        
+                        if (document.getElementById(form_id).elements[id].id === "R090" || document.getElementById(form_id).elements[id].id === "R180" || document.getElementById(form_id).elements[id].id === "R270" || document.getElementById(form_id).elements[id].id === "R360") {                            
+                            peso += parseInt(document.getElementById(form_id).elements[id].value.trim())
+                        }
                         form_respuesta[document.getElementById(id).className.split(" ")[1]] = 'S'
                         if (document.getElementById(form_id).elements[id].value.trim() === "") {
                             valid = false
@@ -70,7 +74,12 @@ export default class Empresa extends Component {
                 }
 
             }
-        }        
+        }
+        if (peso < 100) {
+            window.ModalError(this.state.titulo_principal, "La suma de los valores del campo peso (Resumen) no puede ser menor a 100")            
+            valid = false
+        }
+
         if (valid) {
             try {
                 if (this.props.tipo === "m" || this.props.tipo === "n") {
@@ -82,17 +91,17 @@ export default class Empresa extends Component {
                         form_respuesta["Vigente"] = 'S'
                     }
                     form_respuesta["Fecha"] = fecha[2] + "-" + fecha[1] + "-" + fecha[0]
-                    form_data["datos"] = form_respuesta                    
+                    form_data["datos"] = form_respuesta
                 }
 
                 if (this.props.tipo === "e") {
                     form_data["IdEmpresa"] = this.state.datos_empresa.IdEmpresa
-                }                
+                }
 
                 let URL = ""
                 let headers = new Headers()
                 headers.append("Content-Type", "application/json")
-                headers.append("x-access-token", sessionStorage.getItem('innovaccionmeter_session'))                
+                headers.append("x-access-token", sessionStorage.getItem('innovaccionmeter_session'))
 
                 if (this.props.tipo === "m") {
                     URL = "http://" + window.location.host.split(":")[0] + ":" + process.env.REACT_APP_PORT + "/modificar_empresa"
@@ -127,7 +136,7 @@ export default class Empresa extends Component {
                     if (this.props.tipo === "e") {
                         window.ModalOk(this.state.titulo_principal, "La empresa fue borrada con exito")
                         this.props.funcion()
-                    }                    
+                    }
                     window.RemoveClass()
 
                 } else if (response.status === 400) {
@@ -136,7 +145,7 @@ export default class Empresa extends Component {
                     this.state.auth_false()
                 }
             } catch (e) {
-                window.ModalError(this.state.titulo_principal, e.error)                
+                window.ModalError(this.state.titulo_principal, e.error)
             }
         }
     }
@@ -211,7 +220,7 @@ export default class Empresa extends Component {
 
         if (this.props.tipo === "m" || this.props.tipo === "e") {
             await this.datos_empresa(this.props.IdEmpresa)
-        }        
+        }
 
         this.setState({
             vista: await 1
@@ -231,7 +240,7 @@ export default class Empresa extends Component {
             this.validar_form(e)
         }
         if (this.props.tipo === "e") {
-            this.state.tipo_warning(() => this.validar_form(e), this.state.titulo_principal ,"¿Esta seguro que desea borrar la empresa?")            
+            this.state.tipo_warning(() => this.validar_form(e), this.state.titulo_principal, "¿Esta seguro que desea borrar la empresa?")
         }
     }
 
@@ -291,8 +300,8 @@ export default class Empresa extends Component {
             <div>
                 <h1 className="h3 py-4 text-gray-800 text-center">{this.state.titulo_principal}</h1>
                 <div className="d-flex justify-content-center py-5">
-                        <button type="button" className="btn btn-primary px-5" onClick={this.props.funcion}>{"<< Anterior"}</button>
-                    </div>
+                    <button type="button" className="btn btn-primary px-5" onClick={this.props.funcion}>{"<< Anterior"}</button>
+                </div>
                 <form id="EmpresaID">
                     <div className={class_principal}>
                         <div className="form-group">

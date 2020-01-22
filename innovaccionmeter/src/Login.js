@@ -105,7 +105,7 @@ export default class Login extends Component {
             }
         }
 
-        if (valid) {
+        if (valid) {            
             try {
                 const URL = "http://" + window.location.host.split(":")[0] + ":" + process.env.REACT_APP_PORT + "/login"
                 let response = await fetch(URL, {
@@ -186,7 +186,7 @@ export default class Login extends Component {
                                                     <hr />
                                                 </form>
                                                 <div className="text-center">
-                                                    <a className="small" href="/InnovAccionMeter2020/#" onClick={this.cambiar_vista}>Olvide mi Contraseña</a>
+                                                    <a className="small" href={process.env.REACT_APP_LINK} onClick={this.cambiar_vista}>Olvide mi Contraseña</a>
                                                 </div>
                                             </div>
                                         </div>

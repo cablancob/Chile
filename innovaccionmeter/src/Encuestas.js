@@ -3,13 +3,14 @@ import { AppContext } from './App'
 
 import Menu from './Menu'
 import EncuestaReporte from './EncuestaReporte'
+import Welcome from './Welcome'
 
 export default class Encuestas extends Component {
     constructor(props) {
         super(props)
         Encuestas.contextType = AppContext
         this.state = {
-            pagina: 1,
+            pagina: 0,
             cantidad_preguntas: undefined
         }
     }
@@ -115,6 +116,14 @@ export default class Encuestas extends Component {
             cantidad_preguntas: undefined
         })
         await this.encuesta_data()
+    }
+
+    welcome_avanzar = async () => {
+        await this.setState({
+            pagina: 1,
+            cantidad_preguntas: undefined
+        })
+        await this.encuesta_data()        
     }
 
     respuestas_bd = async (usuario) => {
@@ -559,7 +568,8 @@ export default class Encuestas extends Component {
                     <div id="content-wrapper" className="d-flex flex-column">
                         <div id="content">
                             <Menu />
-                            {(this.state.cantidad_preguntas !== undefined && this.state.pagina !== 8) ? <this.Preguntas /> : ""}
+                            {(this.state.pagina === 0) ? <Welcome avanzar={this.welcome_avanzar} /> : ""}
+                            {(this.state.cantidad_preguntas !== undefined && this.state.pagina > 0 && this.state.pagina < 8) ? <this.Preguntas /> : ""}
                             {(this.state.pagina === 8) ? <EncuestaReporte tipo_encuesta={this.state.state.usuario.TipoUsuario} id_usuario={this.state.state.usuario.Id} id_empresa={0} funcion={this.regresar} correo={1} /> : ""}
                         </div>
                         <footer className="sticky-footer bg-white">

@@ -94,7 +94,7 @@ export default class ListaReporteEmpleados extends Component {
                                     <tr key={index}>
                                         <td className="text-center">
                                             <u>
-                                                <a className="text-dark h5" href="/InnovAccionMeter2020/#" onClick={() => this.reporte_individual(obj)}>{obj.Nombre}</a>
+                                                <a className="text-dark h5" href={process.env.REACT_APP_LINK} onClick={() => this.reporte_individual(obj)}>{obj.Nombre}</a>
                                             </u>
                                         </td>
                                     </tr>

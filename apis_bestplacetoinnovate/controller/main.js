@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken")
 const nodeMailer = require('nodemailer')
 const mysql = require('mysql')
 const util = require('util')
+const del = require('del');
 var crypto = require('crypto');
 
 const Buffer = require('buffer').Buffer;
@@ -16,6 +17,7 @@ const transporter = nodeMailer.createTransport({
         pass: process.env.EMAIL_PASSWORD
     }
 });
+
 let mailOptions = {
     from: "'Prueba' <estudios@bp2i.org>",
     to: "",
@@ -54,6 +56,10 @@ const connect = util.promisify(connection.query).bind(connection);
 setInterval(function () {
     connection.query('SELECT 1');
 }, 20000000);
+
+setInterval(function () {
+    del(['*.jpg']);
+}, 3600000);
 
 const csvFilePath = './controller/preguntas.csv'
 const csv = require('csvtojson')
@@ -396,7 +402,7 @@ const resultados_innovacion = async (req, res) => {
             END) AS '5'`
             + where +
             `WHERE A.Pregunta3 = 'S'`
-            + grupo
+            + grupo            
 
         await connection.query(query, (err, result, fields) => {
             if (err) {
@@ -1745,9 +1751,9 @@ const enviar_conclusion = async (req, res) => {
                 console.log('Message %s sent: %s', info.messageId, info.response)
 
 
-                fs.unlink(file, (err) => {
+                /*fs.unlink(file, (err) => {
                     if (err) throw err;
-                });
+                });*/
             }
         });
     } catch (e) {
@@ -1758,7 +1764,7 @@ const enviar_conclusion = async (req, res) => {
 
 const correo_encuesta_finalizada = async (req, res) => {
     try {
-        const data = await req.body
+        const data = await req.body        
 
         let asunto = ""
         let para = ""
@@ -1800,7 +1806,7 @@ const correo_encuesta_finalizada = async (req, res) => {
                 res.status(400).json({ error: err.message })
             } else {
                 if (parseInt(result[0].A) == 0) {
-                    query = "SELECT A.Nombre, A.Correo, B.NombreEmpresa, B.Sigla, B.Correo,(SELECT Correo FROM iam_usuarios WHERE IdEmpresa = A.IdEmpresa AND TipoUsuario = 88) as correo_contacto FROM iam_usuarios A INNER JOIN iam_empresa B ON A.IdEmpresa = B.IdEmpresa WHERE A.Id = " + data.id_usuario
+                    query = "SELECT A.Nombre, A.Correo, B.NombreEmpresa, B.Sigla, B.Correo,(SELECT Correo FROM iam_usuarios WHERE IdEmpresa = A.IdEmpresa AND TipoUsuario = 88 LIMIT 1) as correo_contacto FROM iam_usuarios A INNER JOIN iam_empresa B ON A.IdEmpresa = B.IdEmpresa WHERE A.Id = " + data.id_usuario                    
                     connection.query(query, async (err, result, fields) => {
                         if (err) {
                             console.log(err.message)
@@ -1857,9 +1863,9 @@ const correo_encuesta_finalizada = async (req, res) => {
                                 console.log('Message %s sent: %s', info.messageId, info.response)
 
 
-                                fs.unlink(file, (err) => {
+                               /* fs.unlink(file, (err) => {
                                     if (err) throw err;
-                                });
+                                });*/
 
 
 
@@ -1944,6 +1950,8 @@ const modificar_empresa = async (req, res) => {
         query = query.substring(0, query.length - 2)
         query += " WHERE IdEmpresa = " + data.IdEmpresa
 
+        await connect("UPDATE iam_usuarios SET Correo =  '" + data.datos.Correo + "' WHERE TipoUsuario = 88 AND IdEmpresa = " + data.IdEmpresa)
+
 
         await connection.query(query, (err, result, fields) => {
             if (err) {
@@ -1970,6 +1978,8 @@ const crear_empresa = async (req, res) => {
         let rows = await connect("SELECT max(IdEmpresa) + 1 as IdEmpresa FROM iam_empresa;")
 
         const idempresa = parseInt(rows[0].IdEmpresa)
+
+        let bcc = process.env.CORREO_ADMIN
 
         let query = "INSERT INTO iam_empresa ("
 
@@ -2038,6 +2048,7 @@ const crear_empresa = async (req, res) => {
         mailOptions.from = de
         mailOptions.subject = asunto
         mailOptions.html = html
+        mailOptions.bcc = bcc
 
         const info = await transporter.sendMail(mailOptions)
         console.log('Message %s sent: %s', info.messageId, info.response)
@@ -2414,28 +2425,29 @@ const enviar_invitaciones = async (req, res) => {
         where = where.substring(0, where.length - 1) + ");"
         query = "SELECT * FROM iam_usuarios WHERE Id IN " + where
 
-        let rows = await connect(query)
+        if (datos.length > 0) {
+            let rows = await connect(query)
 
-        rows.map(async (obj) => {
+            rows.map(async (obj) => {
 
-            if (obj.TipoUsuario == "2") {
-                asunto = "Invitación a llenar Encuesta Comite Ejecutivo de Best Place to Innovate para " + empresa.NombreEmpresa
-                tipo = "Encuesta Comite Ejecutivo - 90°"
-            }
-            if (obj.TipoUsuario == "3") {
-                asunto = "Invitación a llenar Encuesta Colaboradores de Best Place to Innovate para " + empresa.NombreEmpresa
-                tipo = "Encuesta Colaboradores - 180°"
-            }
-            if (obj.TipoUsuario == "4") {
-                asunto = "Invitación a llenar Encuesta Proveedores de Best Place to Innovate para " + empresa.NombreEmpresa
-                tipo = "Encuesta Proveedores - 270°"
-            }
-            if (obj.TipoUsuario == "5") {
-                asunto = "Invitación a llenar Encuesta Clientes de Best Place to Innovate para " + empresa.NombreEmpresa
-                tipo = "Encuesta Clientes - 360°"
-            }
+                if (obj.TipoUsuario == "2") {
+                    asunto = "Invitación a llenar Encuesta Comite Ejecutivo de Best Place to Innovate para " + empresa.NombreEmpresa
+                    tipo = "Encuesta Comite Ejecutivo - 90°"
+                }
+                if (obj.TipoUsuario == "3") {
+                    asunto = "Invitación a llenar Encuesta Colaboradores de Best Place to Innovate para " + empresa.NombreEmpresa
+                    tipo = "Encuesta Colaboradores - 180°"
+                }
+                if (obj.TipoUsuario == "4") {
+                    asunto = "Invitación a llenar Encuesta Proveedores de Best Place to Innovate para " + empresa.NombreEmpresa
+                    tipo = "Encuesta Proveedores - 270°"
+                }
+                if (obj.TipoUsuario == "5") {
+                    asunto = "Invitación a llenar Encuesta Clientes de Best Place to Innovate para " + empresa.NombreEmpresa
+                    tipo = "Encuesta Clientes - 360°"
+                }
 
-            html = `
+                html = `
             <html>
 
             <head>
@@ -2449,64 +2461,41 @@ const enviar_invitaciones = async (req, res) => {
                 <h2 align=center>
                     <font color='#ff0000'>`+ tipo + `</font>
                 </h2>
-                <p><b>`+ obj.Nombre + `.
-                        <p>Hay interés por parte de su empresa, <b><i>`+ empresa.NombreEmpresa + `</i></b>, en entender cuál es su potencial
-                            innovador y en cómo gestionar la innovación para hacerla parte del ADN de la organización.</p>
-                        <p>Es por ello que le agradeceríamos tomarse unos minutos para contestar esta encuesta. Sus respuestas
-                            honestas y lo màs objetivas posibles nos ayudarán a medir donde está la empresa en el camino a la
-                            <b>InnovAcción</b>. En tal sentido no hay respuesta incorrecta solo respuestas útiles. Esta encuesta es
-                            totalmente anónima y confidencial. Nuestro sistema automatizado de tabulación de resultados procesa las
-                            encuestas recibidas consolidándolas de manera tal de permitir una medición a 90° (equipo Gerencial),
-                            180° (Colaboradores), 270° (Proveedores) y 360° (Clientes). Completar la encuesta es muy sencillo y no
-                            le tomará más de unos pocos minutos. Solo tiene que hacer clic
-                            <a
-                                href='`+ process.env.LINK + `'><b>
-                                    <font color='#ff0000'>AQUÍ</font>
-                                </b></a> para comenzar a contestar las preguntas. El usuario para acceder es su correo y la contraseña es: <font color='#ff0000'>`+ obj.Clave + `</font> </p>                        
-                        <p align=center><b>Muchas gracias por su cooperación.</b></p>
-                        <p>
-                            <p>
-                                <p>
-                                    <p>There is interest on the part of your company, <b><i>`+ empresa.NombreEmpresa + `</i></b>, to understand
-                                        what its innovation potential is and how to manage innovation to make it part of the DNA of
-                                        the organization.</p>
-                                    <p>That is why we would appreciate if you could take a few minutes to answer this survey. Your
-                                        honest and objective answers will help us to measure where the company is on the road to
-                                        InnovAction. Please note that there is no wrong answer, only useful ones. This survey is
-                                        anonymous and confidential. Our automated tabulation system processes the surveys received,
-                                        consolidating them in such a way as to allow a measurement at 90 ° (Management team), 180 °
-                                        (Collaborators), 270 ° (Suppliers) and 360 ° (Customers). Completing the survey is very
-                                        simple and will not take more than a few minutes. Just click
-                                        <a
-                                            href='`+ process.env.LINK + `'><b>
-                                                <font color='#ff0000'>HERE</font>
-                                            </b></a> to start answering the questions. The user is your email and the password is: <font color='#ff0000'>`+ obj.Clave + `</font> </p>
-                                    <p align=center><b>Thank you very much for your cooperation.</b></p>
+                <p><b>Estimad@ `+ obj.Nombre + `,
+                        <p>Hay interés por parte de Best Place to Innovate en entender cuál es el potencial innovador de la empresa y en cómo gestionar la innovación para hacerla parte del ADN de la organización.</p>
+                        <p>Es por ello que le agradeceríamos tomarse unos minutos para contestar esta encuesta. Sus respuestas honestas y lo más objetivas posibles nos ayudarán a hacer esta medición.  No hay respuesta incorrecta, solo respuestas útiles.</p> 
+                        <p>Esta encuesta es totalmente anónima y confidencial. Completarla es sencillo y le tomará unos pocos minutos. Solo tiene que hacer clic <a href='`+ process.env.LINK + `?tokenaccess=` + obj.Activacion + `'><b> <font color='#ff0000'>AQUÍ</font></b></a> para comenzar a contestar las preguntas. </p>
+                        <p><b>Muchas gracias por su cooperación.</b></p>
+                        <p><b>Area de Estudios</b></p>
             </body>
-
             </html>`
 
-            //console.log(de + " - " + para + " - " + bcc + " - " + asunto)
+                //console.log(de + " - " + para + " - " + bcc + " - " + asunto)
 
-            para = obj.Nombre + " <" + obj.Correo + ">"
-            bcc = empresa.correo_contacto + "," + bcc
+                para = obj.Nombre + " <" + obj.Correo + ">"
+                bcc = empresa.correo_contacto + "," + bcc
 
-            mailOptions.to = para
-            mailOptions.bcc = bcc
-            mailOptions.from = de
-            mailOptions.subject = asunto
-            mailOptions.html = html
+                mailOptions.to = para
+                mailOptions.bcc = bcc
+                mailOptions.from = de
+                mailOptions.subject = asunto
+                mailOptions.html = html
 
-            const info = await transporter.sendMail(mailOptions)
-            console.log('Message %s sent: %s', info.messageId, info.response)
+                const info = await transporter.sendMail(mailOptions)
+                console.log('Message %s sent: %s', info.messageId, info.response)
+                res.status(200).json("OK")
 
-        })
+            })
+
+        } else {
+            res.status(400).json({ error: "Las invitaciones ya fueron enviadas" })
+        }
 
 
 
 
 
-        res.status(200).json("OK")
+
 
     } catch (e) {
         console.log(e.message)
@@ -2576,22 +2565,14 @@ const enviar_ultimatum = async (req, res) => {
         </head>
 
         <body>
-            <h1 align=center>
-                <font color='#006600'>Best Place to Innovate</font>
-            </h1>
-            <h2 align=center>
-                <font color='#ff0000'>`+ tipo + `</font>
-            </h2>
+            <h1 align=center> <font color='#006600'>Best Place to Innovate</font></h1>
+            <h2 align=center><font color='#ff0000'>`+ tipo + `</font></h2>
             <p>Estimad@ <b>`+ rows[0].Nombre + `</b>:</p>
             <p>`+ cuerpo + `</p>
-            <p>Completar la encuesta es muy sencillo y no le tomará más de unos pocos minutos. Solo tiene que hacer clic
-                <a href='`+ process.env.LINK + `'><b>
-                        <font color='#ff0000'>AQUÍ</font>
-                    </b></a> y luego ingresar su correo como usuario y su clave: <b>`+ rows[0].Clave + `</b>. Para comenzar a contestar las preguntas.</p>    
+            <p>Completar la encuesta es muy sencillo y no le tomará más de unos pocos minutos. Solo tiene que hacer clic <a href='`+ process.env.LINK + `'><b><font color='#ff0000'>AQUÍ</font></b></a> y luego ingresar su correo como usuario y su clave: <b>` + rows[0].Clave + `</b>.</p>
             <p align="center"><b>Muchas gracias por su cooperación</b></p>
             <p align="center"><b>El Equipo de Best Place to Innovate</b></p>    
-            <p align="center"><img src='https://www.bestplacetoinnovate.org/InnovAccionMeter/Image/LogoMailSustainaly.jpg'
-                    alt='Best Place to Innovate'> </p>
+            <p align="center"><img src='https://www.bestplacetoinnovate.org/InnovAccionMeter/Image/LogoMailSustainaly.jpg' alt='Best Place to Innovate'> </p>
         </body>
 
         </html>
@@ -2668,25 +2649,25 @@ const graficos = async (req, res) => {
                     series: serie,
                     title: {
                         text: titulo,
-                        align: "center"                        
+                        align: "center"
                     },
                     legend: {
                         position: "right",
                         offsetY: 50
                     },
                     dataLabels: {
-                        enabled: true,                        
+                        enabled: true,
                         style: {
                             fontSize: '14px',
                             fontFamily: 'Helvetica, Arial, sans-serif',
-                            fontWeight: 'bold'                            
-                        }                                 
+                            fontWeight: 'bold'
+                        }
                     },
                     plotOptions: {
                         pie: {
-                          customScale: 1.0
+                            customScale: 1.0
                         }
-                      }
+                    }
                 }
             }
             return pie_json
@@ -2939,6 +2920,51 @@ const graficos = async (req, res) => {
 }
 
 
+const accessbytoken = async (req, res) => {
+    try {
+        let query = 'select * from  iam_usuarios WHERE Activacion = "' + req.query.token + '"'
+        const rows = await connect(query)
+
+        if (rows.length == 1) {
+            res.status(200).json(rows)
+        } else {
+            res.status(400).json({ error: "PRUEBA" })
+        }
+
+    } catch (e) {
+        console.log(e.message)
+        res.status(400).json({ error: e.message })
+    }
+}
+
+const email_coach = async (req, res) => {
+    try {
+        let query = ""
+
+        if (req.method == "GET") {
+            query = 'SELECT * FROM iam_usuarios WHERE TipoUsuario = 99'
+            const rows = await connect(query)
+
+            if (rows.length == 1) {
+                res.status(200).json(rows)
+            } else {
+                res.status(400).json({ error: e.message })
+            }
+        } else if (req.method == "POST") {
+            query = "UPDATE iam_usuarios SET Correo = '" + req.body.Correo + "' WHERE TipoUsuario = 99;"
+            await connect(query)
+            res.status(200).json("Status: OK")
+        } else {
+            res.status(400).json({ error: "Peticion Invalida" })
+        }
+
+    } catch (e) {
+        console.log(e.message)
+        res.status(400).json({ error: e.message })
+    }
+}
+
+
 
 module.exports = {
     pregunta_archivo,
@@ -2980,6 +3006,7 @@ module.exports = {
     enviar_ultimatum,
     obtener_cuerpo_correo,
     obtener_empresas,
-    graficos
-
+    graficos,
+    accessbytoken,
+    email_coach
 }

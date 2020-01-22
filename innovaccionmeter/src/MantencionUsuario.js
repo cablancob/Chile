@@ -31,7 +31,7 @@ export default class MantencionUsuario extends Component {
     ultimatum(obj) {
         //enviar_ultimatum
         if (obj.status === "1") {
-            return <u><a className="text-dark" href="/InnovAccionMeter2020/#" onClick={() => this.enviar_ultimatum(obj)}>Envia Ultimatum</a></u>
+            return <u><a className="text-dark" href={process.env.REACT_APP_LINK} onClick={() => this.enviar_ultimatum(obj)}>Envia Ultimatum</a></u>
         } else {
             return ""
         }
@@ -170,10 +170,10 @@ export default class MantencionUsuario extends Component {
                 <h1 className="h3 my-4 text-gray-800 text-center"><i className="far fa-trash-alt" onClick={() => this.eliminar_usuarios(this.props.IdEmpresa, this.props.tipo_encuesta, this.props.NombreEmpresa, this.props.Contacto)}></i></h1>
                 <div className="row">
                     <div className="col-md-6 py-3 text-center">
-                        <u><a className="text-dark" href="/InnovAccionMeter2020/#" onClick={() => this.crear_usuario(this.props.IdEmpresa, this.props.tipo_encuesta, this.props.Sigla)}>--- Crea Nuevo Usuario ---</a></u>
+                        <u><a className="text-dark" href={process.env.REACT_APP_LINK} onClick={() => this.crear_usuario(this.props.IdEmpresa, this.props.tipo_encuesta, this.props.Sigla)}>--- Crea Nuevo Usuario ---</a></u>
                     </div>
                     <div className="col-md-6 py-3 text-center">
-                        <u><a className="text-dark" href="/InnovAccionMeter2020/#" onClick={async () => await this.enviar_invitaciones()} >---Envia Invitaciones ---</a></u>
+                        <u><a className="text-dark" href={process.env.REACT_APP_LINK} onClick={async () => await this.enviar_invitaciones()} >---Envia Invitaciones ---</a></u>
                     </div>
                 </div>
                 <div className={titulo}>
@@ -195,7 +195,7 @@ export default class MantencionUsuario extends Component {
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Acci&oacute;n</div>
                                 <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}><i className="far fa-trash-alt" onClick={() => this.borrar_usuario(obj)}></i></div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Nombre</div>
-                                <div className={contenido_2} style={{ "border": "1px solid #c9c9c9" }}><u><a className="text-dark" href="/InnovAccionMeter2020/#" onClick={() => this.modifcar_usuario(obj)}>{obj.Nombre}</a></u></div>
+                                <div className={contenido_2} style={{ "border": "1px solid #c9c9c9" }}><u><a className="text-dark" href={process.env.REACT_APP_LINK} onClick={() => this.modifcar_usuario(obj)}>{obj.Nombre}</a></u></div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Fono</div>
                                 <div className={contenido} style={{ "border": "1px solid #c9c9c9" }}>{obj.Fono}</div>
                                 <div className={subtitulo} style={{ "border": "1px solid #c9c9c9" }}>Correo</div>

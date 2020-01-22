@@ -4,6 +4,7 @@ import Menu from './Menu'
 import EncuestasTotalEmpresa from './EncuestasTotalEmpresa'
 import MantencionEmpresas from './MantencionEmpresas'
 import Estadisticas from './Estadisticas'
+import CoachMail from './CoachMail'
 
 export default class Coach extends Component {
     constructor(props) {
@@ -15,12 +16,12 @@ export default class Coach extends Component {
         }
     }
 
-    regresar = async () => {
-
+    regresar = async () => {        
+        this.cambiar_pagina(this.state.menu, 6)
     }
 
-    cambiar_pagina = async (menu, submenu) => {    
-        
+    cambiar_pagina = async (menu, submenu) => {
+
         this.setState({
             submenu: await 0
         })
@@ -48,22 +49,22 @@ export default class Coach extends Component {
                 <div className="row form-group text-center">
                     <div className="col-md-3 form-group">
                         <u>
-                            <a className={this.style_menu(2)} href="/InnovAccionMeter2020/#" onClick={() => this.cambiar_pagina(2, 6)}>Equipo Gerencial (90°)</a>
+                            <a className={this.style_menu(2)} href={process.env.REACT_APP_LINK} onClick={() => this.cambiar_pagina(2, 6)}>Equipo Gerencial (90°)</a>
                         </u>
                     </div>
                     <div className="col-md-3 form-group">
                         <u>
-                            <a className={this.style_menu(3)} href="/InnovAccionMeter2020/#" onClick={() => this.cambiar_pagina(3, 6)}>Colaboradores (180°)</a>
+                            <a className={this.style_menu(3)} href={process.env.REACT_APP_LINK} onClick={() => this.cambiar_pagina(3, 6)}>Colaboradores (180°)</a>
                         </u>
                     </div>
                     <div className="col-md-3 form-group">
                         <u>
-                            <a className={this.style_menu(4)} href="/InnovAccionMeter2020/#" onClick={() => this.cambiar_pagina(4, 6)}>Proveedores (270°)</a>
+                            <a className={this.style_menu(4)} href={process.env.REACT_APP_LINK} onClick={() => this.cambiar_pagina(4, 6)}>Proveedores (270°)</a>
                         </u>
                     </div>
                     <div className="col-md-3 form-group">
                         <u>
-                            <a className={this.style_menu(5)} href="/InnovAccionMeter2020/#" onClick={() => this.cambiar_pagina(5, 6)}>Clientes (360°)</a>
+                            <a className={this.style_menu(5)} href={process.env.REACT_APP_LINK} onClick={() => this.cambiar_pagina(5, 6)}>Clientes (360°)</a>
                         </u>
                     </div>
                 </div>
@@ -71,23 +72,27 @@ export default class Coach extends Component {
                 <div className="row form-group text-center px-5">
                     <div className="col-md-4 form-group">
                         <u>
-                            <a className={this.style_menu(6)} href="/InnovAccionMeter2020/#" onClick={() => this.cambiar_pagina(this.state.menu, 6)}>Estadisticas</a>
+                            <a className={this.style_menu(6)} href={process.env.REACT_APP_LINK} onClick={() => this.cambiar_pagina(this.state.menu, 6)}>Estadisticas</a>
                         </u>
                     </div>
                     <div className="col-md-4 form-group">
                         <u>
-                            <a className={this.style_menu(7)} href="/InnovAccionMeter2020/#" onClick={() => this.cambiar_pagina(this.state.menu, 7)}>Encuestas Terminadas</a>
+                            <a className={this.style_menu(7)} href={process.env.REACT_APP_LINK} onClick={() => this.cambiar_pagina(this.state.menu, 7)}>Encuestas Terminadas</a>
                         </u>
                     </div>
                     <div className="col-md-4 form-group">
                         <u>
-                            <a className={this.style_menu(8)} href="/InnovAccionMeter2020/#" onClick={() => this.cambiar_pagina(this.state.menu, 8)}>Mantencion Empresas</a>
+                            <a className={this.style_menu(8)} href={process.env.REACT_APP_LINK} onClick={() => this.cambiar_pagina(this.state.menu, 8)}>Mantencion Empresas</a>
                         </u>
                     </div>
-                </div>                
+                </div>
             </div>
         )
 
+    }
+
+    coach_mail = () => {
+        this.cambiar_pagina(this.state.menu, 9)
     }
 
 
@@ -100,15 +105,18 @@ export default class Coach extends Component {
                     <div id="wrapper" className="">
                         <div id="content-wrapper" className="d-flex flex-column">
                             <div id="content">
-                                <Menu />
+                                <Menu coach_mail={this.coach_mail} />
                                 <this.pagina_principal />
                                 <div className="container-fluid">
                                     {
                                         (submenu === 7) ? <EncuestasTotalEmpresa tipo={menu} />
                                             : (submenu === 8) ? <MantencionEmpresas tipo={menu} />
                                                 : (submenu === 6) ? <Estadisticas tipo={menu} />
-                                                    : ""
-                                    }
+                                                    : (submenu === 9) ? <CoachMail  funcion={this.regresar} />
+                                                        : ""
+
+                                                    
+                    }
                                 </div>
                             </div>
                             <footer className="sticky-footer bg-white">
