@@ -31,6 +31,17 @@ let mailOptions = {
         cid: ""
     }]
 };
+
+
+let mailOptions_sinadjunto = {
+    from: "'Prueba' <estudios@bp2i.org>",
+    to: "",
+    bcc: "",
+    cc: "",
+    subject: "Prueba",
+    html: "<b>NodeJS Email Tutorial</b>"
+};
+
 /*
 const info = await transporter.sendMail(mailOptions)
 console.log('Message %s sent: %s', info.messageId, info.response)
@@ -53,13 +64,18 @@ const connection = mysql.createConnection({
 
 const connect = util.promisify(connection.query).bind(connection);
 
-setInterval(function () {
-    connection.query('SELECT 1');
-}, 20000000);
+const mantener_bd = async () => {
+    connection.query('SELECT 1')
+}
 
-setInterval(function () {
-    del(['*.jpg']);
-}, 3600000);
+const borrar_img = async () => {
+    del(['*.jpg'])
+}
+
+setInterval(async () => {
+    await mantener_bd()
+    await borrar_img()
+}, 14400000);
 
 const csvFilePath = './controller/preguntas.csv'
 const csv = require('csvtojson')
@@ -175,16 +191,14 @@ const recuperar_clave = async (req, res) => {
                         <title>`+ asunto + `</title>
                         </head>
                         <body>
-                        <p>Sr(a) `+ result[0].Nombre + `.
-                        <br>Le recordamos que su clave de acceso a los sistemas de Best Place to Innovate es:
-                        <br>Usuario: <b>`+ result[0].Correo + `</b>
-                        <br>Clave: <b>`+ result[0].Clave + `</b>
-                        <br>
-                        <br>Con esta información puede acceder <a href="`+ process.env.LINK + `"><font color='#ff0000'>AQUÍ</font></a>
-                        <br>
-                        <br>Gracias por preferirnos.
-                        <br><i>Equipo de Best Place to Innovate</i>
-                        </p>
+                        <p>Estimad@ `+ result[0].Nombre + `.</p>
+                        <p>Le recordamos que su clave de acceso a los sistemas de Best Place to Innovate es:</p>
+                        <p>Usuario: <b>`+ result[0].Correo + `</b></p>
+                        <p>Clave: <b>`+ result[0].Clave + `</b></p>                        
+                        <p>Con esta información puede acceder <a href="`+ process.env.LINK + `"><font color='#ff0000'>AQUÍ</font></a></p>                        
+                        <p>Gracias por preferirnos.</p>                                                
+                        <p><b>El Equipo de Best Place to Innovate</b></p>
+                        <p><img src='https://bestplacetoinnovate.org/firmacorreo.png' alt='Best Place to Innovate' /></p>
                         </body>
                         </html>
                         `
@@ -192,12 +206,12 @@ const recuperar_clave = async (req, res) => {
                         //CORREO
                         para = result[0].Nombre + " <" + result[0].Correo + ">"
 
-                        mailOptions.to = para
-                        mailOptions.from = de
-                        mailOptions.subject = asunto
-                        mailOptions.html = html
+                        mailOptions_sinadjunto.to = para
+                        mailOptions_sinadjunto.from = de
+                        mailOptions_sinadjunto.subject = asunto
+                        mailOptions_sinadjunto.html = html
 
-                        const info = await transporter.sendMail(mailOptions)
+                        const info = await transporter.sendMail(mailOptions_sinadjunto)
                         console.log('Message %s sent: %s', info.messageId, info.response)
                         res.status(200).json("OK")
                     }
@@ -1683,15 +1697,8 @@ const enviar_conclusion = async (req, res) => {
     <head>
     <title>` + asunto + `</title>
     </head>
-<body>
-    <img src='https://www.bestplacetoinnovate.org/InnovAccionMeter/Image/Logo_bp2i.jpg' alt='Best Place to Innovate' />
-    <h1 align=center>
-        <font color='#006600'>Best Place to Innovate</font>
-    </h1>
-    <h2 align=center>
-        <font color='#ff0000'>`+ tipo_encuesta + `</font>
-    </h2>
-    <p><b><i>`+ data.Contacto + `</i></b>, de nuestra consideración:</p>
+<body>    
+    <p>Estimado@ `+ data.Contacto + `, de nuestra consideración:</p>
     <p>Adjuntamos resultado de encuesta correspondiente a `+ tipo_encuesta + ` de Best Place to Innovate solicitada
         por su empresa <b><i>`+ data.NombreEmpresa + `</i></b>.</p>
         <br>
@@ -1717,7 +1724,10 @@ const enviar_conclusion = async (req, res) => {
             <td><br>`+ data.recomendacion_coach + `<br>&nbsp;</td>
         </tr>
     </table>
-    <br><br>Atentamente equipo de <i>Best Place to Innovate</i>
+    <br><br>
+    <p>Muchas gracias por su cooperación.</p>
+    <p><b>El Equipo de Best Place to Innovate</b></p>
+    <p><img src='https://bestplacetoinnovate.org/firmacorreo.png' alt='Best Place to Innovate' /></p>
 </html>
     `
 
@@ -1819,11 +1829,8 @@ const correo_encuesta_finalizada = async (req, res) => {
                                <head>
                                    <title>`+ asunto + `</title>                                   
                                </head>
-                               <body>
-                                   <img src='https://www.bestplacetoinnovate.org/InnovAccionMeter/Image/Logo_bp2i.jpg' alt='Best Place to Innovate' />
-                                   <h1 align=center><font color='#006600'>Best Place to Innovate</font></h1>
-                                   <h2 align=center><font color='#ff0000'>`+ tipo_encuesta + `</font></h2>
-                                   <p><b><i>`+ result[0].Nombre + `</i></b>, de nuestra consideración:</p>
+                               <body>                                  
+                                   <p>Estimad@ `+ result[0].Nombre + `, de nuestra consideración:</p>
                                    <p>Adjuntamos resultado de encuesta correspondiente a `+ tipo_encuesta + ` de Best Place to Innovate solicitada por <b><i>` + result[0].NombreEmpresa + `</i></b>.</p>
                                    <br><br><br>
                                    <table align='center'>
@@ -1834,6 +1841,10 @@ const correo_encuesta_finalizada = async (req, res) => {
                                        </tr>
                                    </table>                                   
                                    <br><br><br>
+                                   <p>Muchas gracias por su cooperación.</p>
+                                   <p><b>El Equipo de Best Place to Innovate</b></p>
+                                   <p><img src='https://bestplacetoinnovate.org/firmacorreo.png' alt='Best Place to Innovate' /></p>
+
                                </body>
                                </html>
                                `
@@ -2005,6 +2016,8 @@ const crear_empresa = async (req, res) => {
 
         let asunto = "Encuestas Best Place to Innovate para " + data.datos.Sigla
 
+        const usuario = await connect("SELECT * FROM iam_usuarios WHERE IdEmpresa = "+idempresa+" AND TipoUsuario = 88 ORDER by Id DESC LIMIT 1;")        
+
         let tipos_escuesta = ""
         if (data.datos.Encuesta90 === "S") {
             tipos_escuesta += "<li>Comite Ejecutivo - 90°</li>"
@@ -2024,33 +2037,32 @@ const crear_empresa = async (req, res) => {
             <title>` + asunto + `</title>
         </head>
         <body>
-            <h1 align=center>
-                <font color='#006600'>Best Place to Innovate</font>
-            </h1>
             <p>
-                <b><i>` + data.datos.Contacto + `</i></b>, de nuestra consideración:
+                Estimad@ ` + data.datos.Contacto + `, de nuestra consideración:
             </p>
             <p>Le informamos que usted tiene asignado el perfil de Administrador de las encuestas realizadas por Best Place to Innovate para los siguientes tipos de encuestas. </p>
                 <ol>` + tipos_escuesta + `</ol>
                 <br>
-                Para acceder debe ir al siguiente <a href='`+ process.env.LINK + `'><b> <font color='#ff0000'>LINK</font></b></a>
-                ingresando su correo y la clave <b>` + newpass + `</b>
-                <p>Atentamente equipo de Best Place to Innovate</p>
+                
+            <p> Para acceder solo tiene que hacer clic <a href='`+ process.env.LINK + `?tokenaccess=` + usuario[0].Activacion + `'><b> <font color='#ff0000'>AQUÍ</font></b></a></p>
+            <p>Muchas gracias por su cooperación.</p>
+            <p><b>El Equipo de Best Place to Innovate</b></p>
+            <p><img src='https://bestplacetoinnovate.org/firmacorreo.png' alt='Best Place to Innovate' /></p>
         </body>
         </html>
-        `
-
+        `        
+        
         asunto = "Envio de Invitación a llenar encuesta de Best Place to Innovate para " + data.datos.Sigla
         let para = data.datos.Contacto + " <" + data.datos.Correo + ">"
         let de = "Best Place to Innovate" + process.env.CORREO_ADMIN
 
-        mailOptions.to = para
-        mailOptions.from = de
-        mailOptions.subject = asunto
-        mailOptions.html = html
-        mailOptions.bcc = bcc
+        mailOptions_sinadjunto.to = para
+        mailOptions_sinadjunto.from = de
+        mailOptions_sinadjunto.subject = asunto
+        mailOptions_sinadjunto.html = html
+        mailOptions_sinadjunto.bcc = bcc
 
-        const info = await transporter.sendMail(mailOptions)
+        const info = await transporter.sendMail(mailOptions_sinadjunto)
         console.log('Message %s sent: %s', info.messageId, info.response)
         //CORREO
 
@@ -2455,18 +2467,13 @@ const enviar_invitaciones = async (req, res) => {
             </head>
 
             <body>
-                <h1 align=center>
-                    <font color='#006600'>Best Place to Innovate</font>
-                </h1>
-                <h2 align=center>
-                    <font color='#ff0000'>`+ tipo + `</font>
-                </h2>
-                <p><b>Estimad@ `+ obj.Nombre + `,
+                <p>Estimad@ `+ obj.Nombre + `,
                         <p>Hay interés por parte de Best Place to Innovate en entender cuál es el potencial innovador de la empresa y en cómo gestionar la innovación para hacerla parte del ADN de la organización.</p>
                         <p>Es por ello que le agradeceríamos tomarse unos minutos para contestar esta encuesta. Sus respuestas honestas y lo más objetivas posibles nos ayudarán a hacer esta medición.  No hay respuesta incorrecta, solo respuestas útiles.</p> 
                         <p>Esta encuesta es totalmente anónima y confidencial. Completarla es sencillo y le tomará unos pocos minutos. Solo tiene que hacer clic <a href='`+ process.env.LINK + `?tokenaccess=` + obj.Activacion + `'><b> <font color='#ff0000'>AQUÍ</font></b></a> para comenzar a contestar las preguntas. </p>
-                        <p><b>Muchas gracias por su cooperación.</b></p>
-                        <p><b>Area de Estudios</b></p>
+                        <p>Muchas gracias por su cooperación.</p>
+                        <p><b>El Equipo de Best Place to Innovate</b></p>
+                        <p><img src='https://bestplacetoinnovate.org/firmacorreo.png' alt='Best Place to Innovate' /></p>
             </body>
             </html>`
 
@@ -2475,13 +2482,13 @@ const enviar_invitaciones = async (req, res) => {
                 para = obj.Nombre + " <" + obj.Correo + ">"
                 bcc = empresa.correo_contacto + "," + bcc
 
-                mailOptions.to = para
-                mailOptions.bcc = bcc
-                mailOptions.from = de
-                mailOptions.subject = asunto
-                mailOptions.html = html
+                mailOptions_sinadjunto.to = para
+                mailOptions_sinadjunto.bcc = bcc
+                mailOptions_sinadjunto.from = de
+                mailOptions_sinadjunto.subject = asunto
+                mailOptions_sinadjunto.html = html
 
-                const info = await transporter.sendMail(mailOptions)
+                const info = await transporter.sendMail(mailOptions_sinadjunto)
                 console.log('Message %s sent: %s', info.messageId, info.response)
                 res.status(200).json("OK")
 
@@ -2565,14 +2572,12 @@ const enviar_ultimatum = async (req, res) => {
         </head>
 
         <body>
-            <h1 align=center> <font color='#006600'>Best Place to Innovate</font></h1>
-            <h2 align=center><font color='#ff0000'>`+ tipo + `</font></h2>
             <p>Estimad@ <b>`+ rows[0].Nombre + `</b>:</p>
             <p>`+ cuerpo + `</p>
-            <p>Completar la encuesta es muy sencillo y no le tomará más de unos pocos minutos. Solo tiene que hacer clic <a href='`+ process.env.LINK + `'><b><font color='#ff0000'>AQUÍ</font></b></a> y luego ingresar su correo como usuario y su clave: <b>` + rows[0].Clave + `</b>.</p>
-            <p align="center"><b>Muchas gracias por su cooperación</b></p>
-            <p align="center"><b>El Equipo de Best Place to Innovate</b></p>    
-            <p align="center"><img src='https://www.bestplacetoinnovate.org/InnovAccionMeter/Image/LogoMailSustainaly.jpg' alt='Best Place to Innovate'> </p>
+            <p>Completar la encuesta es sencillo y le tomará unos pocos minutos. Solo tiene que hacer clic <a href='`+ process.env.LINK + `?tokenaccess=` + rows[0].Activacion + `'><b> <font color='#ff0000'>AQUÍ</font></b></a> para comenzar a contestar las preguntas. </p>            
+            <p>Muchas gracias por su cooperación.</p>
+            <p><b>El Equipo de Best Place to Innovate</b></p>
+            <p><img src='https://bestplacetoinnovate.org/firmacorreo.png' alt='Best Place to Innovate' /></p>            
         </body>
 
         </html>
@@ -2585,13 +2590,13 @@ const enviar_ultimatum = async (req, res) => {
 
         //console.log(de + " - " + para + " - " + bcc + " - " + asunto)
 
-        mailOptions.to = para
-        mailOptions.from = de
-        mailOptions.bcc = bcc
-        mailOptions.subject = asunto
-        mailOptions.html = html
+        mailOptions_sinadjunto.to = para
+        mailOptions_sinadjunto.from = de
+        mailOptions_sinadjunto.bcc = bcc
+        mailOptions_sinadjunto.subject = asunto
+        mailOptions_sinadjunto.html = html
 
-        const info = await transporter.sendMail(mailOptions)
+        const info = await transporter.sendMail(mailOptions_sinadjunto)
         console.log('Message %s sent: %s', info.messageId, info.response)
 
 
