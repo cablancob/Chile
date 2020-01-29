@@ -75,8 +75,8 @@ export default class Empresa extends Component {
 
             }
         }
-        if (peso < 100) {
-            window.ModalError(this.state.titulo_principal, "La suma de los valores del campo peso (Resumen) no puede ser menor a 100")            
+        if (peso !== 100) {
+            window.ModalError(this.state.titulo_principal, "La suma de los valores del campo peso (Resumen) no puede ser distinto de 100")            
             valid = false
         }
 
