@@ -8,7 +8,7 @@ var crypto = require('crypto');
 const Buffer = require('buffer').Buffer;
 
 //CORREO_ADMIN=estudios@bp2i.org
-/*const transporter = nodeMailer.createTransport({
+const transporter = nodeMailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,
     secure: true,
@@ -16,7 +16,8 @@ const Buffer = require('buffer').Buffer;
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD
     }
-});*/
+});
+
 
 let mailOptions = {
     from: "'Prueba' <estudios@bp2i.org>",
@@ -2529,6 +2530,7 @@ const enviar_ultimatum = async (req, res) => {
         let de = ""
         let bcc = ""
         let correo_admin = ""
+        let opcion = ""
 
         let cuerpo = ""
 
@@ -2542,7 +2544,7 @@ const enviar_ultimatum = async (req, res) => {
 
         query = "SELECT * FROM iam_usuarios WHERE Id = " + usuario
 
-        rows = await connect(query)
+        rows = await connect(query)        
 
         if (data.correo == 0) {
             cuerpo = "Esperamos que este bien. Queríamos comentarle que estamos próximos a cerrar el diagnóstico de potencial innovador y capacidad de gestión de la innovación de la <b>" + empresa.NombreEmpresa + "</b>. Nos encantaría si antes de cerrarse el diagnóstico pudiésemos contar con su opinión la que seguramente será de mucho valor en el trabajo que se está haciendo."
@@ -2555,18 +2557,22 @@ const enviar_ultimatum = async (req, res) => {
         if (rows[0].TipoUsuario == "2") {
             asunto = "Asunto: Su opinión como Ejecutivo de " + empresa.NombreEmpresa
             tipo = "Encuesta Comite Ejecutivo - 90°"
+            opcion = "Encuesta: <b>Equipo General (90°)</b>"
         }
         if (rows[0].TipoUsuario == "3") {
             asunto = "Asunto: Su opinión como Colaborador de " + empresa.NombreEmpresa
             tipo = "Encuesta Colaboradores - 180°"
+            opcion = "Encuesta: <b>Colaboradores (180°)</b>"
         }
         if (rows[0].TipoUsuario == "4") {
             asunto = "Asunto: Su opinión como Proveedores de " + empresa.NombreEmpresa
             tipo = "Encuesta Proveedores - 270°"
+            opcion = "Encuesta: <b>Proveedores (270°)</b>"
         }
         if (rows[0].TipoUsuario == "5") {
             asunto = "Asunto: Su opinión como Cliente de " + empresa.NombreEmpresa
             tipo = "Encuesta Clientes - 360°"
+            opcion = "Encuesta: <b>Clientes (360°)</b>"
         }
 
         html = `
@@ -2579,7 +2585,7 @@ const enviar_ultimatum = async (req, res) => {
         <body>
             <p>Estimad@ <b>`+ rows[0].Nombre + `</b>:</p>
             <p>`+ cuerpo + `</p>
-            <p>Completar la encuesta es sencillo y le tomará unos pocos minutos. Solo tiene que hacer clic <a href='`+ process.env.LINK + `?tokenaccess=` + rows[0].Activacion + `'><b> <font color='#ff0000'>AQUÍ</font></b></a> para comenzar a contestar las preguntas. </p>            
+            <p>Completar la encuesta es sencillo y le tomará unos pocos minutos. Solo tiene que hacer clic <a href='`+ process.env.LINK + `?tokenaccess=` + rows[0].Activacion + `'><b> <font color='#ff0000'>AQUÍ</font></b></a> para comenzar a contestar las preguntas, si con el link no logra ingresar directamente a la encuesta, puede acceder ingresando los siguientes datos: `+opcion+`, Correo Electronico: <b>`+rows[0].Correo+`</b> y Contraseña: <b>`+rows[0].Clave+`</b></p>
             <p>Muchas gracias por su cooperación.</p>
             <p><b>El Equipo de Best Place to Innovate</b></p>
             <p><img src='https://bestplacetoinnovate.org/firmacorreo.png' alt='Best Place to Innovate' /></p>            
