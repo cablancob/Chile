@@ -1,7 +1,7 @@
 {
   "homepage": "./",
   "name": "innovaccionmeter",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "private": true,
   "dependencies": {
     "apexcharts": "^3.11.0",

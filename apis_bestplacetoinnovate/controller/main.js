@@ -8,7 +8,7 @@ var crypto = require('crypto');
 const Buffer = require('buffer').Buffer;
 
 //CORREO_ADMIN=estudios@bp2i.org
-const transporter = nodeMailer.createTransport({
+/*const transporter = nodeMailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,
     secure: true,
@@ -16,7 +16,7 @@ const transporter = nodeMailer.createTransport({
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD
     }
-});
+});*/
 
 let mailOptions = {
     from: "'Prueba' <estudios@bp2i.org>",
@@ -2419,11 +2419,12 @@ const enviar_invitaciones = async (req, res) => {
         let html = ``
         let asunto = ""
         let tipo = ""
+        let opcion = ""
         let para = ""
         let de = data.Nombre + " <" + data.Correo + ">"
         //CAMBIAR
         //let bcc = data.Correo
-        let bcc = process.env.CORREO_ADMIN
+        let bcc = process.env.CORREO_ADMIN        
 
         query = "UPDATE iam_correodesde SET nombre = '" + data.Nombre + "', correo = '" + data.Correo + "' WHERE folio = 2;"
         await connect(query)
@@ -2440,23 +2441,27 @@ const enviar_invitaciones = async (req, res) => {
         if (datos.length > 0) {
             let rows = await connect(query)
 
-            rows.map(async (obj) => {
+            rows.map(async (obj) => {                
 
                 if (obj.TipoUsuario == "2") {
                     asunto = "Invitación a llenar Encuesta Comite Ejecutivo de Best Place to Innovate para " + empresa.NombreEmpresa
                     tipo = "Encuesta Comite Ejecutivo - 90°"
+                    opcion = "Encuesta: <b>Equipo General (90°)</b>"
                 }
                 if (obj.TipoUsuario == "3") {
                     asunto = "Invitación a llenar Encuesta Colaboradores de Best Place to Innovate para " + empresa.NombreEmpresa
                     tipo = "Encuesta Colaboradores - 180°"
+                    opcion = "Encuesta: <b>Colaboradores (180°)</b>"
                 }
                 if (obj.TipoUsuario == "4") {
                     asunto = "Invitación a llenar Encuesta Proveedores de Best Place to Innovate para " + empresa.NombreEmpresa
                     tipo = "Encuesta Proveedores - 270°"
+                    opcion = "Encuesta: <b>Proveedores (270°)</b>"
                 }
                 if (obj.TipoUsuario == "5") {
                     asunto = "Invitación a llenar Encuesta Clientes de Best Place to Innovate para " + empresa.NombreEmpresa
                     tipo = "Encuesta Clientes - 360°"
+                    opcion = "Encuesta: <b>Clientes (360°)</b>"
                 }
 
                 html = `
@@ -2470,7 +2475,7 @@ const enviar_invitaciones = async (req, res) => {
                 <p>Estimad@ `+ obj.Nombre + `,
                         <p>Hay interés por parte de Best Place to Innovate en entender cuál es el potencial innovador de la empresa y en cómo gestionar la innovación para hacerla parte del ADN de la organización.</p>
                         <p>Es por ello que le agradeceríamos tomarse unos minutos para contestar esta encuesta. Sus respuestas honestas y lo más objetivas posibles nos ayudarán a hacer esta medición.  No hay respuesta incorrecta, solo respuestas útiles.</p> 
-                        <p>Esta encuesta es totalmente anónima y confidencial. Completarla es sencillo y le tomará unos pocos minutos. Solo tiene que hacer clic <a href='`+ process.env.LINK + `?tokenaccess=` + obj.Activacion + `'><b> <font color='#ff0000'>AQUÍ</font></b></a> para comenzar a contestar las preguntas. </p>
+                        <p>Esta encuesta es totalmente anónima y confidencial. Completarla es sencillo y le tomará unos pocos minutos. Solo tiene que hacer clic <a href='`+ process.env.LINK + `?tokenaccess=` + obj.Activacion + `'><b> <font color='#ff0000'>AQUÍ</font></b></a> para comenzar a contestar las preguntas, si con el link no logra ingresar directamente a la encuesta, puede acceder ingresando los siguientes datos: `+opcion+`, Correo Electronico: <b>`+obj.Correo+`</b> y Contraseña: <b>`+obj.Clave+`</b></p>
                         <p>Muchas gracias por su cooperación.</p>
                         <p><b>El Equipo de Best Place to Innovate</b></p>
                         <p><img src='https://bestplacetoinnovate.org/firmacorreo.png' alt='Best Place to Innovate' /></p>

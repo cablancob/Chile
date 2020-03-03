@@ -470,6 +470,11 @@ export default class EncuestaReporteResumen extends Component {
     Reporte = () => {
         const empresa = this.props.IdEmpresa
         const usuario = ""
+        let size = {"height": "80px"}
+
+        if (window.screen.width < 720) {
+            size = {"height": "145px"}
+        }
 
         let titulo = "Resultado Resumen Encuesta"
 
@@ -506,7 +511,7 @@ export default class EncuestaReporteResumen extends Component {
                                     return (
                                         <div className="col-md-4" key={index} style={{ paddingTop: "0px", paddingBottom: "0px" }}>
                                             <div className="card h-100">
-                                                <div className="card-header bg-white text-dark text-center" style={{ "height": "145px" }}>
+                                                <div className="card-header bg-white text-dark text-center" style={size}>
                                                     <div className="row">
                                                         <div className="h6 col-md-9 py-3">{obj.titulo}</div>
                                                         <div className="col-md-3 py-2"> <span className={this.Style(obj.promedio)}>{obj.promedio}</span></div>
