@@ -190,7 +190,7 @@ export default class App extends Component {
           auth_false: this.auth_false,
           unbind_usuario: this.unbind_usuario
         }}>
-          <div className="container">
+          <div className="container" id="div_principal">
             <ModalError />
             <ModalOk />
             <ModalWarning funcion={this.state.funcion_warning} />

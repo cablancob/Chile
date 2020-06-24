@@ -395,7 +395,7 @@ export default class Encuestas extends Component {
                                 <div className="container-fluid" key={numero}>
                                     <div className="card form-group">
                                         <div className="h5 card-header bg-white text-dark text-center" dangerouslySetInnerHTML={{ __html: pregunta[0].pregunta }}></div>
-                                        <div className="h5 card-body form-group">
+                                        <div className="h5 card-body form-group text-dark">
                                             {
                                                 pregunta.map((obj, index) => {
                                                     if (obj.tipo.toString() === "radio") {

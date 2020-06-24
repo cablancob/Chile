@@ -434,7 +434,7 @@ export default class EncuestaReporteResumen extends Component {
             let datos = []
 
             let result = await Promise.all([this.resultados_innovacion(empresa, 2), this.resultados_innovacion(empresa, 3), this.resultados_innovacion(empresa, 4), this.resultados_innovacion(empresa, 5)])
-            datos = await this.datos_campos(result)
+            datos = await this.datos_campos(result)            
             this.reporte_final(datos, 1)
 
             result = await Promise.all([this.proposito(empresa, 2), this.proposito(empresa, 3), this.proposito(empresa, 4), this.proposito(empresa, 5)])

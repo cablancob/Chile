@@ -672,14 +672,16 @@ export default class EncuestaReporte extends Component {
             this.reporte_final(datos, 5)
             datos = await this.cultura_conectada(usuario, empresa, tipo)
             this.reporte_final(datos, 6)
-
+                        
             this.setState({
                 mostrar: true
             })
 
+            document.getElementById("div_principal").style.width = "1080px";
+
             if (this.props.correo !== undefined) {
                 await this.correo_encuesta_finalizada(this.props)
-            }
+            }            
 
         } catch (e) {
             window.ModalError("Reporte", e.error)
@@ -689,26 +691,28 @@ export default class EncuestaReporte extends Component {
     correo_encuesta_finalizada = async (usuario) => {
         try {
             let form_data = {}
-            let canvas_image = ""
+            let canvas_image = ""               
             await window.html2canvas(document.getElementById("tabla-final"), {
-                onrendered: function (canvas) {
+                onrendered: function (canvas) {                    
                     canvas_image = canvas.toDataURL("image/jpeg")
                 }
-            });
+            });                        
             form_data["tipo_encuesta"] = usuario.tipo_encuesta
             form_data["id_usuario"] = usuario.id_usuario
-            form_data["imagen"] = canvas_image
+            form_data["imagen"] = canvas_image               
+            document.getElementById("div_principal").style.width = ""    
 
             let headers = new Headers()
             headers.append("Content-Type", "application/json")
             headers.append("x-access-token", sessionStorage.getItem('innovaccionmeter_session'))
 
-            const URL = "http://" + window.location.host.split(":")[0] + ":" + process.env.REACT_APP_PORT + "/correo_encuesta_finalizada"
+            const URL = "http://" + window.location.host.split(":")[0] + ":" + process.env.REACT_APP_PORT + "/correo_encuesta_finalizada"            
             let response = await fetch(URL, {
                 method: "POST",
                 headers: headers,
                 body: JSON.stringify(form_data)
             })
+            
 
             let data = await response.json()
 
@@ -719,7 +723,7 @@ export default class EncuestaReporte extends Component {
             } else {
                 this.state.auth_false()
             }
-        } catch (e) {
+        } catch (e) {            
             window.ModalError("Env&iacute;o de Resultados de Encuesta", e.error)
         }
     }
@@ -732,6 +736,15 @@ export default class EncuestaReporte extends Component {
         let titulo = ""
         let subtitulo = ""
         let pie_pagina = ""
+        let ancho = ""
+        let ocultar = ""
+        if (window.screen.width < 720) {
+            ancho = "970px"
+            ocultar = "block"
+        } else {
+            ancho = "auto"
+            ocultar = "none"
+        }     
 
         if (idioma === "ESP") {
             subtitulo = "Muchas gracias por su cooperación"
@@ -748,27 +761,30 @@ export default class EncuestaReporte extends Component {
             if (this.props.tipo_encuesta === 4) {
                 titulo = "Resultado Encuesta 360°"
             }
-        }
+        }        
         return (
             <div className="container-fluid">
                 <h1 className="h3 mb-4 text-gray-800 text-center">{titulo}</h1>
                 <h1 className="h4 mb-4 text-gray-800 text-center px-2">{subtitulo}</h1>
                 <div className="py-5 text-center">
                     <button type="button" className="btn btn-primary px-5" onClick={this.props.funcion}>{"<< Anterior"}</button>
-                </div>
-                <div className="card" id="tabla-final">
+                </div>                
+                <h1 className="h3 mb-4 text-gray-800" style={{"display": ocultar}}>Deslice a la Derecha</h1>
+                <div className="table-responsive">         
+                <div className="card" id="tabla-final" style={{"width": ancho}}>
+                
                     <div className="h5 card-header bg-white text-dark text-center">
                         <div className="row">
-                            <div className="col-md-4 py-2">
+                            <div className="col-4 py-2">
                                 {(empresa === 0) ? usuario.NombreEmpresa : this.state.datos_empresa.NombreEmpresa}
                             </div>
-                            <div className="col-md-4 py-2">
+                            <div className="col-4 py-2">
                                 {(empresa === 0) ? usuario.nombre : ""}
                             </div>
-                            <div className="col-md-4">
+                            <div className="col-4">
                                 <div className="row">
-                                    <div className="col-md-6 font-weight-bold py-2">SCORE TOTAL</div>
-                                    <div className="col-md-6 py-2">
+                                    <div className="col-6 font-weight-bold py-2">SCORE TOTAL</div>
+                                    <div className="col-6 py-2">
                                         <span className={this.Style((this.state.promedio_general / 6).toFixed(1))}>{(this.state.promedio_general / 6).toFixed(1)}</span>
                                     </div>
                                 </div>
@@ -781,15 +797,15 @@ export default class EncuestaReporte extends Component {
                                 this.state.reporte_final.map((obj, index) => {
                                     let index_superior = index
                                     return (
-                                        <div className="col-md-4" key={index} style={{ paddingTop: "0px", paddingBottom: "0px" }}>
+                                        <div className="col-4" key={index} style={{ paddingTop: "0px", paddingBottom: "0px" }}>
                                             <div className="card h-100">
                                                 <div className="card-header bg-white text-dark text-center" style={{ "height": "110px" }}>
                                                     <div className="row">
-                                                        <div className="h6 col-md-9 py-3">{obj.titulo}</div>
-                                                        <div className="col-md-3 py-2"> <span className={this.Style(obj.promedio)}>{obj.promedio}</span></div>
+                                                        <div className="h6 col-9 py-3">{obj.titulo}</div>
+                                                        <div className="col-3 py-2"> <span className={this.Style(obj.promedio)}>{obj.promedio}</span></div>
                                                     </div>
                                                     <div className="row text-right">
-                                                        <div className="col-md-12 h6 pl-5">{obj.peso}</div>
+                                                        <div className="col-12 h6 pl-5">{obj.peso}</div>
                                                     </div>
                                                 </div>
                                                 <div className="card-body">
@@ -799,8 +815,8 @@ export default class EncuestaReporte extends Component {
                                                             if (this.state.tooltips === undefined) {
                                                                 return (
                                                                     <div className="row" key={index}>
-                                                                        <div className="col-md-9 py-2 text-left">{resultados.pregunta}</div>
-                                                                        <div className="col-md-3 py-2 text-center"><span className={this.Style(resultados.resultado)}>{resultados.resultado.toFixed(1)}</span></div>
+                                                                        <div className="col-9 py-2 text-left">{resultados.pregunta}</div>
+                                                                        <div className="col-3 py-2 text-center"><span className={this.Style(resultados.resultado)}>{resultados.resultado.toFixed(1)}</span></div>
                                                                     </div>
                                                                 )
                                                             } else {
@@ -814,8 +830,8 @@ export default class EncuestaReporte extends Component {
                                                                 })
                                                                 return (
                                                                     <div className="row" key={index}>
-                                                                        <div className="col-md-9 py-2 text-left" data-toggle="tooltip" title={texto}>{resultados.pregunta}</div>
-                                                                        <div className="col-md-3 py-2 text-center"><span className={this.Style(resultados.resultado)}>{resultados.resultado.toFixed(1)}</span></div>
+                                                                        <div className="col-9 py-2 text-left" data-toggle="tooltip" title={texto}>{resultados.pregunta}</div>
+                                                                        <div className="col-3 py-2 text-center"><span className={this.Style(resultados.resultado)}>{resultados.resultado.toFixed(1)}</span></div>
                                                                     </div>
                                                                 )
                                                             }
@@ -829,6 +845,7 @@ export default class EncuestaReporte extends Component {
                             }
                         </div>
                     </div>
+                </div>
                 </div>
                 {(empresa !== 0) ? <this.conclusion /> : ""}
                 <div className="d-flex justify-content-center py-5">
