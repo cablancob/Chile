@@ -49,7 +49,7 @@ console.log('Message %s sent: %s', info.messageId, info.response)
 */
 
 const fs = require('fs');
-const connection = mysql.createConnection({
+const connection = mysql.createPool({
     host: process.env.DATABASE_ADDRESS,
     user: process.env.DATABASE_USER,
     password: process.env.DATABASE_PASSWORD,
@@ -63,6 +63,16 @@ const connection = mysql.createConnection({
         });
 */
 
+const crear_bd = () => {
+    return mysql.createConnection({
+        host: process.env.DATABASE_ADDRESS,
+        user: process.env.DATABASE_USER,
+        password: process.env.DATABASE_PASSWORD,
+        database: process.env.DATABASE,
+        charset: 'latin1'
+    });
+}
+
 const connect = util.promisify(connection.query).bind(connection);
 
 const mantener_bd = async () => {
@@ -74,7 +84,7 @@ const borrar_img = async () => {
 }
 
 setInterval(async () => {
-    await mantener_bd()
+    //await mantener_bd()
     await borrar_img()
 }, 14400000);
 
@@ -1775,7 +1785,7 @@ const enviar_conclusion = async (req, res) => {
 
 const correo_encuesta_finalizada = async (req, res) => {
     try {
-        const data = await req.body        
+        const data = await req.body                
 
         let asunto = ""
         let para = ""
@@ -1808,7 +1818,7 @@ const correo_encuesta_finalizada = async (req, res) => {
         }
 
 
-        let query = "SELECT COUNT(*) as A FROM " + tabla + " WHERE EncuestaEnviada = 'S' AND IdUsuario = " + data.id_usuario
+        let query = "SELECT COUNT(*) as A FROM " + tabla + " WHERE EncuestaEnviada = 'S' AND IdUsuario = " + data.id_usuario        
         //CORREO
 
         await connection.query(query, async (err, result, fields) => {
@@ -1900,7 +1910,7 @@ const correo_encuesta_finalizada = async (req, res) => {
                 }
             }
         });
-    } catch (e) {
+    } catch (e) {        
         console.log(e.message)
         res.status(400).json({ error: e.message })
     }

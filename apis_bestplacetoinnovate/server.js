@@ -11,6 +11,8 @@ const cors = require("cors"); // allows/disallows cross-site communication
 
 const main = require("./controller/main");
 
+const local = "192.168.1.108"
+
 // App
 const app = express();
 
@@ -24,7 +26,7 @@ const corsOptions = {
             callback(new Error("Not allowed by CORS"));
         }
     }
-};
+}
 
 
 
@@ -34,10 +36,11 @@ const cargar_archivo = async () => {
 
 cargar_archivo()
 
+
 app.use(helmet());
-if (ip.address() != "192.168.1.140") {
+if (ip.address() != local) {
     //app.use(cors(corsOptions));
-}
+} 
 app.use(cors());
 
 //app.use(bodyParser.json());
@@ -88,10 +91,7 @@ app.get('/accessbytoken', main.accessbytoken)
 app.get('/email_coach', main.verifytoken, main.email_coach)
 
 
-
-
-
-if (ip.address() == "192.168.1.140") {
+if (ip.address() == local) {
     app.listen(process.env.PORT || 3000, () => {
         console.log(`app is running on port ${process.env.PORT || 3000}`);
     });
@@ -107,4 +107,3 @@ if (ip.address() == "192.168.1.140") {
         console.log(`app is running on port ${process.env.PORT || 3000}`);
     });
 }
-
