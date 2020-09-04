@@ -63,6 +63,7 @@ app.post('/eliminar_usuarios', main.verifytoken, main.eliminar_usuarios)
 app.post('/enviar_invitaciones', main.verifytoken, main.enviar_invitaciones)
 app.post('/enviar_ultimatum', main.verifytoken, main.enviar_ultimatum)
 app.post('/email_coach', main.verifytoken, main.email_coach)
+app.post('/email_text_bienvenida', main.verifytoken, main.email_text_bienvenida)
 
 
 app.get('/session', main.verifytoken, main.session)
@@ -89,6 +90,7 @@ app.get('/obtener_empresas', main.verifytoken, main.obtener_empresas)
 app.get('/graficos', main.verifytoken, main.graficos)
 app.get('/accessbytoken', main.accessbytoken)
 app.get('/email_coach', main.verifytoken, main.email_coach)
+app.get('/email_text_bienvenida', main.verifytoken, main.email_text_bienvenida)
 
 
 if (ip.address() == local) {

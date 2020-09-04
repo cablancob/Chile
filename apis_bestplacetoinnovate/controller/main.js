@@ -18,7 +18,6 @@ const transporter = nodeMailer.createTransport({
     }
 });
 
-
 let mailOptions = {
     from: "'Prueba' <estudios@bp2i.org>",
     to: "",
@@ -63,15 +62,6 @@ const connection = mysql.createPool({
         });
 */
 
-const crear_bd = () => {
-    return mysql.createConnection({
-        host: process.env.DATABASE_ADDRESS,
-        user: process.env.DATABASE_USER,
-        password: process.env.DATABASE_PASSWORD,
-        database: process.env.DATABASE,
-        charset: 'latin1'
-    });
-}
 
 const connect = util.promisify(connection.query).bind(connection);
 
@@ -2425,6 +2415,7 @@ const enviar_invitaciones = async (req, res) => {
         const data = req.body
         const datos = data.datos
         const empresa = data.empresa
+        let contenido_email = data.TextEmail
         let query = ""
         let where = "("
         let html = ``
@@ -2432,18 +2423,22 @@ const enviar_invitaciones = async (req, res) => {
         let tipo = ""
         let opcion = ""
         let para = ""
-        let de = data.Nombre + " <" + data.Correo + ">"
+        let de = data.Nombre + " <" + data.Correo + ">"        
         //CAMBIAR
         //let bcc = data.Correo
         let bcc = process.env.CORREO_ADMIN        
 
         query = "UPDATE iam_correodesde SET nombre = '" + data.Nombre + "', correo = '" + data.Correo + "' WHERE folio = 2;"
         await connect(query)
+        
 
+        query = "UPDATE iam_correo_bienvenida SET contenido = '" + contenido_email + "' WHERE id = 1;"
+        await connect(query)
 
         datos.map((obj) => {
             where += obj.Id + ","
         })
+        contenido_email = contenido_email.replace(/(^[ \t]*\n)/gm, "<br><br>")
 
 
         where = where.substring(0, where.length - 1) + ");"
@@ -2476,16 +2471,14 @@ const enviar_invitaciones = async (req, res) => {
                 }
 
                 html = `
-            <html>
-
+            <html>            
             <head>
                 <title>`+ asunto + `</title>
             </head>
 
             <body>
                 <p>Estimad@ `+ obj.Nombre + `,
-                        <p>Hay interés por parte de Best Place to Innovate en entender cuál es el potencial innovador de la empresa y en cómo gestionar la innovación para hacerla parte del ADN de la organización.</p>
-                        <p>Es por ello que le agradeceríamos tomarse unos minutos para contestar esta encuesta. Sus respuestas honestas y lo más objetivas posibles nos ayudarán a hacer esta medición.  No hay respuesta incorrecta, solo respuestas útiles.</p> 
+                        <p>`+contenido_email+`</p>
                         <p>Esta encuesta es totalmente anónima y confidencial. Completarla es sencillo y le tomará unos pocos minutos. Solo tiene que hacer clic <a href='`+ process.env.LINK + `?tokenaccess=` + obj.Activacion + `'><b> <font color='#ff0000'>AQUÍ</font></b></a> para comenzar a contestar las preguntas, si con el link no logra ingresar directamente a la encuesta, puede acceder ingresando los siguientes datos: `+opcion+`, Correo Electronico: <b>`+obj.Correo+`</b> y Contraseña: <b>`+obj.Clave+`</b></p>
                         <p>Muchas gracias por su cooperación.</p>
                         <p><b>El Equipo de Best Place to Innovate</b></p>
@@ -2506,6 +2499,10 @@ const enviar_invitaciones = async (req, res) => {
 
                 const info = await transporter.sendMail(mailOptions_sinadjunto)
                 console.log('Message %s sent: %s', info.messageId, info.response)
+
+                /*fs.writeFile('prueba.html', html, (err) => {
+                    if (err) throw err;
+                });*/
                 res.status(200).json("OK")
 
             })
@@ -2991,6 +2988,33 @@ const email_coach = async (req, res) => {
 }
 
 
+const email_text_bienvenida = async (req, res) => {
+    try {
+        let query = ""
+
+        if (req.method == "GET") {
+            query = 'SELECT * FROM iam_correo_bienvenida WHERE id = 1'
+            const rows = await connect(query)
+            if (rows.length == 1) {
+                res.status(200).json(rows)
+            } else {
+                res.status(400).json({ error: e.message })
+            }
+        } else if (req.method == "POST") {            
+            query = "UPDATE iam_correo_bienvenida SET contenido = '" + req.body.TextEmail + "' WHERE id = 1;"
+            await connect(query)
+            res.status(200).json("Status: OK")
+        } else {
+            res.status(400).json({ error: "Peticion Invalida" })
+        }
+
+    } catch (e) {
+        console.log(e.message)
+        res.status(400).json({ error: e.message })
+    }
+}
+
+
 
 module.exports = {
     pregunta_archivo,
@@ -3034,5 +3058,6 @@ module.exports = {
     obtener_empresas,
     graficos,
     accessbytoken,
-    email_coach
+    email_coach,
+    email_text_bienvenida
 }
